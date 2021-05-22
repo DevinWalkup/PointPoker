@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-blueGray-200 dark:bg-blueGray-900 text-gray-700 dark:text-gray-200
+    }
+
+    .text-callToAttention{
+        @apply bg-clip-text bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-400 dark:from-teal-200 dark:to-cyan-400
+    }
+}

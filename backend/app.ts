@@ -25,8 +25,7 @@ class App {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
 
-        const allowedOrigins = ['http://localhost:3000',
-            'http://example.com'];
+        const allowedOrigins = ['http://localhost:3000', 'http://example.com'];
 
         this.express.use(cors({
             origin: function(origin : string, callback: any) {
@@ -39,7 +38,8 @@ class App {
                     return callback(new Error(msg), false);
                 }
                 return callback(null, true);
-            }
+            },
+            credentials: true
         }));
     }
 

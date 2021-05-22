@@ -6,8 +6,8 @@
           <div class="flex items-center justify-between w-full md:w-auto">
             <a href="#" @click="sendHome()">
               <span class="sr-only">Workflow</span>
-              <img class="h-8 w-auto sm:h-10" src="https://tailwindui.com/img/logos/workflow-mark-teal-200-cyan-400.svg"
-                   alt=""/>
+              <img class="h-24" src="../../assets/PointPoker_Logo.png"
+                   alt="Point Poker Logo"/>
             </a>
             <div class="-mr-2 flex items-center md:hidden">
               <PopoverButton
@@ -32,8 +32,8 @@
         <div class="rounded-lg shadow-md bg-primaryLight dark:bg-primaryDark ring-1 ring-black ring-opacity-5 overflow-hidden">
           <div class="px-5 pt-4 flex items-center justify-between">
             <div>
-              <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-teal-500-cyan-600.svg"
-                   alt=""/>
+              <img class="h-20 w-auto" src="../../assets/PointPoker_Logo.png"
+                   alt="Point Poker Logo"/>
             </div>
             <div class="-mr-2">
               <PopoverButton
@@ -80,8 +80,9 @@ export default {
   data() {
     return {
       navigation: [
+        {name: 'Home', href: '/'},
         {name: 'Play', href: '#'},
-        {name: 'About', href: '#'}
+        {name: 'About', href: '/about'}
       ]
     }
   },
