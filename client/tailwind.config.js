@@ -15,9 +15,14 @@ module.exports = {
         primaryDark: colors.blueGray["900"],
         primaryDarkHover: colors.blueGray["800"],
         secondaryLight: colors.blueGray["300"],
+        secondaryLightHover: colors.blueGray["300"],
         secondaryDark: colors.blueGray["800"],
+        secondaryDarkHover: colors.blueGray["600"],
         textLight: colors.gray["700"],
-        textDark: colors.gray["200"]
+        textDark: colors.gray["200"],
+        secondaryTextDark: colors.gray["400"],
+        textLightHover: colors.gray["900"],
+        textDarkHover: colors.gray["300"]
       }
     }
   },

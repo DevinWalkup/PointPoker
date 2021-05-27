@@ -51,16 +51,15 @@
 </template>
 
 <script>
-import AppStore from '../stores/AppStore.ts';
 import {useMeta} from "vue-meta";
 export default {
-  name: "About.vue",
+  name: "About",
 
-  setup() {
+  mounted() {
     useMeta({
       title: `About`,
       meta: [
-        {name:'description', content: `${AppStore.AppName} provides a solution for teams to estimate the effort or relative size for stories.`},
+        {name:'description', content: `${this.$appStore.AppName} provides a solution for teams to estimate the effort or relative size for stories.`},
         {property: 'og:title', content: `About`},
         {name: 'robots', content:'index,follow'}
       ]

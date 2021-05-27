@@ -81,7 +81,7 @@ export default {
     return {
       navigation: [
         {name: 'Home', href: '/'},
-        {name: 'Play', href: '#'},
+        {name: 'Play', href: '/play'},
         {name: 'About', href: '/about'}
       ]
     }
