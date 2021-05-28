@@ -14,6 +14,8 @@ const gameSchema = new Schema({
     users: [],
     pointType: {type: PointType, default: PointType.FIBONACCI},
     createdDate: { type: Date, default: Date.now },
+    autoShowVotes: Boolean,
+    autoSwitchStory: Boolean
 })
 
 mongoose.model('games', gameSchema);

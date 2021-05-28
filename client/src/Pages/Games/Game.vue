@@ -29,7 +29,9 @@
         Set user role
       </template>
       <template #body>
-        <span class="font-bold">{{ selectedUser.name }}</span> is currently <span class="font-bold">{{ selectedUser.role }}</span>.
+        <span class="font-bold">{{ selectedUser.name }}</span> is currently <span class="font-bold">{{
+          selectedUser.role
+        }}</span>.
         Do you want to make them <span class="font-bold">{{ resultingRole }}</span>?
       </template>
       <template #confirmText>
@@ -45,7 +47,7 @@
           </h2>
           <div class="flex flex-wrap content-end">
             <Button type="button" @click="startLeaveGame">Leave Game</Button>
-            <Button type="error" @click="startDeleteGame" v-if="$userStore.isEditor()">Delete Game</Button>
+            <Button type="error" @click="startDeleteGame" v-if="$userStore.isAdmin()">Delete Game</Button>
           </div>
         </div>
       </div>
@@ -171,8 +173,8 @@
           </div>
           <div class="flex flex-1 mb-3 space-x-4 p-2">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Total Participants: </span>{{ $gameStore.game.users.length }}</p>
-            <p class="text-textLight dark:text-textDark"><span class="font-bold">Total Votes: </span>{{ totalVotes }}
+                class="font-bold">Participants: </span>{{ $gameStore.game.users.length }}</p>
+            <p class="text-textLight dark:text-textDark"><span class="font-bold">Votes: </span>{{ totalVotes }}
             </p>
             <div
                 @click="copyLink"
@@ -192,25 +194,35 @@
           </div>
           <CurrentStory @story-update="updateGame" v-if="$socketStore.socketSet"/>
         </div>
-        <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
-             v-if="$gameStore.hasUsers">
-          <div>
-            <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-              Users
-            </p>
-            <div class="flex flex-1 justify-center pb-3 mt-2">
-              <div class="px-2 w-full justify-between">
-                <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-8">
-                  <li v-for="(user, idx) in $gameStore.users()" :key="idx"
-                      class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover">
-                    <div class="w-full flex items-center justify-between text-center p-3">
-                      <div class="flex-1 text-center w-full">
-                        <h3 class="text-textLight dark:text-textDark text-md font-bold">{{ user.name }}</h3>
+        <div class="space-y-3">
+          <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
+               v-if="$gameStore.hasUsers">
+            <div>
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Users
+              </p>
+              <div class="flex flex-1 justify-center pb-3 mt-2">
+                <div class="px-2 w-full justify-between">
+                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-8">
+                    <li v-for="(user, idx) in $gameStore.users()" :key="idx"
+                        class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover">
+                      <div class="w-full flex items-center justify-between text-center p-3">
+                        <div class="flex-1 text-center w-full">
+                          <h3 class="text-textLight dark:text-textDark text-md font-bold">{{ user.name }}</h3>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
+                </div>
               </div>
+            </div>
+          </div>
+          <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
+            <div class="text-textLight dark:text-textDark text-center pt-3" v-if="!$gameStore.game.stories.length > 0">
+              No stories added yet!
+            </div>
+            <div class="text-textLight dark:text-textDark pt-3" v-else>
+              <GameStories />
             </div>
           </div>
         </div>
@@ -232,11 +244,13 @@ import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
 import {GameEvents, UserEvents} from "../../../../backend/Types/SocketEvents";
 import UserService from "../../services/UserService";
 import {RoleType} from "../../../../backend/Types/UserTypes";
+import GameStories from "../../components/Stories/GameStories.vue";
 
 export default {
   name: "Game",
 
   components: {
+    GameStories,
     Button,
     Modal,
     CurrentStory,
@@ -273,11 +287,13 @@ export default {
     this.initializeSockets();
 
     if (this.$userStore.joinedUser) {
-      this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
-    }
-
-    if (!this.$gameStore.game) {
+      this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
       this.populateGame();
+    }
+    else{
+      UserService.GetCurrentUser().then(() => {
+        this.populateGame();
+      });
     }
   },
 
@@ -321,16 +337,16 @@ export default {
 
               that.$alertStore.warning({"message": "Game has been deleted the admin user!"});
 
-              this.$router.push('/');
+              that.$router.push('/');
 
-              this.$nextTick(() => {
+              that.$nextTick(() => {
                 that.socket.delete();
-                this.$gameStore.reset();
+                that.$gameStore.reset();
               })
             })
 
-            this.$socketStore.socket.on('client_user_role_change', function(data) {
-              if (data.userId !== that.$userStore.user.userId){
+            this.$socketStore.socket.on('client_user_role_change', function (data) {
+              if (data.userId !== that.$userStore.user.userId) {
                 return;
               }
 
@@ -383,6 +399,8 @@ export default {
 
       GameService.submitStoryPoint(data).then(() => {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+
+        this.handleAutoSwitchStory();
       });
     },
 
@@ -402,6 +420,10 @@ export default {
     },
 
     toggleVoteVisibility() {
+      if (!this.$userStore.isAdmin()){
+        return;
+      }
+
       GameService.toggleStoryVotesVisible({gameId: this.$gameStore.game.gameId}).then(() => {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
       });
@@ -410,9 +432,10 @@ export default {
     updateGame() {
       this.populateGame();
 
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.$forceUpdate();
-      })
+      }, 200)
+
     },
 
     startLeaveGame() {
@@ -438,7 +461,7 @@ export default {
         return;
       }
 
-      if (this.$userStore.user.roleType !== RoleType.ADMIN){
+      if (!this.$userStore.isAdmin()) {
         return;
       }
 
@@ -462,18 +485,65 @@ export default {
     },
 
     changeUserRole() {
-      let data = {currentUserId: this.$userStore.user.userId, userId: this.selectedUser.userId, roleType: this.resultingRoleId};
+      let data = {
+        currentUserId: this.$userStore.user.userId,
+        userId: this.selectedUser.userId,
+        roleType: this.resultingRoleId
+      };
       this.showChangeRoleModal = false
       this.selectedUser = null;
       this.resultingRoleId = null;
       this.resultingRole = null;
 
       UserService.UpdateUserRole(data).then((user) => {
-          if (!user) {
-            return;
-          }
+        if (!user) {
+          return;
+        }
 
-          this.$socketStore.emitEvent(UserEvents.ROLE_CHANGE, {userId: user.userId});
+        this.$socketStore.emitEvent(UserEvents.ROLE_CHANGE, {userId: user.userId});
+      })
+    },
+
+    handleAutoToggleVotes() {
+      if (!this.$userStore.isAdmin()){
+        return;
+      }
+
+      if (!this.$gameStore.autoShowVotes) {
+        return;
+      }
+
+      if (this.totalVotes === this.$gameStore.users().length) {
+        this.toggleVoteVisibility();
+      }
+    },
+
+    handleAutoSwitchStory() {
+      debugger;
+      if (!this.$userStore.isAdmin()){
+        return;
+      }
+
+      if (!this.$gameStore.autoSwitchStory) {
+        return;
+      }
+
+      if (!this.$gameStore.nextStory){
+        return;
+      }
+
+      let story = this.$gameStore.nextStory
+
+      if (!story){
+        return;
+      }
+
+      let data = {gameId: this.$gameStore.game.gameId, ...story};
+
+
+      GameService.setCurrentStory(data).then(() => {
+        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        this.updateGame();
       })
     }
   },
@@ -483,6 +553,14 @@ export default {
       if (newVal !== oldVal) {
         this.setTotalVotes();
       }
+    },
+
+    totalVotes(newVal, oldVal) {
+      if (newVal === oldVal) {
+        return;
+      }
+
+      this.handleAutoToggleVotes();
     }
   }
 }

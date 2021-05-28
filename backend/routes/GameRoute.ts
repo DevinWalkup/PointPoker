@@ -16,7 +16,7 @@ import {UserService} from "../services/UserService";
 class GameRoute {
     public express: express.Application;
     private logger: Logger;
-    private gameService : GameService
+    private gameService: GameService
 
     constructor() {
         this.express = express();
@@ -37,7 +37,9 @@ class GameRoute {
                     gameDescription: data.gameDescription,
                     gameStories: data.gameStories,
                     // @ts-ignore
-                    pointType: PointType[parseInt(data.pointType)]
+                    pointType: PointType[parseInt(data.pointType)],
+                    autoShowVotes: data.autoShowVotes,
+                    autoSwitchStory: data.autoSwitchStory
                 }
 
             let erroredFields = []
@@ -65,8 +67,8 @@ class GameRoute {
 
             this.gameService.CreateGame(params).then((game: any) => {
                 if (!req.session.user) {
-                    let userService : UserService = new UserService();
-                    userService.GetUser(game.users[0].userId).then((user : User) => {
+                    let userService: UserService = new UserService();
+                    userService.GetUser(game.users[0].userId).then((user: User) => {
                         req.session.user = user;
                         req.session.save();
                     });
@@ -101,16 +103,16 @@ class GameRoute {
             }
 
             // @ts-ignore
-            let role : RoleType = RoleType[user.roleType];
+            let role: RoleType = RoleType[user.roleType];
 
-            if (role === RoleType.USER){
+            if (role === RoleType.USER) {
                 res.status(401).send({"message": "You are not authorized to add stories!"});
                 return;
             }
 
             let data = req.body;
 
-            let params : CreateStoryProps = {
+            let params: CreateStoryProps = {
                 StoryType: data.StoryType,
                 Story: data.Story,
                 Notes: data.Notes,
@@ -122,15 +124,15 @@ class GameRoute {
 
             let erroredFields = []
 
-            if (params.StoryType < 0){
+            if (params.StoryType < 0) {
                 erroredFields.push("Story Type");
             }
 
-            if (!params.GameId){
+            if (!params.GameId) {
                 erroredFields.push("Game Id");
             }
 
-            if (erroredFields.length > 0){
+            if (erroredFields.length > 0) {
                 res.status(400).send(
                     {
                         "message": "There were errors",
@@ -141,7 +143,7 @@ class GameRoute {
             }
 
             this.gameService.AddStory(params).then((game) => {
-                res.status(200).send({"game" : game});
+                res.status(200).send({"game": game});
                 return;
             }).catch((err) => {
                 res.status(500).send({"message": err});
@@ -152,9 +154,9 @@ class GameRoute {
         this.express.get('/getGame', (req, res) => {
             this.logger.endpoint(`/games${req.url}`)
 
-            let gameId : String = req.query.gameId.toString();
+            let gameId: String = req.query.gameId.toString();
 
-            if (!gameId){
+            if (!gameId) {
                 res.status(400).send({"message": "Game was not found!"});
                 return;
             }
@@ -200,9 +202,9 @@ class GameRoute {
                 return res.status(400).send({"message": "GameId was not provided!"});
             }
 
-            this.gameService.SetCurrentStory(data.storyId, data.gameId).then((resp : Game | String) =>{
-                if (typeof resp === 'string'){
-                    return res.status(400).send({"message" : resp});
+            this.gameService.SetCurrentStory(data.storyId, data.gameId).then((resp: Game | String) => {
+                if (typeof resp === 'string') {
+                    return res.status(400).send({"message": resp});
                 }
 
                 return res.status(200).send({"game": resp});
@@ -217,20 +219,20 @@ class GameRoute {
         this.express.patch('/story/vote', (req, res) => {
             this.logger.endpoint(`/games${req.url}`);
 
-            let data : CastVoteProps = req.body;
+            let data: CastVoteProps = req.body;
 
-            if (!req.session.user){
-                return res.status(400).send({"message" : "There was an error casting the vote!"})
+            if (!req.session.user) {
+                return res.status(400).send({"message": "There was an error casting the vote!"})
             }
 
-            this.gameService.AddVote(data, req.session.user).then((game : Game | String) => {
+            this.gameService.AddVote(data, req.session.user).then((game: Game | String) => {
 
-                if (typeof game === 'string'){
+                if (typeof game === 'string') {
                     return res.status(400).send({"message": game});
                 }
 
                 return res.status(200).send({"game": game});
-            }).catch((err) =>{
+            }).catch((err) => {
                 this.logger.error(err);
                 return res.status(500).send({"message": err})
             })
@@ -239,7 +241,7 @@ class GameRoute {
         this.express.patch('/story/setStoryPoint', (req, res) => {
             this.logger.endpoint(`/games${req.url}`);
 
-            let data : SetStoryPointProps = req.body;
+            let data: SetStoryPointProps = req.body;
 
             this.gameService.SetStoryValue(data).then((resp: Game | String) => {
                 if (typeof resp === 'string') {
@@ -256,7 +258,7 @@ class GameRoute {
         this.express.patch('/story/toggleVotesVisible', (req, res) => {
             this.logger.endpoint(`/games${req.url}`);
 
-            let data : ToggleStoryVotesVisibleProps = req.body;
+            let data: ToggleStoryVotesVisibleProps = req.body;
 
             this.gameService.ToggleStoryVotesVisible(data).then((resp: Game | String) => {
                 if (typeof resp === 'string') {
@@ -273,16 +275,16 @@ class GameRoute {
         this.express.patch('/story', (req, res) => {
             this.logger.endpoint(`/games${req.url}`);
 
-            let data : UpdateStoryProps = req.body;
+            let data: UpdateStoryProps = req.body;
 
-            this.gameService.UpdateStory(data).then((game : Game | String) => {
+            this.gameService.UpdateStory(data).then((game: Game | String) => {
 
-                if (typeof game === 'string'){
+                if (typeof game === 'string') {
                     return res.status(400).send({"message": game});
                 }
 
                 return res.status(200).send({"game": game});
-            }).catch((err) =>{
+            }).catch((err) => {
                 this.logger.error(err);
                 return res.status(500).send({"message": err})
             })
@@ -291,15 +293,15 @@ class GameRoute {
         this.express.delete('/story', (req, res) => {
             this.logger.endpoint(`/games${req.url}`);
 
-            let data : DeleteStoryProps = req.body;
+            let data: DeleteStoryProps = req.body;
 
-            this.gameService.DeleteStory(data).then((game : Game | String) => {
-                if (typeof game === 'string'){
+            this.gameService.DeleteStory(data).then((game: Game | String) => {
+                if (typeof game === 'string') {
                     return res.status(400).send({"message": game});
                 }
 
                 return res.status(200).send({"game": game});
-            }).catch((err) =>{
+            }).catch((err) => {
                 this.logger.error(err);
                 return res.status(500).send({"message": err})
             })

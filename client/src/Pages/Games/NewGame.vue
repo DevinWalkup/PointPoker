@@ -18,6 +18,8 @@
               <Select v-if="hasPointTypes" validator="select" id="game_point_type" :items="pointTypes" :show-select-option="false" :default-selected-item="defaultPointType" v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
               <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
               <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories" description="Copy and paste to import stories into your game">Game Stories</TextArea>
+              <Toggle v-model="formData.autoShowVotes">Automatically show votes when all users vote?</Toggle>
+              <Toggle v-model="formData.autoSwitchStory">Automatically switch to the next story when estimate has been set?</Toggle>
           </div>
         </div>
       </div>
@@ -47,10 +49,20 @@ import GameService from '../../services/GameService'
 import Button from "../../components/Fields/Button.vue";
 import points from "../../stores/PointStore"
 
+import UserService from "../../services/UserService";
+import Toggle from "../../components/Fields/Toggle.vue";
+
 export default {
   name: "New Game",
 
-  components: {Button, Select, TextArea, Input},
+  components: {
+    Toggle,
+    Button,
+    Select,
+    TextArea,
+    Input,
+
+  },
 
   data() {
     return {
@@ -60,6 +72,8 @@ export default {
         gameDescription: '',
         gameStories: '',
         gamePointType: 0,
+        autoShowVotes: false,
+        autoSwitchStory: false,
       },
       pointTypes: [],
       defaultPointType: 0
@@ -82,9 +96,11 @@ export default {
   },
 
   mounted() {
-    if (this.$userStore.user) {
-      this.formData.userName = this.$userStore.user.name;
-    }
+    UserService.GetCurrentUser().then(() => {
+      if (this.$userStore.user) {
+        this.formData.userName = this.$userStore.user.name;
+      }
+    })
   },
 
   computed: {

@@ -26,6 +26,10 @@ class UserStore {
         return this.state.userRole !== RoleType[RoleType.USER];
     }
 
+    public isAdmin() : boolean {
+        return this.state.userRole === RoleType[RoleType.ADMIN];
+    }
+
     public setUser(user) {
         this.state.user = user;
 

@@ -18,7 +18,9 @@ export interface CreateGameParams {
     gameName: String,
     gameDescription: String,
     gameStories: String,
-    pointType: PointType
+    pointType: PointType,
+    autoShowVotes: Boolean,
+    autoSwitchStory: Boolean
 }
 
 export interface Game {

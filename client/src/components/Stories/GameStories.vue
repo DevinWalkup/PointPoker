@@ -20,9 +20,12 @@
         <TrashIcon class="text-red-400 w-5 h-5 cursor-pointer" v-show="showHoverIcons(story)"
                    @click="askDeleteStory(story)"/>
       </div>
-      <div class="absolute right-2 top-2">
+      <div class="absolute right-2 top-2 space-x-2">
               <span class="items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
                     v-if="isCurrent(story)">Current</span>
+        <span class="items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" v-if="story.storyPoint">Estimate: {{
+            story.storyPoint
+          }}</span>
         <span
             class="items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 cursor-pointer"
             @click="setCurrentStory(story)"
@@ -104,6 +107,10 @@ export default {
 
     showHoverIcons(story) {
       if (!this.hoverStory) {
+        return;
+      }
+
+      if (!this.$userStore.isEditor()){
         return;
       }
 

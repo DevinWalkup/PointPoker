@@ -46,7 +46,7 @@ class GameStore{
         return this.state.currentStory;
     }
 
-    private setCurrentStory() {
+    public setCurrentStory() {
         this.state.currentStory = this.state.game.stories.filter(story => story.storyId === this.state.game.currentStoryId)[0] ?? null;
     }
 
@@ -79,6 +79,37 @@ class GameStore{
 
     public users(){
         return this.state.game.users;
+    }
+
+    get autoShowVotes() {
+        return this.state.game.autoShowVotes;
+    }
+
+    get nextStory() {
+        let setStory = false;
+
+        let nextStory = null;
+
+        this.state.game.stories.forEach((story) => {
+            if (nextStory) {
+                return;
+            }
+
+            if (setStory) {
+                nextStory = story;
+                return;
+            }
+
+            if (story.storyId === this.state.currentStory.storyId){
+                setStory = true;
+            }
+        })
+
+        return nextStory;
+    }
+
+    get autoSwitchStory() {
+        return this.state.game.autoSwitchStory;
     }
 }
 

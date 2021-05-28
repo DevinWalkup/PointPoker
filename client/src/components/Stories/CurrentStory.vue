@@ -36,7 +36,8 @@
               </p>
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.notes }}</p>
             </div>
-            <div v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+            <div
+                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -62,17 +63,17 @@
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
                 <div class="w-full p-2">
-                <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
-                  <Switch v-model="editVote"
-                          :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
-                    <span class="sr-only">Toggle Add Stories</span>
-                    <span aria-hidden="true"
-                          :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
-                  </Switch>
-                  <SwitchLabel as="span" class="ml-3">
-                    <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
-                  </SwitchLabel>
-                </SwitchGroup>
+                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
+                    <Switch v-model="editVote"
+                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
+                      <span class="sr-only">Toggle Add Stories</span>
+                      <span aria-hidden="true"
+                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
+                    </Switch>
+                    <SwitchLabel as="span" class="ml-3">
+                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
+                    </SwitchLabel>
+                  </SwitchGroup>
                 </div>
                 <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
                   <div class="flex-1 text-center">
@@ -92,8 +93,10 @@
                         class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
                       <div class="w-full flex items-center justify-between text-center p-3">
                         <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{ vote.castedVote }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{vote.name}}</p>
+                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
+                              vote.castedVote
+                            }}</h3>
+                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
                         </div>
                       </div>
                     </li>
@@ -117,7 +120,8 @@
               </p>
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.notes }}</p>
             </div>
-            <div v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+            <div
+                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -173,8 +177,10 @@
                         class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
                       <div class="w-full flex items-center justify-between text-center p-3">
                         <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{ vote.castedVote }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{vote.name}}</p>
+                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
+                              vote.castedVote
+                            }}</h3>
+                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
                         </div>
                       </div>
                     </li>
@@ -192,27 +198,29 @@
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 As A
               </p>
-              <Input placeholder="As a..." id="current_story_as" validator="empty" required v-model="storyData.as" />
+              <Input placeholder="As a..." id="current_story_as" validator="empty" required v-model="storyData.as"/>
             </div>
             <div>
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 I Would Like
               </p>
-              <Input placeholder="I would like..." id="current_story_like" validator="empty" required v-model="storyData.like" />
+              <Input placeholder="I would like..." id="current_story_like" validator="empty" required
+                     v-model="storyData.like"/>
             </div>
             <div>
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 So That
               </p>
-              <Input placeholder="So that..." id="current_story_so" validator="empty" required v-model="storyData.so" />
+              <Input placeholder="So that..." id="current_story_so" validator="empty" required v-model="storyData.so"/>
             </div>
             <div>
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Notes
               </p>
-              <TextArea placeholder="Notes.." id="current_story_notes" v-model="storyData.notes" />
+              <TextArea placeholder="Notes.." id="current_story_notes" v-model="storyData.notes"/>
             </div>
-            <div v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+            <div
+                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -268,8 +276,10 @@
                         class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
                       <div class="w-full flex items-center justify-between text-center p-3">
                         <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{ vote.castedVote }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{vote.name}}</p>
+                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
+                              vote.castedVote
+                            }}</h3>
+                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
                         </div>
                       </div>
                     </li>
@@ -294,7 +304,8 @@
               </p>
               <TextArea id="current_story_notes" placeholder="Notes..." v-model="storyData.notes"/>
             </div>
-            <div v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+            <div
+                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -350,8 +361,10 @@
                         class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
                       <div class="w-full flex items-center justify-between text-center p-3">
                         <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{ vote.castedVote }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{vote.name}}</p>
+                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
+                              vote.castedVote
+                            }}</h3>
+                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
                         </div>
                       </div>
                     </li>
@@ -420,19 +433,17 @@ export default {
     let that = this;
 
     this.$socketStore.socket.on('client_update_game', function (data) {
-      that.$nextTick(() => {
-        if (data.gameId !== that.$gameStore.game.gameId) {
-          return;
-        }
+      if (data.gameId !== that.$gameStore.game.gameId) {
+        return;
+      }
 
+      that.setLocalData();
 
-        that.setLocalData();
+      that.getCurrentVote();
+
+      setTimeout(() => {
         that.$forceUpdate();
-
-        that.$nextTick(() => {
-          that.getCurrentVote();
-        })
-      })
+      }, 200);
     })
 
     if (!this.$gameStore.currentStory) {

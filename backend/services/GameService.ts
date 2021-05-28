@@ -47,7 +47,9 @@ export class GameService {
             name: data.gameName,
             users,
             description: data.gameDescription,
-            pointType: data.pointType})
+            pointType: data.pointType,
+            autoShowVotes: data.autoShowVotes ? data.autoShowVotes : false,
+            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false})
 
         await game.save();
 
@@ -161,6 +163,8 @@ export class GameService {
         if (!game) {
             return 'Game not found!';
         }
+
+        console.log(storyId);
 
         game.currentStoryId = storyId;
 
