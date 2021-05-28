@@ -13,7 +13,8 @@ class UserStore {
     constructor() {
         this.state = reactive({
             user: null,
-            userRole: RoleType.USER
+            userRole: RoleType.USER,
+            joiningUser: false
         })
     }
 
@@ -29,6 +30,14 @@ class UserStore {
         this.state.user = user;
 
         this.state.userRole = RoleType[user.roleType];
+    }
+
+    public setJoiningUser(value) {
+        this.state.joiningUser = value;
+    }
+
+    get joinedUser() {
+        return this.state.joiningUser;
     }
 
 }

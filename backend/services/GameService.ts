@@ -38,9 +38,9 @@ export class GameService {
             throw new Error(err);
         })
 
-        let users : Array<String> = new Array<String>();
+        let users : Array<any> = new Array<any>();
 
-        users.push(user.userId);
+        users.push({userId: user.userId.toString(), name: user.name});
 
         let game = await Game.create({
             gameId: uuidv4(),
@@ -48,8 +48,6 @@ export class GameService {
             users,
             description: data.gameDescription,
             pointType: data.pointType})
-
-        console.log(game.users)
 
         await game.save();
 
@@ -117,7 +115,7 @@ export class GameService {
         return true;
     }
 
-    public async AddVote(data: CastVoteProps, userId: String): Promise<Game | String> {
+    public async AddVote(data: CastVoteProps, user: User): Promise<Game | String> {
         let game = await Game.findOne({"gameId": data.gameId});
 
         if (!game) {
@@ -134,16 +132,15 @@ export class GameService {
             return "There was an error getting the story";
         }
 
-        console.log("AddVote UserId", userId);
-
         let vote: Votes = {
             voteId: uuidv4(),
-            userId: userId,
+            userId: user.userId,
+            name: user.name,
             castedVote: data.vote
         };
 
-        if (story.votes.length > 0 && story.votes.some((vote : Votes) => {return vote.userId === userId})){
-            let existingVote = story.votes.filter((v : Votes) => {return v.userId === userId})[0]
+        if (story.votes.length > 0 && story.votes.some((vote : Votes) => {return vote.userId === user.userId})){
+            let existingVote = story.votes.filter((v : Votes) => {return v.userId === user.userId})[0]
 
             if (existingVote) {
                 existingVote.castedVote = vote.castedVote;
@@ -282,7 +279,7 @@ export class GameService {
             return "Game not found";
         }
 
-        game.users.push(user.userId);
+        game.users.push({userId: user.userId, name: user.name});
 
         game.save();
 

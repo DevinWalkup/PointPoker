@@ -1,7 +1,7 @@
 
 
 require('dotenv').config({path: '../client/.env.local'})
-import {SocketSessionProps} from "./Types/SocketTypes";
+import {SocketSessionProps, UserSocketRoleChangeProps} from "./Types/SocketTypes";
 import {Mongoose} from "./services/Mongoose";
 import {Logger} from "./logger/logger";
 import * as bodyParser from "body-parser";
@@ -9,7 +9,7 @@ import * as express from "express";
 import * as socketIo from 'socket.io';
 import Routes from "./routes/routes";
 import {createServer, Server} from 'http';
-import {GameEvents} from "./Types/SocketEvents";
+import {GameEvents, UserEvents} from "./Types/SocketEvents";
 import {GameSocketType} from "./Types/GameTypes";
 import {GameService} from "./services/GameService";
 import {SocketService} from "./services/SocketService";
@@ -136,24 +136,34 @@ export class App {
             this.socketService.SetSocketSession(socketData);
 
             socket.on(GameEvents.GAME_UPDATE, (m: GameSocketType) => {
-                this.logger.info(`[server](message): ${JSON.stringify(m)}`);
+                this.logger.socket(`${GameEvents.GAME_UPDATE}`);
                 this.io.emit('client_update_game', m);
             });
 
             socket.on(GameEvents.GAME_DELETE, (m: GameSocketType) => {
-                this.logger.info(`[server](message): ${JSON.stringify(m)}`);
-                this.socketService.DeleteSocketSession(socketData);
-                this.io.emit('client_game_was_delete', m)
+                this.logger.socket(`${GameEvents.GAME_DELETE}`);
+                this.socketService.DeleteSocketSession(socketData).then(() => {
+                    this.io.emit('client_game_was_delete', m)
+                });
             })
 
             socket.on(GameEvents.DISCONNECT, () => {
-                this.logger.info('Socket disconnected');
+                this.logger.socket(`${GameEvents.DISCONNECT}`);
             });
 
             socket.on(GameEvents.LEAVE_GAME, () => {
-                this.socketService.DeleteSocketSession(socketData);
-                this.logger.info('Socket disconnected');
+                this.logger.socket(`${GameEvents.LEAVE_GAME}`);
+
+                this.socketService.DeleteSocketSession(socketData).then(() => {
+                    this.logger.info('Socket session has ended');
+                });
+
             });
+
+            socket.on(UserEvents.ROLE_CHANGE, (m: UserSocketRoleChangeProps) => {
+                this.logger.socket(`${UserEvents.ROLE_CHANGE}`);
+                this.io.emit('client_user_role_change', m)
+            })
         });
     }
 

@@ -26,13 +26,13 @@
         <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5" v-if="isFreeForm">
           <TextArea validator="empty" id="story_story" v-model="formData.Story"
                     description="Type or copy your story as free-form text" required>Story</TextArea>
-          <TextArea validator="empty" id="story_notes" v-model="formData.Notes" required>Notes</TextArea>
+          <TextArea id="story_notes" v-model="formData.Notes">Notes</TextArea>
         </div>
         <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5" v-if="isStructured">
           <Input validator="empty" id="story_as" v-model="formData.As" required>As a/an...</Input>
           <Input validator="empty" id="story_like" v-model="formData.Like" required>I would like to...</Input>
           <Input validator="empty" id="story_so" v-model="formData.So" required>So that...</Input>
-          <TextArea validator="empty" id="story_notes" v-model="formData.Notes" required>Notes</TextArea>
+          <TextArea id="story_notes" v-model="formData.Notes">Notes</TextArea>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
       No stories added yet!
     </div>
     <div class="text-textLight dark:text-textDark pt-3" v-else>
-      <GameStories @change-story="changeStory" :socket="socket"/>
+      <GameStories @change-story="changeStory" />
     </div>
   </div>
 </template>
@@ -82,11 +82,6 @@ export default {
       type: Boolean,
       required: true
     },
-
-    socket: {
-      type: Socket,
-      required: true
-    }
   },
 
   emits: ['change-story'],
@@ -174,7 +169,7 @@ export default {
 
         this.changeStory();
 
-        this.socket.emit(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
       });
     },
 
@@ -185,7 +180,7 @@ export default {
 
       GameService.deleteGame().then(status => {
         if (status) {
-          this.socket.emit(GameEvents.GAME_DELETE, {gameId: this.$gameStore.game.gameId});
+          this.$socketStore.emitEvent(GameEvents.GAME_DELETE, {gameId: this.$gameStore.game.gameId});
           this.$router.push('/')}
       })
     },

@@ -48,11 +48,7 @@ export class SocketService {
             return;
         }
 
-        console.log(socket.userId, game.users.filter((user : String) => {return user !== socket.userId}));
-
-        game.users = game.users.filter((user : String) => {return user !== socket.userId});
-
-        console.log(game.users);
+        game.users = game.users.filter((user : any) => {return user.userId !== socket.userId});
 
         this.UpdateGameStories(socket, game);
 

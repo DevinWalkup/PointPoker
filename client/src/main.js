@@ -9,6 +9,7 @@ import GameStore from "./stores/GameStore";
 import PointStore from "./stores/PointStore";
 import UserStore from "./stores/UserStore";
 import AppStore from "./stores/AppStore";
+import SocketStore from "./stores/SocketStore";
 
 
 const app = createApp(App);
@@ -19,6 +20,7 @@ app.config.globalProperties.$gameStore = GameStore
 app.config.globalProperties.$pointStore = PointStore
 app.config.globalProperties.$userStore = UserStore
 app.config.globalProperties.$appStore = AppStore
+app.config.globalProperties.$socketStore = SocketStore
 
 app.use(createMetaManager())
 app.mount('#app')

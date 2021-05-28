@@ -22,6 +22,7 @@ export interface JoinGameUserProps {
 }
 
 export interface ChangeUserRoleProps {
+    currentUserId: String,
     userId: String,
     roleType: RoleType
 }

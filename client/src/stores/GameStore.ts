@@ -13,6 +13,7 @@ class GameStore{
             showVotes: false,
             loading: true,
             CurrentPointType: null,
+            currentVote: null
         })
     }
 
@@ -70,6 +71,14 @@ class GameStore{
 
     public setPointType() {
         this.state.CurrentPointType = points.Points.filter(p => p.pointTypeId === this.state.game.pointType)[0];
+    }
+
+    get hasUsers() {
+        return this.state.game.users.length > 0
+    }
+
+    public users(){
+        return this.state.game.users;
     }
 }
 

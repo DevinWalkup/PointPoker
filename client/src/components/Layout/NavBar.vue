@@ -1,6 +1,6 @@
 <template>
   <Popover as="header" class="relative">
-    <div class="bg-primaryLight dark:bg-primaryDark pt-6 pb-6">
+    <div class="bg-primaryLight dark:bg-primaryDark pt-6 pb-2">
       <nav class="relative max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6" aria-label="Global">
         <div class="flex items-center flex-1">
           <div class="flex items-center justify-between w-full md:w-auto">

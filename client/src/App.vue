@@ -49,8 +49,7 @@ export default {
   },
 
   mounted() {
-    UserService.isLoggedIn().then(() => {
-      console.log(this.$userStore.user);
+    UserService.GetCurrentUser().then(() => {
       this.loading = false;
     });
   }

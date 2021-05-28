@@ -5,3 +5,7 @@ export enum GameEvents {
     GAME_DELETE = 'game_delete',
     LEAVE_GAME = 'leave_game'
 }
+
+export enum UserEvents {
+    ROLE_CHANGE = "role_change"
+}

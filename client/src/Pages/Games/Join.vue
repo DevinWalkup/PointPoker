@@ -42,6 +42,7 @@ import GameService from "../../services/GameService";
 import Loader from "../../components/Loader.vue";
 import Input from "../../components/Fields/Input.vue";
 import Button from "../../components/Fields/Button.vue";
+import {GameEvents} from "../../../../backend/Types/SocketEvents";
 
 export default {
   name: "Join",
@@ -79,13 +80,19 @@ export default {
     },
 
     joinGame() {
-      let data = {gameId: this.$route.params.id, name: this.formData.userName};
+      let data = {gameId: this.$route.params.id};
+
+      if (this.$userStore.user) {
+        data.name = this.$userStore.user.name;
+      }
+      else{
+        data.name = this.formData.userName;
+      }
 
       UserService.JoinGame(data).then((success) => {
-
-        console.log("Join game user", this.$userStore.user);
         if (success) {
           this.$router.push(`/game/${this.$gameStore.game.gameId}`);
+
           return;
         }
 

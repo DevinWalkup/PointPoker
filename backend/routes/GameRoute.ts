@@ -66,7 +66,7 @@ class GameRoute {
             this.gameService.CreateGame(params).then((game: any) => {
                 if (!req.session.user) {
                     let userService : UserService = new UserService();
-                    userService.GetUser(game.users[0]).then((user : User) => {
+                    userService.GetUser(game.users[0].userId).then((user : User) => {
                         req.session.user = user;
                         req.session.save();
                     });
@@ -75,7 +75,7 @@ class GameRoute {
                 res.status(200)
                     .send({
                         "gameId": game.gameId,
-                        "user": game.users[0]
+                        "user": game.users[0].userId
                     });
                 return;
             }).catch((err) => {
@@ -219,13 +219,11 @@ class GameRoute {
 
             let data : CastVoteProps = req.body;
 
-            console.log(req.session.user);
-
             if (!req.session.user){
                 return res.status(400).send({"message" : "There was an error casting the vote!"})
             }
 
-            this.gameService.AddVote(data, req.session.user.userId).then((game : Game | String) => {
+            this.gameService.AddVote(data, req.session.user).then((game : Game | String) => {
 
                 if (typeof game === 'string'){
                     return res.status(400).send({"message": game});

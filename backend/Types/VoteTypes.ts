@@ -1,6 +1,7 @@
 export interface Votes {
     voteId : String
     userId: String,
+    name: String,
     castedVote: String
 }
 
