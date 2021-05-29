@@ -47,7 +47,7 @@ export class App {
     }
 
     private configureCors(): void {
-        const allowedOrigins = ['http://localhost:3000', 'http://example.com'];
+        const allowedOrigins = [process.env.APP_URL];
 
         this._app.use(cors({
             origin: function (origin: string, callback: any) {
