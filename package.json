@@ -25,5 +25,5 @@
     "@heroicons/vue": "^1.0.1",
     "@types/node": "^15.6.0",
     "@vue/compiler-sfc": "^3.0.5"
-  },
+  }
 }
