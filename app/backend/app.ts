@@ -45,14 +45,13 @@ export class App {
     }
 
     private configureCors(): void {
-        const allowedOrigins = [process.env.APP_URL];
-
         this._app.use(cors({
             origin: function (origin: string, callback: any) {
+                const allowedOriginParts = ["localhost", "point-poker-staging"]
                 // allow requests with no origin
                 // (like mobile apps or curl requests)
                 if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) === -1) {
+                if (!allowedOriginParts.some(element => origin.includes(element))){
                     let msg = 'The CORS policy for this site does not ' +
                         'allow access from the specified Origin.';
                     return callback(new Error(msg), false);
