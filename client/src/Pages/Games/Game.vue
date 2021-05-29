@@ -114,7 +114,7 @@
               </div>
               <div class="w-full border-l-2 pl-3 space-y-2 border-gray-200">
                 <Input type="text" id="story_total" v-model="storyTotal" required>Total Points</Input>
-                <Button type="submit">Set Estimate</Button>
+                <Button type="submit" :show-loader="submitting">Set Estimate</Button>
               </div>
             </form>
 
@@ -293,7 +293,8 @@ export default {
       },
       resultingRole: null,
       resultingRoleId: null,
-      updateChildren: false
+      updateChildren: false,
+      submitting: false
     }
   },
 
@@ -417,6 +418,7 @@ export default {
       if (!this.storyTotal) {
         return;
       }
+      this.submitting = true;
 
       let data = {gameId: this.$gameStore.game.gameId, storyPoint: this.storyTotal};
 
@@ -426,6 +428,7 @@ export default {
         this.handleAutoSwitchStory();
 
         this.storyTotal = null;
+        this.submitting = false;
       });
     },
 

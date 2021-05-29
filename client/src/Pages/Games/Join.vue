@@ -24,7 +24,7 @@
 
       <div class="pt-5">
         <div class="flex justify-start space-x-4">
-          <Button type="submit">
+          <Button type="submit" :show-loader="submitting">
             Save
           </Button>
           <Button
@@ -57,7 +57,8 @@ export default {
       pageReady: false,
 
       formData: {
-        userName: ''
+        userName: '',
+        submitting: false
       }
     }
   },
@@ -74,6 +75,7 @@ export default {
 
   methods: {
     submitForm() {
+      this.submitting = true;
       if (!this.$route.params.id) {
         AlertStore.error({"message": "The game was not found. Please try again later!"});
         return;
@@ -99,6 +101,7 @@ export default {
             return;
           }
 
+          this.submitting = false;
           this.$router.push(`/game/${this.$route.params.id}`);
         } else {
           AlertStore.error({"message": "There was a problem joining the game. Please try again later!"});

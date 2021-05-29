@@ -3,14 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5d7a3af9-9ae6-49e4-be67-9b2d36760bc4" name="Default Changelist" comment="#6 - Mobile menu popup fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/Pages/Games/Game.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Games/Game.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/Pages/Games/NewGame.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Games/NewGame.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Fields/Button.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Fields/Button.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Layout/FooterBar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Layout/FooterBar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Loader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Loader.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Stories/CreateStory.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Stories/CreateStory.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/Pages/Games/Join.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Games/Join.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,8 +123,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.start:dev" />
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start:dev" />
         <item itemvalue="npm.postinstall" />
         <item itemvalue="npm.build" />
       </list>
