@@ -6,6 +6,8 @@ name: Point Poker Client
 on:
   release:
     types: [published, created, edited]
+    
+  workflow_dispatch:
 
 jobs:
   build:
