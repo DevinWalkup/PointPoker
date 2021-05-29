@@ -80,6 +80,8 @@ export class App {
 
         if (this._app.get('env') === 'development') {
             sessionOptions.cookie.secure = false;
+            sessionOptions.cookie.httpOnly = true;
+            sessionOptions.cookie.sameSite = "lax"
         }
 
         this._app.set('trust proxy', 1);

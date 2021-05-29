@@ -39,7 +39,7 @@
 
     <div class="pt-5">
       <div class="flex justify-start space-x-4">
-        <Button type="submit">
+        <Button type="submit" :show-loader="submitting">
           Save
         </Button>
         <Button v-if="!hasStories" @click="cancel" type="button">
@@ -110,6 +110,8 @@ export default {
         GameId: ''
       },
 
+      submitting: false,
+
       stories: this.$gameStore.game.stories
     }
   },
@@ -156,6 +158,7 @@ export default {
     },
 
     submitForm() {
+      this.submitting = true;
       if (!this.formData.GameId){
         this.formData.GameId = this.$gameStore.game.gameId;
       }
@@ -174,6 +177,7 @@ export default {
         this.changeStory();
 
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        this.submitting = false;
       });
     },
 

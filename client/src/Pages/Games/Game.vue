@@ -39,12 +39,19 @@
       </template>
     </Modal>
 
+    <Loader v-if="isLoading" loader-size="medium"/>
     <div class="max-w-max lg:max-w-7xl mx-auto" v-if="!isLoading">
       <div class="relative z-10 mb-8 md:mb-2 md:px-6">
         <div class="flex flex-1 justify-between text-base max-w-prose lg:max-w-none">
+          <div class="relative">
           <h2 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-callToAttention sm:text-4xl">
             {{ $gameStore.game.name }}
           </h2>
+          <p class="text-sm tracking-wide text-textLight dark:text-textDark pt-2"
+             v-if="$gameStore.game.description">
+            {{ $gameStore.game.description }}
+          </p>
+          </div>
           <div class="flex flex-wrap content-end">
             <Button type="button" @click="startLeaveGame">Leave Game</Button>
             <Button type="error" @click="startDeleteGame" v-if="$userStore.isAdmin()">Delete Game</Button>
@@ -147,7 +154,8 @@
                 </SwitchLabel>
               </SwitchGroup>
             </div>
-            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame" :force-update="updateChildren"/>
+            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame"
+                         :force-update="updateChildren"/>
           </div>
         </div>
       </div>
@@ -245,11 +253,13 @@ import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
 import UserService from "../../services/UserService";
 import GameStories from "../../components/Stories/GameStories.vue";
 import {GameEvents, RoleType, UserEvents} from "../../constants/contants";
+import Loader from "../../components/Loader.vue";
 
 export default {
   name: "Game",
 
   components: {
+    Loader,
     GameStories,
     Button,
     Modal,
