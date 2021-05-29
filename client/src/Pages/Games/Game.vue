@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <CurrentStory v-if="$gameStore.currentStory" @story-update="updateGame"/>
+          <CurrentStory v-if="$gameStore.currentStory" @story-update="updateGame" :force-reload="updateChildren"/>
         </div>
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
@@ -107,7 +107,7 @@
               </div>
               <div class="w-full border-l-2 pl-3 space-y-2 border-gray-200">
                 <Input type="text" id="story_total" v-model="storyTotal" required>Total Points</Input>
-                <Button type="submit">Accept Round</Button>
+                <Button type="submit">Set Estimate</Button>
               </div>
             </form>
 
@@ -135,7 +135,7 @@
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
             <div class="flex flex-1 mb-3 space-x-4">
-              <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
+              <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories">
                 <Switch v-model="toggleCreateStory"
                         :class="[toggleCreateStory ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
                   <span class="sr-only">Toggle Add Stories</span>
@@ -147,7 +147,7 @@
                 </SwitchLabel>
               </SwitchGroup>
             </div>
-            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame"/>
+            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame" :force-update="updateChildren"/>
           </div>
         </div>
       </div>
@@ -173,7 +173,8 @@
           </div>
           <div class="flex flex-1 mb-3 space-x-4 p-2">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Participants: </span>{{ $gameStore.game.users.length }}</p>
+                class="font-bold">Participants: </span>{{ $gameStore.game.users ? $gameStore.game.users.length : 0 }}
+            </p>
             <p class="text-textLight dark:text-textDark"><span class="font-bold">Votes: </span>{{ totalVotes }}
             </p>
             <div
@@ -192,7 +193,7 @@
               </div>
             </div>
           </div>
-          <CurrentStory @story-update="updateGame" v-if="$socketStore.socketSet"/>
+          <CurrentStory @story-update="updateGame" v-if="$socketStore.socketSet" :force-reload="updateChildren"/>
         </div>
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
@@ -218,11 +219,11 @@
             </div>
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
-            <div class="text-textLight dark:text-textDark text-center pt-3" v-if="!$gameStore.game.stories.length > 0">
+            <div class="text-textLight dark:text-textDark text-center pt-3" v-if="!$gameStore.hasStories > 0">
               No stories added yet!
             </div>
             <div class="text-textLight dark:text-textDark pt-3" v-else>
-              <GameStories />
+              <GameStories :force-update="updateChildren"/>
             </div>
           </div>
         </div>
@@ -277,23 +278,31 @@ export default {
       storyTotal: '',
       showCheck: false,
       showChangeRoleModal: false,
-      selectedUser: null,
+      selectedUser: {
+        name: '',
+        role: ''
+      },
       resultingRole: null,
-      resultingRoleId: null
+      resultingRoleId: null,
+      updateChildren: false
     }
   },
 
   beforeMount() {
+    if (!this.$userStore.user) {
+      this.$alertStore.error({"message": "An unknown error occurred!"});
+      this.$router.push('/');
+      return;
+    }
+
+    this.populateGame();
+  },
+
+  mounted() {
     this.initializeSockets();
 
     if (this.$userStore.joinedUser) {
       this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
-      this.populateGame();
-    }
-    else{
-      UserService.GetCurrentUser().then(() => {
-        this.populateGame();
-      });
     }
   },
 
@@ -305,10 +314,12 @@ export default {
 
   methods: {
     populateGame() {
-      GameService.loadGame(this.$route.params.id).then(game => {
+      this.updateChildren = true;
+      GameService.loadGame(this.$route.params.id).then(() => {
         this.showAddStory = this.$userStore.isEditor();
         this.showVoteScreen = !this.showAddStory;
         this.setTotalVotes();
+        this.updateChildren = false;
 
         if (!this.$gameStore.game) {
           this.$alertStore.warning({"message": "Game not found!"});
@@ -318,6 +329,16 @@ export default {
     },
 
     initializeSockets() {
+      let gameId;
+      if (!this.$route.params.id) {
+        if (!this.$gameStore.game) {
+          this.$alertStore.error({"message": "An error occurred!"});
+          this.$router.push('/');
+        }
+
+        gameId = this.$gameStore.game.gameId;
+      }
+
       this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id)
           .then(() => {
             let that = this;
@@ -337,12 +358,7 @@ export default {
 
               that.$alertStore.warning({"message": "Game has been deleted the admin user!"});
 
-              that.$router.push('/');
-
-              that.$nextTick(() => {
-                that.socket.delete();
-                that.$gameStore.reset();
-              })
+              that.leaveGame();
             })
 
             this.$socketStore.socket.on('client_user_role_change', function (data) {
@@ -377,16 +393,14 @@ export default {
 
     deleteGame() {
       let gameId = this.$gameStore.game.gameId;
-      GameService.deleteGame().then(status => {
-        if (status) {
-          this.$socketStore.emitEvent(GameEvents.GAME_DELETE, {gameId: gameId});
+      GameService.deleteGame().then(() => {
+        this.$router.push('/');
 
-          this.$router.push('/');
+        this.$nextTick(() => {
+          this.$gameStore.reset();
+        })
 
-          this.$nextTick(() => {
-            this.$gameStore.reset();
-          })
-        }
+        this.$socketStore.emitEvent(GameEvents.GAME_DELETE, {gameId: gameId});
       })
     },
 
@@ -401,6 +415,8 @@ export default {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
 
         this.handleAutoSwitchStory();
+
+        this.storyTotal = null;
       });
     },
 
@@ -420,12 +436,14 @@ export default {
     },
 
     toggleVoteVisibility() {
-      if (!this.$userStore.isAdmin()){
+      if (!this.$userStore.isAdmin()) {
         return;
       }
 
       GameService.toggleStoryVotesVisible({gameId: this.$gameStore.game.gameId}).then(() => {
+        this.updateChildren = true;
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
+        this.updateChildren = false;
       });
     },
 
@@ -443,20 +461,14 @@ export default {
     },
 
     leaveGame() {
+      this.$router.push('/');
+
       this.showLeaveModal = false;
 
       this.$socketStore.emitEvent(GameEvents.LEAVE_GAME, {gameId: this.$gameStore.game.gameId})
-
-      this.$router.push('/');
-
-      this.$nextTick(() => {
-        this.socket.delete();
-        this.$gameStore.reset();
-      })
     },
 
     setUser(user) {
-      debugger;
       if (user.userId === this.$userStore.user.userId) {
         return;
       }
@@ -490,12 +502,17 @@ export default {
         userId: this.selectedUser.userId,
         roleType: this.resultingRoleId
       };
+
       this.showChangeRoleModal = false
-      this.selectedUser = null;
-      this.resultingRoleId = null;
-      this.resultingRole = null;
 
       UserService.UpdateUserRole(data).then((user) => {
+        this.selectedUser = {
+          name: '',
+          role: ''
+        };
+        this.resultingRoleId = null;
+        this.resultingRole = null;
+
         if (!user) {
           return;
         }
@@ -505,7 +522,7 @@ export default {
     },
 
     handleAutoToggleVotes() {
-      if (!this.$userStore.isAdmin()){
+      if (!this.$userStore.isAdmin()) {
         return;
       }
 
@@ -519,8 +536,7 @@ export default {
     },
 
     handleAutoSwitchStory() {
-      debugger;
-      if (!this.$userStore.isAdmin()){
+      if (!this.$userStore.isAdmin()) {
         return;
       }
 
@@ -528,13 +544,13 @@ export default {
         return;
       }
 
-      if (!this.$gameStore.nextStory){
+      if (!this.$gameStore.nextStory) {
         return;
       }
 
       let story = this.$gameStore.nextStory
 
-      if (!story){
+      if (!story) {
         return;
       }
 
@@ -542,10 +558,17 @@ export default {
 
 
       GameService.setCurrentStory(data).then(() => {
+        this.updateChildren = true;
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
         this.updateGame();
+        this.updateChildren = false;
       })
     }
+  },
+
+  unmounted() {
+    this.$socketStore.delete();
+    this.$gameStore.reset();
   },
 
   watch: {

@@ -19,6 +19,8 @@ export class UserService {
         })
 
         if (user) {
+            user.roleType = data.roleType;
+            await user.save();
             return user;
         }
 
@@ -39,6 +41,8 @@ export class UserService {
         })
 
         if (user) {
+            user.roleType = RoleType.USER;
+            await user.save();
             return user;
         }
 
@@ -61,8 +65,12 @@ export class UserService {
        return user;
     }
 
-    public async GetUser(userId : String ) : Promise<User> {
+    public async GetUserById(userId : String ) : Promise<User> {
         return User.findOne({userId: userId});
+    }
+
+    public async GetUserByName(name: String) : Promise<User> {
+        return User.findOne({name: name});
     }
 
     public async DeleteUser(userId: String): Promise<boolean> {

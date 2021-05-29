@@ -10,21 +10,27 @@
         </div>
       </div>
       <template v-if="!canEdit">
-        <div :id="`structured_body_${$gameStore.currentStory.storyId}`" v-if="isStructured">
+        <div :id="`structured_body_${$gameStore.currentStory.storyId}`">
           <div class="p-4 text-center space-y-4">
-            <div>
+            <div v-if="!isStructured">
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Story
+              </p>
+              <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.story }}</p>
+            </div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 As A
               </p>
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.as }}</p>
             </div>
-            <div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 I Would Like
               </p>
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.like }}</p>
             </div>
-            <div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 So That
               </p>
@@ -37,7 +43,7 @@
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.notes }}</p>
             </div>
             <div
-                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+                v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -57,97 +63,13 @@
                 </div>
               </div>
             </div>
-            <div v-if="getCurrentVote($gameStore.currentStory.votes) && !$gameStore.currentStory.votesVisible">
+            <div v-if="currentVote && !$gameStore.currentStory.votesVisible">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
                 Current Vote
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
                 <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
-                    <Switch v-model="editVote"
-                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
-                      <span class="sr-only">Toggle Add Stories</span>
-                      <span aria-hidden="true"
-                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
-                    </Switch>
-                    <SwitchLabel as="span" class="ml-3">
-                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
-                    </SwitchLabel>
-                  </SwitchGroup>
-                </div>
-                <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
-                  <div class="flex-1 text-center">
-                    <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ currentVote }}</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-if="$gameStore.currentStory.votesVisible">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Votes
-              </p>
-              <div class="flex flex-1 justify-center pb-3 mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
-                    <li v-for="(vote, idx) in $gameStore.currentStory.votes" :key="idx"
-                        class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
-                      <div class="w-full flex items-center justify-between text-center p-3">
-                        <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
-                              vote.castedVote
-                            }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div :id="`structured_body_${$gameStore.currentStory.storyId}`" v-if="!isStructured">
-          <div class="p-4 text-center space-y-4">
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Story
-              </p>
-              <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.story }}</p>
-            </div>
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Notes
-              </p>
-              <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.notes }}</p>
-            </div>
-            <div
-                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Vote
-              </p>
-              <div class="flex flex-1 justify-center mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
-                    <li v-for="(point, idx) in points" :key="idx"
-                        class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover"
-                        @click="castVote(point)">
-                      <div class="w-full flex items-center justify-between text-center p-3 space-x-3">
-                        <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ point }}</h3>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div v-if="getCurrentVote($gameStore.currentStory.votes) && !$gameStore.currentStory.votesVisible">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
-                Current Vote
-              </p>
-              <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
-                <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
+                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">
                     <Switch v-model="editVote"
                             :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
                       <span class="sr-only">Toggle Add Stories</span>
@@ -191,23 +113,30 @@
           </div>
         </div>
       </template>
-      <template v-else>
-        <div :id="`structured_body_${$gameStore.currentStory.storyId}`" v-if="isStructured">
+      <template v-if="canEdit">
+        <div :id="`structured_body_${$gameStore.currentStory.storyId}`">
           <div class="p-4 text-center space-y-4">
-            <div>
+            <div v-if="!isStructured">
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Story
+              </p>
+              <Input type="text" required validator="empty" id="current_story_story" placeholder="Story..."
+                     v-model="storyData.story"/>
+            </div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 As A
               </p>
               <Input placeholder="As a..." id="current_story_as" validator="empty" required v-model="storyData.as"/>
             </div>
-            <div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 I Would Like
               </p>
               <Input placeholder="I would like..." id="current_story_like" validator="empty" required
                      v-model="storyData.like"/>
             </div>
-            <div>
+            <div v-if="isStructured">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 So That
               </p>
@@ -220,7 +149,7 @@
               <TextArea placeholder="Notes.." id="current_story_notes" v-model="storyData.notes"/>
             </div>
             <div
-                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
+                v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -240,98 +169,13 @@
                 </div>
               </div>
             </div>
-            <div v-if="getCurrentVote($gameStore.currentStory.votes) && !$gameStore.currentStory.votesVisible">
+            <div v-if="currentVote && !$gameStore.currentStory.votesVisible">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
                 Current Vote
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
                 <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
-                    <Switch v-model="editVote"
-                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
-                      <span class="sr-only">Toggle Add Stories</span>
-                      <span aria-hidden="true"
-                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
-                    </Switch>
-                    <SwitchLabel as="span" class="ml-3">
-                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
-                    </SwitchLabel>
-                  </SwitchGroup>
-                </div>
-                <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
-                  <div class="flex-1 text-center">
-                    <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ currentVote }}</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-if="$gameStore.currentStory.votesVisible">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Votes
-              </p>
-              <div class="flex flex-1 justify-center pb-3 mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
-                    <li v-for="(vote, idx) in $gameStore.currentStory.votes" :key="idx"
-                        class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover">
-                      <div class="w-full flex items-center justify-between text-center p-3">
-                        <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-bold truncate">{{
-                              vote.castedVote
-                            }}</h3>
-                          <p class="text-textLight dark:text-textDark font-normal text-sm">{{ vote.name }}</p>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div :id="`structured_body_${$gameStore.currentStory.storyId}`" v-if="!isStructured">
-          <div class="p-4 text-center space-y-4">
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Story
-              </p>
-              <Input type="text" required validator="empty" id="current_story_story" placeholder="Story..."
-                     v-model="storyData.story"/>
-            </div>
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Notes
-              </p>
-              <TextArea id="current_story_notes" placeholder="Notes..." v-model="storyData.notes"/>
-            </div>
-            <div
-                v-if="!$gameStore.currentStory.votesVisible && !getCurrentVote($gameStore.currentStory.votes) || editVote">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Vote
-              </p>
-              <div class="flex flex-1 justify-center mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
-                    <li v-for="(point, idx) in points" :key="idx"
-                        class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-primaryLight dark:hover:bg-secondaryDarkHover"
-                        @click="castVote(point)">
-                      <div class="w-full flex items-center justify-between text-center p-3 space-x-3">
-                        <div class="flex-1 text-center">
-                          <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ point }}</h3>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div v-if="getCurrentVote($gameStore.currentStory.votes) && !$gameStore.currentStory.votesVisible">
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
-                Current Vote
-              </p>
-              <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
-                <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.game.stories.length > 0">
+                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">
                     <Switch v-model="editVote"
                             :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
                       <span class="sr-only">Toggle Add Stories</span>
@@ -405,9 +249,16 @@ export default {
 
   mixins: [utilMixin],
 
+  props: {
+    forceReload: {
+      type: Boolean,
+      required: false
+    }
+  },
+
   data() {
     return {
-      points: this.$gameStore.currentPoints,
+      points: null,
       currentVote: null,
       isMounted: false,
       editVote: false,
@@ -430,29 +281,15 @@ export default {
 
   mounted() {
     this.isMounted = false;
-    let that = this;
-
-    this.$socketStore.socket.on('client_update_game', function (data) {
-      if (data.gameId !== that.$gameStore.game.gameId) {
-        return;
-      }
-
-      that.setLocalData();
-
-      that.getCurrentVote();
-
-      setTimeout(() => {
-        that.$forceUpdate();
-      }, 200);
-    })
 
     if (!this.$gameStore.currentStory) {
       this.isMounted = true;
       return;
     }
 
-    this.getCurrentVote();
     this.setLocalData();
+
+    this.points = this.$gameStore.currentPoints;
 
     this.isMounted = true;
   },
@@ -474,14 +311,12 @@ export default {
       this.originalData = JSON.parse(JSON.stringify(this.storyData));
     },
 
-    getCurrentVote(votes) {
-      if (!votes) {
-        return false;
+    getCurrentVote() {
+      if (!this.$gameStore.currentStory || !this.$gameStore.currentStory.votes || this.$gameStore.currentStory.votes.length === 0) {
+        this.currentVote = null;
       }
 
-      this.currentVote = votes.filter(vote => vote.userId === this.$userStore.user.userId)[0]?.castedVote;
-
-      return !!this.currentVote;
+      this.currentVote = this.$gameStore.currentStory ? this.$gameStore.currentStory.votes.filter(vote => vote.userId === this.$userStore.user.userId)[0]?.castedVote : null;
     },
 
     updateCurrentStory() {
@@ -494,8 +329,14 @@ export default {
 
         this.$emit('story-update');
       })
-    }
+    },
 
+    handleStoryUpdate() {
+      this.points = this.$gameStore.currentPoints;
+      this.setLocalData();
+      this.getCurrentVote();
+      this.$forceUpdate();
+    }
   },
 
   watch: {
@@ -510,7 +351,15 @@ export default {
           return;
         }
 
+        this.points = this.$gameStore.currentPoints;
+
         this.debounce(this.updateCurrentStory, 2000);
+      }
+    },
+
+    forceReload(newVal, oldVal) {
+      if (oldVal && newVal === false) {
+        this.handleStoryUpdate();
       }
     }
   }

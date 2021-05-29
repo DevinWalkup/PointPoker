@@ -137,13 +137,13 @@ export class App {
 
             socket.on(GameEvents.GAME_UPDATE, (m: GameSocketType) => {
                 this.logger.socket(`${GameEvents.GAME_UPDATE}`);
-                this.io.emit('client_update_game', m);
+                this.io.emit('client_update_game', {gameId: socketData.gameId});
             });
 
             socket.on(GameEvents.GAME_DELETE, (m: GameSocketType) => {
                 this.logger.socket(`${GameEvents.GAME_DELETE}`);
                 this.socketService.DeleteSocketSession(socketData).then(() => {
-                    this.io.emit('client_game_was_delete', m)
+                    this.io.emit('client_game_was_delete', {gameId: socketData.gameId})
                 });
             })
 
@@ -158,6 +158,7 @@ export class App {
                     this.logger.info('Socket session has ended');
                 });
 
+                this.io.emit('client_update_game', {gameId: socketData.gameId});
             });
 
             socket.on(UserEvents.ROLE_CHANGE, (m: UserSocketRoleChangeProps) => {

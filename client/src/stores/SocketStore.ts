@@ -32,6 +32,12 @@ class SocketStore {
     get socketSet() {
         return this.state.socket !== null;
     }
+
+    delete() {
+        this.state.socket.disconnect();
+
+        this.state.socket = null;
+    }
 }
 
 export {SocketStore}

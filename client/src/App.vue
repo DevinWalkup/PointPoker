@@ -50,7 +50,9 @@ export default {
 
   mounted() {
     UserService.GetCurrentUser().then(() => {
-      this.loading = false;
+      this.$nextTick(() => {
+        this.loading = false;
+      })
     });
   }
 }

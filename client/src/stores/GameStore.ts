@@ -47,6 +47,10 @@ class GameStore{
     }
 
     public setCurrentStory() {
+        if (!this.state.game.stories) {
+            return null;
+        }
+
         this.state.currentStory = this.state.game.stories.filter(story => story.storyId === this.state.game.currentStoryId)[0] ?? null;
     }
 
@@ -74,7 +78,7 @@ class GameStore{
     }
 
     get hasUsers() {
-        return this.state.game.users.length > 0
+        return this.state.game.users ? this.state.game.users.length > 0 : false;
     }
 
     public users(){
@@ -110,6 +114,10 @@ class GameStore{
 
     get autoSwitchStory() {
         return this.state.game.autoSwitchStory;
+    }
+
+    get hasStories() {
+        return this.state.game.stories ? this.state.game.stories.length > 0 : false;
     }
 }
 

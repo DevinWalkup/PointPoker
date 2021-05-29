@@ -3,6 +3,7 @@ import {Logger} from "../logger/logger";
 import {ChangeUserRoleProps, JoinGameUserProps, RoleType, User} from "../Types/UserTypes";
 import {UserService} from "../services/UserService";
 import {GameService} from "../services/GameService";
+import {JoinGameProps} from "../Types/GameTypes";
 
 class UserRoute {
     public express: express.Application
@@ -20,11 +21,11 @@ class UserRoute {
         this.express.get('/', (req, resp) => {
             this.logger.endpoint('/users/');
 
-            if (!req.session.user){
+            if (!req.session.user) {
                 return resp.status(200).send({"user": null});
             }
 
-            this.userService.GetUser(req.session.user.userId).then((user) => {
+            this.userService.GetUserById(req.session.user.userId).then((user) => {
                 if (!user) {
                     return resp.status(200).send({"user": null});
                 }
@@ -56,62 +57,49 @@ class UserRoute {
                 return;
             }
 
-            let user = this.userService.CreateJoinUser(data).then((ud) => {
-                if (typeof ud === 'string') {
-                    return resp.status(400).send({"message": ud});
+            let gameService: GameService = new GameService();
+
+            gameService.HandleJoinGame(data).then((g) => {
+                if (typeof g === 'string') {
+                    return resp.status(400).send({"message": g})
                 }
 
-                let userObj = ud as User
+                let data = g as JoinGameProps;
 
-                if (!req.session.user) {
-                    req.session.user = userObj;
-                    req.session.save();
-                } else {
-                    req.session.user = userObj;
+                if (!req.session.user){
+                    req.session.user = data.user;
                     req.session.save();
                 }
 
-                let gameService: GameService = new GameService();
-
-                gameService.AddUser(data.gameId, userObj).then((g) => {
-                    if (typeof g === 'string') {
-                        return resp.status(400).send({"message": g});
-                    }
-
-                    return resp.status(200).send({"user": userObj, "game": g})
-                })
-            }).catch((err) => {
-                this.logger.error(err);
-
-                return resp.status(500).send({"message": err});
+                return resp.status(200).send({"user": data.user, "game": data.game});
             })
         })
 
         this.express.get('/getUser', (req, resp) => {
-            let userId : String = req.query.userId.toString();
+            let userId: String = req.query.userId.toString();
 
             if (!userId) {
-                return resp.status(400).send({"message" : "UserId was not provided!"});
+                return resp.status(400).send({"message": "UserId was not provided!"});
             }
 
-            this.userService.GetUser(userId).then((user) => {
+            this.userService.GetUserById(userId).then((user) => {
                 if (!user) {
-                    return resp.status(400).send({"message" : "User was not found!"});
+                    return resp.status(400).send({"message": "User was not found!"});
                 }
 
-                return resp.status(200).send({"user" : user});
+                return resp.status(200).send({"user": user});
             })
         })
 
         this.express.patch('/updateUserRole', (req, resp) => {
-            let data : ChangeUserRoleProps = req.body;
+            let data: ChangeUserRoleProps = req.body;
 
             if (!data.currentUserId) {
                 return resp.status(400).send({"message": "The user was not supplied!"});
             }
 
-            this.userService.GetUser(data.currentUserId).then((user) => {
-                if (user.roleType !== RoleType.ADMIN){
+            this.userService.GetUserById(data.currentUserId).then((user) => {
+                if (user.roleType !== RoleType.ADMIN) {
                     return resp.status(401).send({"message": "Invalid permissions to perform action!"});
                 }
 

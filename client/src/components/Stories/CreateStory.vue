@@ -53,7 +53,7 @@
       No stories added yet!
     </div>
     <div class="text-textLight dark:text-textDark pt-3" v-else>
-      <GameStories @change-story="changeStory" />
+      <GameStories @change-story="changeStory" :force-update="forceUpdate"/>
     </div>
   </div>
 </template>
@@ -82,6 +82,11 @@ export default {
       type: Boolean,
       required: true
     },
+
+    forceUpdate: {
+      type: Boolean,
+      required: true
+    }
   },
 
   emits: ['change-story'],

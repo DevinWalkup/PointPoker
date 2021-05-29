@@ -6,14 +6,13 @@ enum RoleType {
     USER
 }
 
-
 class UserStore {
     private state;
 
     constructor() {
         this.state = reactive({
             user: null,
-            userRole: RoleType.USER,
+            userRole: null,
             joiningUser: false
         })
     }
@@ -31,9 +30,9 @@ class UserStore {
     }
 
     public setUser(user) {
-        this.state.user = user;
-
         this.state.userRole = RoleType[user.roleType];
+
+        this.state.user = user;
     }
 
     public setJoiningUser(value) {

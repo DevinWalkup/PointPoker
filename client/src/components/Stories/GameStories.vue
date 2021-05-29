@@ -31,7 +31,7 @@
             @click="setCurrentStory(story)"
             v-if="!isCurrent(story) && showHoverIcons(story)">Set Current</span>
       </div>
-      <div class="flex-1 min-w-0" :class="{'mt-2' : isCurrent(story)}">
+      <div class="flex-1 min-w-0 pt-2" :class="{'mt-2' : isCurrent(story)}">
         <div class="focus:outline-none">
           <div class="relative w-full">
             <p class="text-sm font-medium text-textLight dark:text-textDark" v-if="!isStructuredStory(story)">
@@ -73,6 +73,13 @@ export default {
       hoverStory: null,
       confirmDelete: false,
       storyToDelete: null
+    }
+  },
+
+  props: {
+    forceUpdate: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -144,10 +151,10 @@ export default {
   },
 
   watch: {
-    '$gameStore.game.stories': {
-      deep: true,
-      handler(newVal) {
-        this.stories = newVal;
+    forceUpdate(newVal, oldVal) {
+      if (oldVal && newVal === false) {
+        console.log("Hm");
+        this.stories = this.$gameStore.game.stories;
       }
     }
   }

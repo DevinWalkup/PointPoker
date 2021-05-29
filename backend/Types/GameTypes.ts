@@ -33,3 +33,8 @@ export interface Game {
     pointType: PointType,
     createdDate: Date
 }
+
+export interface JoinGameProps {
+    game: any
+    user: User
+}

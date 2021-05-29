@@ -68,7 +68,7 @@ class GameRoute {
             this.gameService.CreateGame(params).then((game: any) => {
                 if (!req.session.user) {
                     let userService: UserService = new UserService();
-                    userService.GetUser(game.users[0].userId).then((user: User) => {
+                    userService.GetUserById(game.users[0].userId).then((user: User) => {
                         req.session.user = user;
                         req.session.save();
                     });
@@ -77,7 +77,7 @@ class GameRoute {
                 res.status(200)
                     .send({
                         "gameId": game.gameId,
-                        "user": game.users[0].userId
+                        "user": req.session.user
                     });
                 return;
             }).catch((err) => {

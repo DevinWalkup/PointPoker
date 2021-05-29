@@ -1,9 +1,9 @@
 import {
     CreateGameParams,
-    Game,
+    Game, JoinGameProps,
 } from "../Types/GameTypes";
 import {UserService} from "./UserService";
-import {CreateUserProps, RoleType, User} from "../Types/UserTypes";
+import {CreateUserProps, JoinGameUserProps, RoleType, User} from "../Types/UserTypes";
 import {Logger} from "../logger/logger";
 import {CastVoteProps, Votes} from "../Types/VoteTypes";
 import {
@@ -276,6 +276,18 @@ export class GameService {
         return game;
     }
 
+    public async UserInGame(gameId: String, user : User) : Promise<boolean | String> {
+        let game = await Game.findOne({"gameId": gameId});
+
+        if (!game) {
+            return "Game not found";
+        }
+
+        return !!game.users.some((gameUser: any) => {
+            return gameUser.userId === user.userId
+        });
+    }
+
     public async AddUser(gameId: String, user : User) : Promise<Game | String> {
         let game = await Game.findOne({"gameId": gameId});
 
@@ -288,5 +300,47 @@ export class GameService {
         game.save();
 
         return game;
+    }
+
+    public async HandleJoinGame(data : JoinGameUserProps) : Promise<JoinGameProps | String> {
+        let userService = new UserService();
+
+        let user = await userService.GetUserByName(data.name);
+
+        if (!user) {
+            return await this.CreateJoinUserAndAddToGame(data, userService);
+        }
+
+        let userInGame = await this.UserInGame(data.gameId, user);
+
+        if (typeof userInGame === 'string'){
+            return userInGame;
+        }
+
+        let game = await this.GetGame(data.gameId);
+
+        if (userInGame) {
+            return {user: user, game: game};
+        }
+
+        return await this.CreateJoinUserAndAddToGame(data, userService);
+    }
+
+    private async CreateJoinUserAndAddToGame(data: JoinGameUserProps, userService : UserService) : Promise<JoinGameProps | String>{
+        let user = await userService.CreateJoinUser(data);
+
+        if (typeof user === 'string') {
+            return user;
+        }
+
+        let userObj = user
+
+        let gameObj = this.AddUser(data.gameId, userObj);
+
+        if (typeof gameObj === 'string'){
+            return gameObj;
+        }
+
+        return {user: userObj, game: gameObj};
     }
 }

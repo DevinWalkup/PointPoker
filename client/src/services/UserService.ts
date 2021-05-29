@@ -6,15 +6,23 @@ import GameStore from "../stores/GameStore";
 
 class UserService {
     public async GetCurrentUser() {
-        await HttpClient.get('/api/users').then((res) => {
-            if (res.data.user){
-                UserStore.setUser(res.data.user);
-            }
-        })
+        let response : AxiosResponse = await HttpClient.get('/api/users');
+
+        if (response.data.user){
+            UserStore.setUser(response.data.user);
+
+            return true;
+        }
+
+        return false;
     }
 
     public async JoinGame(data : JoinGameUserProps) {
         let response : AxiosResponse = await HttpClient.post('/api/users/joinGame', data);
+
+        if (!response) {
+            return false;
+        }
 
         if (response.data) {
             UserStore.setUser(response.data.user);

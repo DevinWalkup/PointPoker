@@ -1,12 +1,14 @@
 <template>
   <div class="w-full md:w-9/12 grid items-center mx-auto pb-5">
     <Loader loader-size="large" v-if="!pageReady"/>
-    <form class="p-4 space-y-8 divide-y divide-gray-200 bg-secondaryLight dark:bg-secondaryDark rounded-lg p-3 shadow-lg" @submit.prevent="submitForm" v-if="pageReady">
+    <form
+        class="p-4 space-y-8 divide-y divide-gray-200 bg-secondaryLight dark:bg-secondaryDark rounded-lg p-3 shadow-lg"
+        @submit.prevent="submitForm" v-if="pageReady">
       <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div>
           <div>
             <h2 class="text-3xl pb-3 leading-8 font-extrabold tracking-tight text-callToAttention">
-              Join Game: {{$gameStore.game.name}}
+              Join Game: {{ $gameStore.game.name }}
             </h2>
             <p class="mt-3 max-w-2xl text-sm text-textLight dark:text-textDark">
               All you need to do is just enter your name and then you can join the game!
@@ -14,7 +16,8 @@
           </div>
 
           <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-            <Input validator="empty" placeholder="Enter your name..." id="user_name" auto-complete="name" v-model="formData.userName" required>Name</Input>
+            <Input validator="empty" placeholder="Enter your name..." id="user_name" auto-complete="name"
+                   v-model="formData.userName" required>Name</Input>
           </div>
         </div>
       </div>
@@ -61,7 +64,7 @@ export default {
 
   mounted() {
     GameService.loadGame(this.$route.params.id).then(() => {
-      if (this.$userStore.user){
+      if (this.$userStore.user) {
         this.joinGame();
       }
 
@@ -72,7 +75,7 @@ export default {
   methods: {
     submitForm() {
       if (!this.$route.params.id) {
-        AlertStore.error({"message" : "The game was not found. Please try again later!"});
+        AlertStore.error({"message": "The game was not found. Please try again later!"});
         return;
       }
 
@@ -84,19 +87,23 @@ export default {
 
       if (this.$userStore.user) {
         data.name = this.$userStore.user.name;
-      }
-      else{
+      } else {
         data.name = this.formData.userName;
       }
 
       UserService.JoinGame(data).then((success) => {
         if (success) {
-          this.$router.push(`/game/${this.$gameStore.game.gameId}`);
+          if (!this.$route.params.id) {
+            AlertStore.error({"message": "There was a problem joining the game. Please try again later!"});
+            this.$router.push('/');
+            return;
+          }
 
-          return;
+          this.$router.push(`/game/${this.$route.params.id}`);
+        } else {
+          AlertStore.error({"message": "There was a problem joining the game. Please try again later!"});
+          this.$router.push('/');
         }
-
-        AlertStore.error({"message" : "There was a problem joining the game. Please try again later!"});
       })
     },
 
