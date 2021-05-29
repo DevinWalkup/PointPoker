@@ -13,4 +13,12 @@ export class Logger {
     public error(logText: string): void {
         console.log(new Date() + "error:::::" + logText);
     }
+
+    public endpoint(endpoint: string): void{
+        console.log(new Date() + "url:::::::" + endpoint);
+    }
+
+    public socket(event: string): void {
+        console.log(new Date() + "socket:::::::" + event);
+    }
 }

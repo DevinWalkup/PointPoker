@@ -1,20 +1,12 @@
-import * as http from "http";
-import App from "./app";
-import { Logger } from "./logger/logger";
+import { App } from './app';
+import {User} from "./Types/UserTypes";
 
-const port = 3080;
+declare module 'express-session' {
+    export interface SessionData {
+        user: User;
+    }
+}
 
-App.set("port", port);
-const server = http.createServer(App);
+let app = new App().app;
 
-server.listen(port);
-
-const logger = new Logger();
-
-server.on("listening", function(): void {
-    const addr = server.address();
-    const bind = (typeof addr === "string") ? `pipe ${addr}` : `port ${addr.port}`;
-    logger.info(`Listening on ${bind}`);
-});
-
-module.exports = App;
+export { app };

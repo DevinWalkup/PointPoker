@@ -1,15 +1,14 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import { Logger } from "../logger/logger";
-import User from "./user";
+import Games from "./GameRoute"
+import User from './UserRoute'
 
 class Routes {
 
     public express: express.Application;
     public logger: Logger;
 
-    // array to hold users
-    public users: any[];
 
     constructor() {
         this.express = express();
@@ -25,9 +24,8 @@ class Routes {
     }
 
     private routes(): void {
-
-        // user route
-        this.express.use("/", User);
+        this.express.use("/users", User)
+        this.express.use("/games", Games)
     }
 }
 
