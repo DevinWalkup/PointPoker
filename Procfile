@@ -1,2 +1,1 @@
-buildweb: npm run build
-runweb: npm run serve
+web: npm run serve
