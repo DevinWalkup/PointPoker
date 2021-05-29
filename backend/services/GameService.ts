@@ -38,7 +38,7 @@ export class GameService {
             throw new Error(err);
         })
 
-        let users : Array<any> = new Array<any>();
+        let users: Array<any> = new Array<any>();
 
         users.push({userId: user.userId.toString(), name: user.name});
 
@@ -49,15 +49,35 @@ export class GameService {
             description: data.gameDescription,
             pointType: data.pointType,
             autoShowVotes: data.autoShowVotes ? data.autoShowVotes : false,
-            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false})
+            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false
+        })
 
         await game.save();
+
+        if (data.gameStories) {
+
+            let stories = data.gameStories.split(',');
+            console.log("Game has stories", stories);
+            for (const idx in stories) {
+                let newStory: CreateStoryProps = {
+                    StoryType: 0,
+                    Story: stories[idx].trim(),
+                    Notes: '',
+                    As: '',
+                    Like: '',
+                    So: '',
+                    GameId: game.gameId
+                };
+
+                game = await this.AddStory(newStory);
+            };
+        }
 
         return game;
     }
 
     public async AddStory(data: CreateStoryProps): Promise<Game | String> {
-        let story : any
+        let story: any
 
         if (data.StoryType === StoryType.Structured) {
             story = {
@@ -124,11 +144,13 @@ export class GameService {
             return "Game was not found";
         }
 
-        if (game.stories.length <= 0){
+        if (game.stories.length <= 0) {
             return "There were no stories found for the game!";
         }
 
-        let story = game.stories.filter((s : Story) => {return s.storyId === data.storyId})[0];
+        let story = game.stories.filter((s: Story) => {
+            return s.storyId === data.storyId
+        })[0];
 
         if (!story) {
             return "There was an error getting the story";
@@ -141,14 +163,17 @@ export class GameService {
             castedVote: data.vote
         };
 
-        if (story.votes.length > 0 && story.votes.some((vote : Votes) => {return vote.userId === user.userId})){
-            let existingVote = story.votes.filter((v : Votes) => {return v.userId === user.userId})[0]
+        if (story.votes.length > 0 && story.votes.some((vote: Votes) => {
+            return vote.userId === user.userId
+        })) {
+            let existingVote = story.votes.filter((v: Votes) => {
+                return v.userId === user.userId
+            })[0]
 
             if (existingVote) {
                 existingVote.castedVote = vote.castedVote;
             }
-        }
-        else {
+        } else {
             story.votes.push(vote);
         }
 
@@ -173,10 +198,10 @@ export class GameService {
         return game;
     }
 
-    public async SetStoryValue(data: SetStoryPointProps) : Promise<Game | String>{
+    public async SetStoryValue(data: SetStoryPointProps): Promise<Game | String> {
         let game = await Game.findOne({"gameId": data.gameId});
 
-        if (!game){
+        if (!game) {
             return "Game was not found";
         }
 
@@ -184,7 +209,9 @@ export class GameService {
             return "There are no stories for the game!";
         }
 
-        let story = game.stories.filter((story : Story) => {return story.storyId === game.currentStoryId})[0];
+        let story = game.stories.filter((story: Story) => {
+            return story.storyId === game.currentStoryId
+        })[0];
 
         if (!story) {
             return "The story was not found!";
@@ -197,10 +224,10 @@ export class GameService {
         return game;
     }
 
-    public async ToggleStoryVotesVisible(data: ToggleStoryVotesVisibleProps) : Promise<Game | String>{
+    public async ToggleStoryVotesVisible(data: ToggleStoryVotesVisibleProps): Promise<Game | String> {
         let game = await Game.findOne({"gameId": data.gameId});
 
-        if (!game){
+        if (!game) {
             return "Game was not found";
         }
 
@@ -208,7 +235,9 @@ export class GameService {
             return "There are no stories for the game!";
         }
 
-        let story = game.stories.filter((story : Story) => {return story.storyId === game.currentStoryId})[0];
+        let story = game.stories.filter((story: Story) => {
+            return story.storyId === game.currentStoryId
+        })[0];
 
         if (!story) {
             return "The story was not found!";
@@ -221,10 +250,10 @@ export class GameService {
         return game;
     }
 
-    public async UpdateStory(data: UpdateStoryProps) : Promise<Game | String>{
+    public async UpdateStory(data: UpdateStoryProps): Promise<Game | String> {
         let game = await Game.findOne({"gameId": data.gameId});
 
-        if (!game){
+        if (!game) {
             return "Game was not found";
         }
 
@@ -232,7 +261,9 @@ export class GameService {
             return "There are no stories for the game!";
         }
 
-        let story = game.stories.filter((story : Story) => {return story.storyId === data.storyId})[0];
+        let story = game.stories.filter((story: Story) => {
+            return story.storyId === data.storyId
+        })[0];
 
         story.notes = data.notes;
         story.story = data.story;
@@ -246,10 +277,10 @@ export class GameService {
         return game;
     }
 
-    public async DeleteStory(data: DeleteStoryProps) : Promise<Game | String> {
+    public async DeleteStory(data: DeleteStoryProps): Promise<Game | String> {
         let game = await Game.findOne({"gameId": data.gameId});
 
-        if (!game){
+        if (!game) {
             return "Game was not found";
         }
 
@@ -257,9 +288,9 @@ export class GameService {
             return "There are no stories for the game!";
         }
 
-        let stories : Array<Story> = []
+        let stories: Array<Story> = []
 
-        game.stories.forEach((story : Story) => {
+        game.stories.forEach((story: Story) => {
             if (story.storyId !== data.storyId) {
                 stories.push(story);
             }
@@ -276,7 +307,7 @@ export class GameService {
         return game;
     }
 
-    public async UserInGame(gameId: String, user : User) : Promise<boolean | String> {
+    public async UserInGame(gameId: String, user: User): Promise<boolean | String> {
         let game = await Game.findOne({"gameId": gameId});
 
         if (!game) {
@@ -288,7 +319,7 @@ export class GameService {
         });
     }
 
-    public async AddUser(gameId: String, user : User) : Promise<Game | String> {
+    public async AddUser(gameId: String, user: User): Promise<Game | String> {
         let game = await Game.findOne({"gameId": gameId});
 
         if (!game) {
@@ -302,7 +333,7 @@ export class GameService {
         return game;
     }
 
-    public async HandleJoinGame(data : JoinGameUserProps) : Promise<JoinGameProps | String> {
+    public async HandleJoinGame(data: JoinGameUserProps): Promise<JoinGameProps | String> {
         let userService = new UserService();
 
         let user = await userService.GetUserByName(data.name);
@@ -313,7 +344,7 @@ export class GameService {
 
         let userInGame = await this.UserInGame(data.gameId, user);
 
-        if (typeof userInGame === 'string'){
+        if (typeof userInGame === 'string') {
             return userInGame;
         }
 
@@ -326,7 +357,7 @@ export class GameService {
         return await this.CreateJoinUserAndAddToGame(data, userService);
     }
 
-    private async CreateJoinUserAndAddToGame(data: JoinGameUserProps, userService : UserService) : Promise<JoinGameProps | String>{
+    private async CreateJoinUserAndAddToGame(data: JoinGameUserProps, userService: UserService): Promise<JoinGameProps | String> {
         let user = await userService.CreateJoinUser(data);
 
         if (typeof user === 'string') {
@@ -337,7 +368,7 @@ export class GameService {
 
         let gameObj = this.AddUser(data.gameId, userObj);
 
-        if (typeof gameObj === 'string'){
+        if (typeof gameObj === 'string') {
             return gameObj;
         }
 

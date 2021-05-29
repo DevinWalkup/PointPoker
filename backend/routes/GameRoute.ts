@@ -69,7 +69,6 @@ class GameRoute {
                 if (!req.session.user) {
                     let userService: UserService = new UserService();
                     userService.GetUserById(game.users[0].userId).then((user: User) => {
-                        console.log("User", user);
                         req.session.user = user;
                         req.session.save();
 

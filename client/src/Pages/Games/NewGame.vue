@@ -17,7 +17,7 @@
               <Input validator="empty" placeholder="Game name..." id="game_name" v-model="formData.gameName" required>Game Name</Input>
               <Select v-if="hasPointTypes" validator="select" id="game_point_type" :items="pointTypes" :show-select-option="false" :default-selected-item="defaultPointType" v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
               <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
-              <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories" description="Copy and paste to import stories into your game">Game Stories</TextArea>
+              <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories" description="Copy and paste to import stories into your game. Separate the stories names by a comma">Game Stories</TextArea>
               <Toggle v-model="formData.autoShowVotes">Automatically show votes when all users vote?</Toggle>
               <Toggle v-model="formData.autoSwitchStory">Automatically switch to the next story when estimate has been set?</Toggle>
           </div>
