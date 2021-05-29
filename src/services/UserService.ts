@@ -1,6 +1,6 @@
 import {HttpClient} from "./HttpClient";
 import UserStore from "../stores/UserStore";
-import {ChangeUserRoleProps, JoinGameUserProps} from "../../../backend/Types/UserTypes";
+import {ChangeUserRoleProps, JoinGameUserProps} from "../../backend/Types/UserTypes";
 import {AxiosResponse} from "axios";
 import GameStore from "../stores/GameStore";
 

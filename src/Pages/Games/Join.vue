@@ -45,7 +45,7 @@ import GameService from "../../services/GameService";
 import Loader from "../../components/Loader.vue";
 import Input from "../../components/Fields/Input.vue";
 import Button from "../../components/Fields/Button.vue";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
+
 
 export default {
   name: "Join",
@@ -114,7 +114,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

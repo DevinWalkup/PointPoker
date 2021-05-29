@@ -2,14 +2,23 @@ import {HttpClient} from "./HttpClient";
 import GameStore from "../stores/GameStore";
 import AlertStore from "../stores/AlertStore";
 import {AxiosResponse} from "axios";
-import {CastVoteProps} from "../../../backend/Types/VoteTypes";
+import {CastVoteProps} from "../../backend/Types/VoteTypes";
 import {io, Socket} from "socket.io-client";
+import UserStore from "../stores/UserStore";
 
 class GameService {
     public socket : Socket;
 
     public async createGame(items) {
-        return await HttpClient.post('/api/games/create', items)
+        let response : AxiosResponse = await HttpClient.post('/api/games/create', items);
+
+        if (response.data) {
+            UserStore.setUser(response.data.user);
+
+            return response.data.gameId;
+        }
+
+        return null;
     }
 
     public async loadGame(gameId : String) {

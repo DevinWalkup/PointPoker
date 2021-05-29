@@ -1,6 +1,6 @@
 
 
-require('dotenv').config({path: '../client/.env.local'})
+require('dotenv').config({path: './.env'})
 import {SocketSessionProps, UserSocketRoleChangeProps} from "./Types/SocketTypes";
 import {Mongoose} from "./services/Mongoose";
 import {Logger} from "./logger/logger";
@@ -114,7 +114,7 @@ export class App {
     private initSocket(): void {
         this.io = new socketIo.Server(this.server, {
             cors: {
-                origin: process.env.VITE_APP_URL,
+                origin: process.env.APP_URL,
                 credentials: true
             }
         });

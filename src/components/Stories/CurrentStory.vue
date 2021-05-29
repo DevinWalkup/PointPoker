@@ -235,7 +235,7 @@ import GameService from "../../services/GameService";
 import Input from "../Fields/Input.vue";
 import TextArea from "../Fields/TextArea.vue";
 import utilMixin from "../../scripts/util-mixin";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
+import {GameEvents} from "../../../backend/Types/SocketEvents";
 import {Switch, SwitchGroup, SwitchLabel} from '@headlessui/vue'
 
 export default {

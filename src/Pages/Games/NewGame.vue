@@ -111,11 +111,12 @@ export default {
 
   methods: {
     submitForm() {
-      GameService.createGame(this.formData).then((resp) => {
-        // Redirect user with the game id;
-        this.$userStore.setUser(resp.data.user);
-
-        let gameId = resp.data.gameId;
+      GameService.createGame(this.formData).then((gameId) => {
+        if (!gameId) {
+          this.$alertStore.error({"message": "An unknown error occurred"})
+          this.cancel();
+          return;
+        }
 
         GameService.loadGame(gameId).then((resp) => {
           this.$router.push(`/game/${gameId}`);

@@ -65,7 +65,7 @@ import GameService from "../../services/GameService";
 import GameStories from "./GameStories.vue";
 import Button from "../Fields/Button.vue";
 import {Socket} from "socket.io-client";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
+import {GameEvents} from "../../../backend/Types/SocketEvents";
 
 export default {
   name: "CreateStory",

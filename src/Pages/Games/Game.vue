@@ -242,9 +242,9 @@ import Button from "../../components/Fields/Button.vue";
 import utilMixin from "../../scripts/util-mixin";
 import Input from "../../components/Fields/Input.vue"
 import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
-import {GameEvents, UserEvents} from "../../../../backend/Types/SocketEvents";
+import {GameEvents, UserEvents} from "../../../backend/Types/SocketEvents";
 import UserService from "../../services/UserService";
-import {RoleType} from "../../../../backend/Types/UserTypes";
+import {RoleType} from "../../../backend/Types/UserTypes";
 import GameStories from "../../components/Stories/GameStories.vue";
 
 export default {

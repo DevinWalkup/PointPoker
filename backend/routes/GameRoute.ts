@@ -69,17 +69,23 @@ class GameRoute {
                 if (!req.session.user) {
                     let userService: UserService = new UserService();
                     userService.GetUserById(game.users[0].userId).then((user: User) => {
+                        console.log("User", user);
                         req.session.user = user;
                         req.session.save();
-                    });
-                }
 
-                res.status(200)
-                    .send({
-                        "gameId": game.gameId,
-                        "user": req.session.user
+                        return res.status(200)
+                            .send({
+                                "gameId": game.gameId,
+                                "user": user
+                            });
                     });
-                return;
+                } else {
+                    return res.status(200)
+                        .send({
+                            "gameId": game.gameId,
+                            "user": req.session.user
+                        });
+                }
             }).catch((err) => {
                 this.logger.error(err);
 
