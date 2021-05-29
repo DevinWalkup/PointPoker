@@ -15,13 +15,13 @@ import {SocketService} from "./services/SocketService";
 const cors = require('cors');
 
 export class App {
-    private readonly _app: express.Application;
     public static readonly PORT: number = 8080;
+    private readonly _app: express.Application;
     private server: Server;
     private io: socketIo.Server;
     private logger: Logger
     private gameService: GameService
-    private socketService : SocketService
+    private socketService: SocketService
 
     constructor() {
         this._app = express();
@@ -49,7 +49,7 @@ export class App {
                 // allow requests with no origin
                 // (like mobile apps or curl requests)
                 if (!origin) return callback(null, true);
-                if (!allowedOriginParts.some(element => origin.includes(element))){
+                if (!allowedOriginParts.some(element => origin.includes(element))) {
                     let msg = 'The CORS policy for this site does not ' +
                         'allow access from the specified Origin.';
                     return callback(new Error(msg), false);
@@ -109,7 +109,18 @@ export class App {
     private initSocket(): void {
         this.io = new socketIo.Server(this.server, {
             cors: {
-                origin: process.env.APP_URL,
+                origin: function (origin: string, callback: any) {
+                    const allowedOriginParts = ["localhost", "point-poker-staging"]
+                    // allow requests with no origin
+                    // (like mobile apps or curl requests)
+                    if (!origin) return callback(null, true);
+                    if (!allowedOriginParts.some(element => origin.includes(element))) {
+                        let msg = 'The CORS policy for this site does not ' +
+                            'allow access from the specified Origin.';
+                        return callback(new Error(msg), false);
+                    }
+                    return callback(null, true);
+                },
                 credentials: true
             }
         });
@@ -124,7 +135,7 @@ export class App {
             this.logger.info(`Socket connected on port ${process.env.PORT}`);
 
             let socketData: SocketSessionProps = {
-                userId : socket.request._query["userid"],
+                userId: socket.request._query["userid"],
                 gameId: socket.request._query["gameid"]
             };
 
