@@ -3,7 +3,7 @@
   <footer class="bg-secondaryLight dark:bg-secondaryDark">
     <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
       <div class="flex justify-center space-x-6 md:order-2">
-        <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-textLight dark:text-textDark hover:text-gray-500">
+        <a v-for="item in navigation" :key="item.name" :href="item.href" target="_blank" class="text-textLight dark:text-textDark hover:text-gray-500">
           <span class="sr-only">{{ item.name }}</span>
           <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
         </a>
@@ -23,7 +23,7 @@ import { defineComponent, h } from 'vue'
 const navigation = [
   {
     name: 'GitHub',
-    href: '#',
+    href: 'https://github.com/DevinWalkup/PointPoker',
     icon: defineComponent({
       render: () =>
           h('svg', { fill: 'currentColor', viewBox: '0 0 24 24' }, [

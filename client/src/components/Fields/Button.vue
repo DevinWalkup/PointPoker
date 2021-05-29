@@ -4,6 +4,7 @@
       type="submit"
       class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
       @click="onClick">
+    <Loader v-if="showLoader" classes="pr-2 -ml-2" color="text-white"/>
     <slot></slot>
   </button>
   <button
@@ -33,8 +34,12 @@
 </template>
 
 <script>
+import Loader from "../Loader.vue";
+
 export default {
   name: "Button",
+
+  components: {Loader},
 
   emits: ['click'],
 
@@ -42,6 +47,10 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    showLoader: {
+      type: Boolean,
+      default: false
     }
   },
 
