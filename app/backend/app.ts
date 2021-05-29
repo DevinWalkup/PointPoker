@@ -21,14 +21,12 @@ export class App {
     public static readonly PORT: number = 8080;
     private server: Server;
     private io: socketIo.Server;
-    private port: string | number;
     private logger: Logger
     private gameService: GameService
     private socketService : SocketService
 
     constructor() {
         this._app = express();
-        this.port = process.env.PORT || 3080;
         this.logger = new Logger();
         this.middleware();
         this.configureCors();
@@ -121,12 +119,12 @@ export class App {
     }
 
     private listen(): void {
-        this.server.listen(this.port, () => {
-            this.logger.info(`Running server on port ${this.port}`);
+        this.server.listen(process.env.PORT, () => {
+            this.logger.info(`Running server on port ${process.env.PORT}`);
         });
 
         this.io.on(GameEvents.CONNECT, (socket: any) => {
-            this.logger.info(`Socket connected on port ${this.port}`);
+            this.logger.info(`Socket connected on port ${process.env.PORT}`);
 
             let socketData: SocketSessionProps = {
                 userId : socket.request._query["userid"],
