@@ -244,8 +244,7 @@ import Input from "../../components/Fields/Input.vue"
 import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
 import UserService from "../../services/UserService";
 import GameStories from "../../components/Stories/GameStories.vue";
-import {GameEvents, UserEvents} from "../../../../backend/Types/SocketEvents";
-import {RoleType} from "../../../../backend/Types/UserTypes";
+import {GameEvents, RoleType, UserEvents} from "../../constants/contants";
 
 export default {
   name: "Game",

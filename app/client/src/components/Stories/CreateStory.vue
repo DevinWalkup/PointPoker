@@ -64,7 +64,7 @@ import TextArea from '../Fields/TextArea.vue'
 import GameService from "../../services/GameService";
 import GameStories from "./GameStories.vue";
 import Button from "../Fields/Button.vue";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
+import {GameEvents} from "../../constants/contants";
 
 export default {
   name: "CreateStory",
