@@ -73,7 +73,8 @@ export class App {
             secret: process.env.COOKIE_SECRET,
             cookie: {
                 secure: true,
-                httpOnly: false
+                httpOnly: false,
+                sameSite: "none"
             },
         };
 
