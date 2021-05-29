@@ -54,8 +54,7 @@
 import GameService from "../../services/GameService";
 import {TrashIcon} from '@heroicons/vue/outline'
 import Modal from "../Modal.vue";
-import {Socket} from "socket.io-client";
-import {GameEvents} from "../../../backend/Types/SocketEvents";
+import {GameEvents} from "../../../../backend/Types/SocketEvents";
 
 export default {
   name: "GameStories",

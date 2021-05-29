@@ -1,6 +1,6 @@
 
 
-require('dotenv').config({path: '../.env'})
+require('dotenv').config({path: './.env'})
 import {SocketSessionProps, UserSocketRoleChangeProps} from "./Types/SocketTypes";
 import {Mongoose} from "./services/Mongoose";
 import {Logger} from "./logger/logger";

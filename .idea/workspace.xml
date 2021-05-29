@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="eec97c76-78b8-4859-bed2-0b84e7e9a08c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/backend/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/GameTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/SocketEvents.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/SocketTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/StoryTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/UserTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/Types/VoteTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/app.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/logger/logger.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/models/game.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/models/sockets.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/models/story.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/models/users.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/models/votes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/nodemon.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/routes/GameRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/routes/UserRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/routes/routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/services/GameService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/services/Mongoose.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/services/SocketService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/services/UserService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/socket.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/tslint.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/backend/webpack.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/Procfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/postcss.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/public/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/App.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/About.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/Games/Game.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/Games/Join.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/Games/NewGame.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/Home.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/Pages/Play.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/assets/PointPoker_Logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Alerts/Alert.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Alerts/ErrorAlert.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Alerts/SuccessAlert.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Alerts/WarningAlert.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Fields/Button.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Fields/Input.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Fields/Select.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Fields/TextArea.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Fields/Toggle.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Layout/FooterBar.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Layout/NavBar.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Loader.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Modal.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Stories/CreateStory.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Stories/CurrentStory.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/components/Stories/GameStories.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/scripts/field-mixin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/scripts/util-mixin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/services/GameService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/services/HttpClient.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/services/SocketService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/services/UserService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/AlertStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/AppStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/GameStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/PointStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/SocketStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/stores/UserStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/src/validators/validators.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/static.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/tailwind.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/client/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/GameTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/SocketEvents.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/SocketTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/StoryTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/UserTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/VoteTypes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/logger/logger.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/game.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/sockets.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/story.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/users.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/votes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/nodemon.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/GameRoute.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/UserRoute.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/services/GameService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/services/Mongoose.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/services/SocketService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/services/UserService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/socket.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tslint.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/webpack.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/About.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Games/Game.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Games/Join.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Games/NewGame.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Home.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Play.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/PointPoker_Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Alerts/Alert.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Alerts/ErrorAlert.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Alerts/SuccessAlert.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Alerts/WarningAlert.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields/Button.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields/Input.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields/Select.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields/TextArea.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields/Toggle.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/FooterBar.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/NavBar.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Loader.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modal.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Stories/CreateStory.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Stories/CurrentStory.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Stories/GameStories.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scripts/field-mixin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scripts/util-mixin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/GameService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/HttpClient.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/SocketService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/UserService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/AlertStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/AppStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/GameStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/PointStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/SocketStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/UserStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validators/validators.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1tCJ8mczDOjtFm5Y2aReLeP6xaJ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/backend/package.json" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2021.1.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Development\PointPoker\client" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="dev (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/app/client/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/client/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:dev (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/app/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev (1)" />
+        <item itemvalue="npm.start:dev (1)" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start:dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eec97c76-78b8-4859-bed2-0b84e7e9a08c" name="Default Changelist" comment="" />
+      <created>1622266982463</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622266982463</updated>
+      <workItem from="1622266984433" duration="1211000" />
+      <workItem from="1622268244960" duration="172000" />
+      <workItem from="1622268425777" duration="19000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
