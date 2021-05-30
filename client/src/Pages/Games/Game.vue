@@ -380,6 +380,16 @@ export default {
                 that.updateGame();
               })
             })
+
+            this.$socketStore.socket.on('client_story_was_added', function(data) {
+              console.log(data, that.$route.params.id);
+              if (data.gameId !== that.$route.params.id) {
+                return;
+              }
+
+              that.updateGame();
+              that.handleAutoSwitchStory();
+            })
           });
     },
 
