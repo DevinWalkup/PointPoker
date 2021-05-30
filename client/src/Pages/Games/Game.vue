@@ -39,12 +39,19 @@
       </template>
     </Modal>
 
+    <Loader v-if="isLoading" loader-size="medium"/>
     <div class="max-w-max lg:max-w-7xl mx-auto" v-if="!isLoading">
       <div class="relative z-10 mb-8 md:mb-2 md:px-6">
         <div class="flex flex-1 justify-between text-base max-w-prose lg:max-w-none">
+          <div class="relative">
           <h2 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-callToAttention sm:text-4xl">
             {{ $gameStore.game.name }}
           </h2>
+          <p class="text-sm tracking-wide text-textLight dark:text-textDark pt-2"
+             v-if="$gameStore.game.description">
+            {{ $gameStore.game.description }}
+          </p>
+          </div>
           <div class="flex flex-wrap content-end">
             <Button type="button" @click="startLeaveGame">Leave Game</Button>
             <Button type="error" @click="startDeleteGame" v-if="$userStore.isAdmin()">Delete Game</Button>
@@ -107,7 +114,7 @@
               </div>
               <div class="w-full border-l-2 pl-3 space-y-2 border-gray-200">
                 <Input type="text" id="story_total" v-model="storyTotal" required>Total Points</Input>
-                <Button type="submit">Set Estimate</Button>
+                <Button type="submit" :show-loader="submitting">Set Estimate</Button>
               </div>
             </form>
 
@@ -147,7 +154,8 @@
                 </SwitchLabel>
               </SwitchGroup>
             </div>
-            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame" :force-update="updateChildren"/>
+            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame"
+                         :force-update="updateChildren"/>
           </div>
         </div>
       </div>
@@ -244,13 +252,14 @@ import Input from "../../components/Fields/Input.vue"
 import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
 import UserService from "../../services/UserService";
 import GameStories from "../../components/Stories/GameStories.vue";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
-import {RoleType} from "../../../../backend/Types/UserTypes";
+import {GameEvents, RoleType, UserEvents} from "../../constants/contants";
+import Loader from "../../components/Loader.vue";
 
 export default {
   name: "Game",
 
   components: {
+    Loader,
     GameStories,
     Button,
     Modal,
@@ -284,7 +293,8 @@ export default {
       },
       resultingRole: null,
       resultingRoleId: null,
-      updateChildren: false
+      updateChildren: false,
+      submitting: false
     }
   },
 
@@ -408,6 +418,7 @@ export default {
       if (!this.storyTotal) {
         return;
       }
+      this.submitting = true;
 
       let data = {gameId: this.$gameStore.game.gameId, storyPoint: this.storyTotal};
 
@@ -417,6 +428,7 @@ export default {
         this.handleAutoSwitchStory();
 
         this.storyTotal = null;
+        this.submitting = false;
       });
     },
 

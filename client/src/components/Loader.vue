@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-1 text-center justify-center items-center">
-    <svg class="animate-spin text-cyan-400"
-         :class="size"
+  <div class="flex flex-1 text-center justify-center items-center" :class="classes">
+    <svg class="animate-spin"
+         :class="[size, color]"
          xmlns="http://www.w3.org/2000/svg"
          fill="none"
          viewBox="0 0 24 24">
@@ -20,6 +20,16 @@ export default {
     loaderSize: {
       type: String,
       default: "small"
+    },
+
+    color: {
+      type: String,
+      default: "text-cyan-400"
+    },
+
+    classes: {
+      type: String,
+      default: ""
     }
   },
 

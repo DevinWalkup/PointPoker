@@ -1,5 +1,3 @@
-
-
 require('dotenv').config({path: './.env'})
 import {SocketSessionProps, UserSocketRoleChangeProps} from "./Types/SocketTypes";
 import {Mongoose} from "./services/Mongoose";
@@ -17,18 +15,16 @@ import {SocketService} from "./services/SocketService";
 const cors = require('cors');
 
 export class App {
-    private readonly _app: express.Application;
     public static readonly PORT: number = 8080;
+    private readonly _app: express.Application;
     private server: Server;
     private io: socketIo.Server;
-    private port: string | number;
     private logger: Logger
     private gameService: GameService
-    private socketService : SocketService
+    private socketService: SocketService
 
     constructor() {
         this._app = express();
-        this.port = process.env.PORT || 3080;
         this.logger = new Logger();
         this.middleware();
         this.configureCors();
@@ -47,14 +43,13 @@ export class App {
     }
 
     private configureCors(): void {
-        const allowedOrigins = [process.env.APP_URL];
-
         this._app.use(cors({
             origin: function (origin: string, callback: any) {
+                const allowedOriginParts = ["localhost", "point-poker-staging"]
                 // allow requests with no origin
                 // (like mobile apps or curl requests)
                 if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) === -1) {
+                if (!allowedOriginParts.some(element => origin.includes(element))) {
                     let msg = 'The CORS policy for this site does not ' +
                         'allow access from the specified Origin.';
                     return callback(new Error(msg), false);
@@ -77,12 +72,16 @@ export class App {
             }),
             secret: process.env.COOKIE_SECRET,
             cookie: {
-                secure: true
+                secure: true,
+                httpOnly: false,
+                sameSite: "none"
             },
         };
 
         if (this._app.get('env') === 'development') {
             sessionOptions.cookie.secure = false;
+            sessionOptions.cookie.httpOnly = true;
+            sessionOptions.cookie.sameSite = "lax"
         }
 
         this._app.set('trust proxy', 1);
@@ -114,22 +113,33 @@ export class App {
     private initSocket(): void {
         this.io = new socketIo.Server(this.server, {
             cors: {
-                origin: process.env.APP_URL,
+                origin: function (origin: string, callback: any) {
+                    const allowedOriginParts = ["localhost", "point-poker-staging"]
+                    // allow requests with no origin
+                    // (like mobile apps or curl requests)
+                    if (!origin) return callback(null, true);
+                    if (!allowedOriginParts.some(element => origin.includes(element))) {
+                        let msg = 'The CORS policy for this site does not ' +
+                            'allow access from the specified Origin.';
+                        return callback(new Error(msg), false);
+                    }
+                    return callback(null, true);
+                },
                 credentials: true
             }
         });
     }
 
     private listen(): void {
-        this.server.listen(this.port, () => {
-            this.logger.info(`Running server on port ${this.port}`);
+        this.server.listen(process.env.PORT, () => {
+            this.logger.info(`Running server on port ${process.env.PORT}`);
         });
 
         this.io.on(GameEvents.CONNECT, (socket: any) => {
-            this.logger.info(`Socket connected on port ${this.port}`);
+            this.logger.info(`Socket connected on port ${process.env.PORT}`);
 
             let socketData: SocketSessionProps = {
-                userId : socket.request._query["userid"],
+                userId: socket.request._query["userid"],
                 gameId: socket.request._query["gameid"]
             };
 

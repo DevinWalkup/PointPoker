@@ -39,7 +39,7 @@
 
     <div class="pt-5">
       <div class="flex justify-start space-x-4">
-        <Button type="submit">
+        <Button type="submit" :show-loader="submitting">
           Save
         </Button>
         <Button v-if="!hasStories" @click="cancel" type="button">
@@ -64,7 +64,7 @@ import TextArea from '../Fields/TextArea.vue'
 import GameService from "../../services/GameService";
 import GameStories from "./GameStories.vue";
 import Button from "../Fields/Button.vue";
-import {GameEvents} from "../../../../backend/Types/SocketEvents";
+import {GameEvents} from "../../constants/contants";
 
 export default {
   name: "CreateStory",
@@ -109,6 +109,8 @@ export default {
         StoryType: -1,
         GameId: ''
       },
+
+      submitting: false,
 
       stories: this.$gameStore.game.stories
     }
@@ -156,6 +158,7 @@ export default {
     },
 
     submitForm() {
+      this.submitting = true;
       if (!this.formData.GameId){
         this.formData.GameId = this.$gameStore.game.gameId;
       }
@@ -174,6 +177,7 @@ export default {
         this.changeStory();
 
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        this.submitting = false;
       });
     },
 

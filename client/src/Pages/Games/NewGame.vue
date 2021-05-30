@@ -1,6 +1,8 @@
 <template>
   <div class="w-full md:w-9/12 grid items-center mx-auto pb-5">
-    <form class="p-4 space-y-8 divide-y divide-gray-200 bg-secondaryLight dark:bg-secondaryDark rounded-lg p-3 shadow-lg" @submit.prevent="submitForm">
+    <form
+        class="p-4 space-y-8 divide-y divide-gray-200 bg-secondaryLight dark:bg-secondaryDark rounded-lg p-3 shadow-lg"
+        @submit.prevent="submitForm">
       <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div>
           <div>
@@ -13,20 +15,27 @@
           </div>
 
           <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-              <Input validator="empty" placeholder="Enter your name..." id="user_name" auto-complete="name" v-model="formData.userName" required>Name</Input>
-              <Input validator="empty" placeholder="Game name..." id="game_name" v-model="formData.gameName" required>Game Name</Input>
-              <Select v-if="hasPointTypes" validator="select" id="game_point_type" :items="pointTypes" :show-select-option="false" :default-selected-item="defaultPointType" v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
-              <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
-              <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories" description="Copy and paste to import stories into your game">Game Stories</TextArea>
-              <Toggle v-model="formData.autoShowVotes">Automatically show votes when all users vote?</Toggle>
-              <Toggle v-model="formData.autoSwitchStory">Automatically switch to the next story when estimate has been set?</Toggle>
+            <Input validator="empty" placeholder="Enter your name..." id="user_name" auto-complete="name"
+                   v-model="formData.userName" required>Name</Input>
+            <Input validator="empty" placeholder="Game name..." id="game_name" v-model="formData.gameName" required>Game
+              Name</Input>
+            <Select v-if="hasPointTypes" validator="select" id="game_point_type" :items="pointTypes"
+                    :show-select-option="false" :default-selected-item="defaultPointType"
+                    v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
+            <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
+            <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories"
+                      description="Copy and paste to import stories into your game. Separate the stories names by a comma">Game Stories</TextArea>
+            <Toggle v-model="formData.autoShowVotes">Automatically show votes when all users vote?</Toggle>
+            <Toggle v-model="formData.autoSwitchStory">Automatically switch to the next story when estimate has been
+              set?
+            </Toggle>
           </div>
         </div>
       </div>
 
       <div class="pt-5">
         <div class="flex justify-start space-x-4">
-          <Button type="submit">
+          <Button type="submit" :show-loader="submitting">
             Save
           </Button>
           <Button
@@ -76,7 +85,8 @@ export default {
         autoSwitchStory: false,
       },
       pointTypes: [],
-      defaultPointType: 0
+      defaultPointType: 0,
+      submitting: false
     }
   },
 
@@ -84,9 +94,9 @@ export default {
     useMeta({
       title: `New Game`,
       meta: [
-        {name:'description', content: 'Start a new Point Poker game!'},
+        {name: 'description', content: 'Start a new Point Poker game!'},
         {property: 'og:title', content: `New Game`},
-        {name: 'robots', content:'index,follow'}
+        {name: 'robots', content: 'index,follow'}
       ]
     })
   },
@@ -111,6 +121,7 @@ export default {
 
   methods: {
     submitForm() {
+      this.submitting = true;
       GameService.createGame(this.formData).then((gameId) => {
         if (!gameId) {
           this.$alertStore.error({"message": "An unknown error occurred"})
@@ -119,6 +130,7 @@ export default {
         }
 
         GameService.loadGame(gameId).then((resp) => {
+          this.submitting = false;
           this.$router.push(`/game/${gameId}`);
         });
 

@@ -7,6 +7,7 @@
       <div class="overflow-auto min-h-screen">
         <Alert/>
         <NavBar/>
+        <Loader v-if="loading" loader-size="medium"/>
         <router-view v-if="!loading"/>
       </div>
       <div class="relative w-full bottom-0 mt-4">
@@ -24,10 +25,11 @@ import {useMeta} from 'vue-meta'
 import AppStore from './stores/AppStore'
 import Alert from './components/Alerts/Alert.vue'
 import UserService from "./services/UserService";
-import UserStore from "./stores/UserStore";
+import Loader from "./components/Loader.vue";
 
 export default {
   components: {
+    Loader,
     Home,
     FooterBar,
     NavBar,
