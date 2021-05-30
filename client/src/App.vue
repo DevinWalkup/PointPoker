@@ -51,6 +51,11 @@ export default {
   },
 
   mounted() {
+    if (window.location.protocol !== 'https:' && import.meta.env.MODE !== 'development'){
+      window.location.href = import.meta.env.VITE_APP_URL;
+      return;
+    }
+
     UserService.GetCurrentUser().then(() => {
       this.$nextTick(() => {
         this.loading = false;
