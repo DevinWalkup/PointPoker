@@ -152,7 +152,6 @@ export default {
   watch: {
     forceUpdate(newVal, oldVal) {
       if (oldVal && newVal === false) {
-        console.log("Hm");
         this.stories = this.$gameStore.game.stories;
       }
     }

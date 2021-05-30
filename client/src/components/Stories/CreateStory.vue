@@ -176,7 +176,7 @@ export default {
 
         this.changeStory();
 
-        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        this.$socketStore.emitEvent(GameEvents.CREATE_STORY, {gameId: this.$gameStore.game.gameId});
         this.submitting = false;
       });
     },

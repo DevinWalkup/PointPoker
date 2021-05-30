@@ -3,7 +3,8 @@ export enum GameEvents {
     DISCONNECT = 'disconnect',
     GAME_UPDATE = 'game_update',
     GAME_DELETE = 'game_delete',
-    LEAVE_GAME = 'leave_game'
+    LEAVE_GAME = 'leave_game',
+    CREATE_STORY = 'create_story'
 }
 
 export enum UserEvents {
