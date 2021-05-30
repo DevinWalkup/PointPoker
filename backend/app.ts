@@ -45,7 +45,7 @@ export class App {
     private configureCors(): void {
         this._app.use(cors({
             origin: function (origin: string, callback: any) {
-                const allowedOriginParts = ["localhost", "point-poker-staging"]
+                const allowedOriginParts = ["localhost", "point-poker-staging", "pointpoker"]
                 // allow requests with no origin
                 // (like mobile apps or curl requests)
                 if (!origin) return callback(null, true);
@@ -114,7 +114,7 @@ export class App {
         this.io = new socketIo.Server(this.server, {
             cors: {
                 origin: function (origin: string, callback: any) {
-                    const allowedOriginParts = ["localhost", "point-poker-staging"]
+                    const allowedOriginParts = ["localhost", "point-poker-staging", "pointpoker"]
                     // allow requests with no origin
                     // (like mobile apps or curl requests)
                     if (!origin) return callback(null, true);
