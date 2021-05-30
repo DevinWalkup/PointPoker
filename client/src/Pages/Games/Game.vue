@@ -366,7 +366,7 @@ export default {
                 return;
               }
 
-              that.$alertStore.warning({"message": "Game has been deleted the admin user!"});
+              that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
 
               that.leaveGame();
             })
