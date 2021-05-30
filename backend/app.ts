@@ -175,6 +175,12 @@ export class App {
                 this.logger.socket(`${UserEvents.ROLE_CHANGE}`);
                 this.io.emit('client_user_role_change', m)
             })
+
+            socket.on(GameEvents.CREATE_STORY, () => {
+                this.logger.socket(`${GameEvents.CREATE_STORY}`);
+
+                this.io.emit('client_story_was_added', {gameId: socketData.gameId});
+            })
         });
     }
 
