@@ -2,13 +2,11 @@ import {HttpClient} from "./HttpClient";
 import GameStore from "../stores/GameStore";
 import AlertStore from "../stores/AlertStore";
 import {AxiosResponse} from "axios";
-import {CastVoteProps} from "../../backend/Types/VoteTypes";
-import {io, Socket} from "socket.io-client";
 import UserStore from "../stores/UserStore";
+import {CastVoteProps} from "../../../backend/Types/VoteTypes";
+import {RouteParamValue} from "vue-router";
 
 class GameService {
-    public socket : Socket;
-
     public async createGame(items) {
         let response : AxiosResponse = await HttpClient.post('/api/games/create', items);
 
@@ -21,7 +19,7 @@ class GameService {
         return null;
     }
 
-    public async loadGame(gameId : String) {
+    public async loadGame(gameId: string | RouteParamValue[]) {
         let params = {gameId: gameId};
         let response = await HttpClient.get('/api/games/getGame', params)
 

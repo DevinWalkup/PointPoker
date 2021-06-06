@@ -64,8 +64,6 @@ export default {
     TrashIcon
   },
 
-  emits: ['change-story'],
-
   data() {
     return {
       stories: this.$gameStore.game.stories,
@@ -102,8 +100,6 @@ export default {
         this.stories = this.$gameStore.game.stories;
 
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
-
-        this.$emit('change-story');
       });
     },
 
@@ -144,7 +140,6 @@ export default {
       GameService.DeleteStory(data).then(() => {
         this.stories = this.$gameStore.game.stories;
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
-        this.$emit('change-story');
       })
     }
   },

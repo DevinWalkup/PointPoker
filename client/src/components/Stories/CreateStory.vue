@@ -53,7 +53,7 @@
       No stories added yet!
     </div>
     <div class="text-textLight dark:text-textDark pt-3" v-else>
-      <GameStories @change-story="changeStory" :force-update="forceUpdate"/>
+      <GameStories :force-update="forceUpdate"/>
     </div>
   </div>
 </template>
@@ -87,8 +87,6 @@ export default {
       required: true
     }
   },
-
-  emits: ['change-story'],
 
   data() {
     return {
@@ -174,8 +172,6 @@ export default {
           Notes: '',
         }
 
-        this.changeStory();
-
         this.$socketStore.emitEvent(GameEvents.CREATE_STORY, {gameId: this.$gameStore.game.gameId});
         this.submitting = false;
       });
@@ -208,10 +204,6 @@ export default {
         ]
         this.selectTab('Stories')
       }
-    },
-
-    changeStory() {
-      this.$emit('change-story')
     }
   },
 
