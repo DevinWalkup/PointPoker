@@ -119,6 +119,14 @@ class GameStore{
     get hasStories() {
         return this.state.game.stories ? this.state.game.stories.length > 0 : false;
     }
+
+    get hasVotes(){
+        if (!this.state.currentStory) {
+            return false;
+        }
+
+        return !this.state.currentStory.votes ? false : this.state.currentStory.votes.length > 0;
+    }
 }
 
 export {GameStore}

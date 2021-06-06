@@ -302,7 +302,6 @@ export default {
 
       GameService.castVote(data).then(() => {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
-        this.$emit('story-update')
       });
     },
 
@@ -326,8 +325,6 @@ export default {
       GameService.UpdateStory(data).then(() => {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
         this.setLocalData();
-
-        this.$emit('story-update');
       })
     },
 

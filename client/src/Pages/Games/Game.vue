@@ -99,7 +99,7 @@
             </div>
           </div>
 
-          <CurrentStory v-if="$gameStore.currentStory" @story-update="updateGame" :force-reload="updateChildren"/>
+          <CurrentStory v-if="$gameStore.currentStory" :force-reload="updateChildren"/>
         </div>
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
@@ -154,7 +154,7 @@
                 </SwitchLabel>
               </SwitchGroup>
             </div>
-            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory" @change-story="updateGame"
+            <CreateStory :toggle-create-story="toggleCreateStory" v-if="showAddStory"
                          :force-update="updateChildren"/>
           </div>
         </div>
@@ -201,7 +201,7 @@
               </div>
             </div>
           </div>
-          <CurrentStory @story-update="updateGame" v-if="$socketStore.socketSet" :force-reload="updateChildren"/>
+          <CurrentStory v-if="$socketStore.socketSet" :force-reload="updateChildren"/>
         </div>
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
@@ -314,6 +314,10 @@ export default {
     if (this.$userStore.joinedUser) {
       this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
     }
+
+    if (this.$gameStore.hasVotes) {
+      this.handleAutoToggleVotes();
+    }
   },
 
   computed: {
@@ -425,6 +429,10 @@ export default {
     },
 
     submitPoints() {
+      if (!this.$userStore.isEditor()){
+        return;
+      }
+
       if (!this.storyTotal) {
         return;
       }
@@ -433,9 +441,12 @@ export default {
       let data = {gameId: this.$gameStore.game.gameId, storyPoint: this.storyTotal};
 
       GameService.submitStoryPoint(data).then(() => {
-        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
-
-        this.handleAutoSwitchStory();
+        if (!this.$gameStore.autoSwitchStory) {
+          this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        }
+        else {
+          this.handleAutoSwitchStory();
+        }
 
         this.storyTotal = null;
         this.submitting = false;
@@ -552,6 +563,10 @@ export default {
         return;
       }
 
+      if (this.$gameStore.currentStory.votesVisible) {
+        return;
+      }
+
       if (this.totalVotes === this.$gameStore.users().length) {
         this.toggleVoteVisibility();
       }
@@ -563,6 +578,10 @@ export default {
       }
 
       if (!this.$gameStore.autoSwitchStory) {
+        return;
+      }
+
+      if (!this.$gameStore.currentStory.storyPoint){
         return;
       }
 
