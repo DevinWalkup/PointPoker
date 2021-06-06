@@ -59,12 +59,12 @@
 </template>
 
 <script>
-import Input from '../Fields/Input.vue'
-import TextArea from '../Fields/TextArea.vue'
-import GameService from "../../services/GameService";
+import Input from '../../Fields/Input.vue'
+import TextArea from '../../Fields/TextArea.vue'
+import GameService from "../../../services/GameService";
 import GameStories from "./GameStories.vue";
-import Button from "../Fields/Button.vue";
-import {GameEvents} from "../../constants/contants";
+import Button from "../../Fields/Button.vue";
+import {GameEvents} from "../../../constants/contants";
 
 export default {
   name: "CreateStory",

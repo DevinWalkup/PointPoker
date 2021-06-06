@@ -23,21 +23,7 @@
         Leave Game
       </template>
     </Modal>
-    <Modal :open="showChangeRoleModal" confirm-variant="success" @cancel="this.showChangeRoleModal = false;"
-           @confirm="changeUserRole">
-      <template #title>
-        Set user role
-      </template>
-      <template #body>
-        <span class="font-bold">{{ selectedUser.name }}</span> is currently <span class="font-bold">{{
-          selectedUser.role
-        }}</span>.
-        Do you want to make them <span class="font-bold">{{ resultingRole }}</span>?
-      </template>
-      <template #confirmText>
-        Yes
-      </template>
-    </Modal>
+
 
     <Loader v-if="isLoading" loader-size="medium"/>
     <div class="max-w-max lg:max-w-7xl mx-auto" v-if="!isLoading">
@@ -118,26 +104,7 @@
               </div>
             </form>
 
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Users
-              </p>
-              <div class="flex flex-1 justify-center pb-3 mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-8">
-                    <li v-for="(user, idx) in $gameStore.users()" :key="idx"
-                        class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover"
-                        @click="setUser(user)">
-                      <div class="w-full flex items-center justify-between text-center p-3">
-                        <div class="flex-1 text-center w-full">
-                          <h3 class="text-textLight dark:text-textDark text-md font-bold">{{ user.name }}</h3>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <UserList />
 
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
@@ -206,25 +173,7 @@
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
                v-if="$gameStore.hasUsers">
-            <div>
-              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-                Users
-              </p>
-              <div class="flex flex-1 justify-center pb-3 mt-2">
-                <div class="px-2 w-full justify-between">
-                  <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-8">
-                    <li v-for="(user, idx) in $gameStore.users()" :key="idx"
-                        class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover">
-                      <div class="w-full flex items-center justify-between text-center p-3">
-                        <div class="flex-1 text-center w-full">
-                          <h3 class="text-textLight dark:text-textDark text-md font-bold">{{ user.name }}</h3>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <UserList />
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
             <div class="text-textLight dark:text-textDark text-center pt-3" v-if="!$gameStore.hasStories > 0">
@@ -242,23 +191,25 @@
 
 <script>
 import GameService from "../../services/GameService";
-import CreateStory from '../../components/Stories/CreateStory.vue'
+import CreateStory from '../../components/Game/Stories/CreateStory.vue'
 import {Switch, SwitchGroup, SwitchLabel} from '@headlessui/vue'
-import CurrentStory from "../../components/Stories/CurrentStory.vue";
+import CurrentStory from "../../components/Game/Stories/CurrentStory.vue";
 import Modal from "../../components/Modal.vue";
 import Button from "../../components/Fields/Button.vue";
 import utilMixin from "../../scripts/util-mixin";
 import Input from "../../components/Fields/Input.vue"
 import {CheckCircleIcon, ClipboardCopyIcon} from '@heroicons/vue/outline'
 import UserService from "../../services/UserService";
-import GameStories from "../../components/Stories/GameStories.vue";
+import GameStories from "../../components/Game/Stories/GameStories.vue";
 import {GameEvents, RoleType, UserEvents} from "../../constants/contants";
 import Loader from "../../components/Loader.vue";
+import UserList from "../../components/Game/UserList.vue";
 
 export default {
   name: "Game",
 
   components: {
+    UserList,
     Loader,
     GameStories,
     Button,
@@ -286,13 +237,7 @@ export default {
       totalVotes: 0,
       storyTotal: '',
       showCheck: false,
-      showChangeRoleModal: false,
-      selectedUser: {
-        name: '',
-        role: ''
-      },
-      resultingRole: null,
-      resultingRoleId: null,
+
       updateChildren: false,
       submitting: false
     }
@@ -386,7 +331,6 @@ export default {
             })
 
             this.$socketStore.socket.on('client_story_was_added', function(data) {
-              console.log(data, that.$route.params.id);
               if (data.gameId !== that.$route.params.id) {
                 return;
               }
@@ -499,59 +443,6 @@ export default {
       this.showLeaveModal = false;
 
       this.$socketStore.emitEvent(GameEvents.LEAVE_GAME, {gameId: this.$gameStore.game.gameId})
-    },
-
-    setUser(user) {
-      if (user.userId === this.$userStore.user.userId) {
-        return;
-      }
-
-      if (!this.$userStore.isAdmin()) {
-        return;
-      }
-
-      UserService.GetUser(user.userId).then((usr) => {
-        this.selectedUser = usr;
-
-        switch (usr.roleType) {
-          case 2:
-            this.selectedUser.role = `a ${RoleType[usr.roleType].toLowerCase()}`;
-            this.resultingRoleId = RoleType.EDITOR;
-            this.resultingRole = `an ${RoleType[RoleType.EDITOR].toLowerCase()}`;
-            break;
-          default:
-            this.selectedUser.role = `an ${RoleType[usr.roleType].toLowerCase()}`;
-            this.resultingRoleId = RoleType.USER;
-            this.resultingRole = `a ${RoleType[RoleType.USER].toLowerCase()}`;
-        }
-
-        this.showChangeRoleModal = true;
-      })
-    },
-
-    changeUserRole() {
-      let data = {
-        currentUserId: this.$userStore.user.userId,
-        userId: this.selectedUser.userId,
-        roleType: this.resultingRoleId
-      };
-
-      this.showChangeRoleModal = false
-
-      UserService.UpdateUserRole(data).then((user) => {
-        this.selectedUser = {
-          name: '',
-          role: ''
-        };
-        this.resultingRoleId = null;
-        this.resultingRole = null;
-
-        if (!user) {
-          return;
-        }
-
-        this.$socketStore.emitEvent(UserEvents.ROLE_CHANGE, {userId: user.userId});
-      })
     },
 
     handleAutoToggleVotes() {
