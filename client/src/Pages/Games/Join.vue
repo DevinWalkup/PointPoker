@@ -56,9 +56,10 @@ export default {
     return {
       pageReady: false,
 
+      submitting: false,
+
       formData: {
-        userName: '',
-        submitting: false
+        userName: ''
       }
     }
   },
@@ -102,6 +103,7 @@ export default {
           }
 
           this.submitting = false;
+
           this.$router.push(`/game/${this.$route.params.id}`);
         } else {
           AlertStore.error({"message": "There was a problem joining the game. Please try again later!"});

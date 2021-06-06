@@ -231,12 +231,12 @@
 </template>
 
 <script>
-import GameService from "../../services/GameService";
-import Input from "../Fields/Input.vue";
-import TextArea from "../Fields/TextArea.vue";
-import utilMixin from "../../scripts/util-mixin";
+import GameService from "../../../services/GameService";
+import Input from "../../Fields/Input.vue";
+import TextArea from "../../Fields/TextArea.vue";
+import utilMixin from "../../../scripts/util-mixin";
 import {Switch, SwitchGroup, SwitchLabel} from '@headlessui/vue'
-import {GameEvents} from "../../constants/contants";
+import {GameEvents} from "../../../constants/contants";
 
 export default {
   components: {
