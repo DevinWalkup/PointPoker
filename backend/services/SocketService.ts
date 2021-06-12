@@ -1,5 +1,5 @@
 import {Logger} from "../logger/logger";
-import {SocketSessionProps} from "../Types/SocketTypes";
+import {Sockets, SocketSessionProps} from "../Types/SocketTypes";
 import {User} from "../Types/UserTypes";
 import {Votes} from "../Types/VoteTypes";
 import {Story} from "../Types/StoryTypes";
@@ -80,5 +80,9 @@ export class SocketService {
         })
 
         game.stories = stories;
+    }
+
+    public async GetAll() : Promise<Array<Sockets>> {
+        return Socket.find();
     }
 }

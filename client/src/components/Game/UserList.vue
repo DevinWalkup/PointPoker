@@ -129,6 +129,10 @@ export default {
     },
 
     hasVoted(user) {
+      if (!this.$gameStore.currentStory || !this.$gameStore.currentStory.votes) {
+        return false;
+      }
+
       return this.$gameStore.currentStory.votes.some((vote) => {return vote.userId === user.userId});
     }
   }

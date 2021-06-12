@@ -129,11 +129,7 @@ export default {
           return;
         }
 
-        GameService.loadGame(gameId).then((resp) => {
-          this.submitting = false;
-          this.$router.push(`/game/${gameId}`);
-        });
-
+        this.$router.push(`/game/${gameId}`);
       })
     },
 

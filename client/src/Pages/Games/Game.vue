@@ -25,10 +25,10 @@
     </Modal>
 
 
-    <Loader v-if="isLoading" loader-size="medium"/>
-    <div class="max-w-max lg:max-w-7xl mx-auto" v-if="!isLoading">
+    <Loader v-if="loading" loader-size="medium"/>
+    <div class="max-w-max lg:max-w-7xl mx-auto">
       <div class="relative z-10 mb-8 md:mb-2 md:px-6">
-        <div class="flex flex-1 justify-between text-base max-w-prose lg:max-w-none">
+        <div class="flex flex-1 justify-between text-base max-w-prose lg:max-w-none" v-if="!loading">
           <div class="relative">
           <h2 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-callToAttention sm:text-4xl">
             {{ $gameStore.game.name }}
@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div class="lg:grid lg:grid-cols-2 lg:gap-6" v-if="$userStore.isEditor()">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-6" v-if="$userStore.isEditor() && !loading">
         <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
              v-if="$gameStore.game">
           <div class="pt-1 block sm:hidden">
@@ -126,7 +126,7 @@
           </div>
         </div>
       </div>
-      <div class="lg:grid lg:grid-cols-2 lg:gap-6" v-else>
+      <div class="lg:grid lg:grid-cols-2 lg:gap-6" v-else-if="!loading">
         <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
              v-if="$gameStore.game">
           <div class="pt-1 block sm:hidden">
@@ -237,6 +237,7 @@ export default {
       totalVotes: 0,
       storyTotal: '',
       showCheck: false,
+      loading: true,
 
       updateChildren: false,
       submitting: false
@@ -244,6 +245,7 @@ export default {
   },
 
   beforeMount() {
+    this.loading = true;
     if (!this.$userStore.user) {
       this.$alertStore.error({"message": "An unknown error occurred!"});
       this.$router.push('/');
@@ -265,12 +267,6 @@ export default {
     }
   },
 
-  computed: {
-    isLoading() {
-      return this.$gameStore.isLoading();
-    },
-  },
-
   methods: {
     populateGame() {
       this.updateChildren = true;
@@ -279,6 +275,7 @@ export default {
         this.showVoteScreen = !this.showAddStory;
         this.setTotalVotes();
         this.updateChildren = false;
+        this.loading = false;
 
         if (!this.$gameStore.game) {
           this.$alertStore.warning({"message": "Game not found!"});

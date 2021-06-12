@@ -1,17 +1,16 @@
-import {
-    CreateGameParams,
-    Game, JoinGameProps,
-} from "../Types/GameTypes";
+import {CreateGameParams, Game, JoinGameProps,} from "../Types/GameTypes";
 import {UserService} from "./UserService";
 import {CreateUserProps, JoinGameUserProps, RoleType, User} from "../Types/UserTypes";
 import {Logger} from "../logger/logger";
 import {CastVoteProps, Votes} from "../Types/VoteTypes";
 import {
-    CreateStoryProps, DeleteStoryProps,
+    CreateStoryProps,
+    DeleteStoryProps,
     SetStoryPointProps,
     Story,
     StoryType,
-    ToggleStoryVotesVisibleProps, UpdateStoryProps
+    ToggleStoryVotesVisibleProps,
+    UpdateStoryProps
 } from "../Types/StoryTypes";
 
 const mongoose = require("mongoose");
@@ -70,7 +69,7 @@ export class GameService {
                 };
 
                 game = await this.AddStory(newStory);
-            };
+            }
         }
 
         return game;
@@ -373,5 +372,9 @@ export class GameService {
         }
 
         return {user: userObj, game: gameObj};
+    }
+
+    public async GetAll() : Promise<Array<Game>> {
+        return Game.find();
     }
 }

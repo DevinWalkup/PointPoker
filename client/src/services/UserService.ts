@@ -1,8 +1,8 @@
 import {HttpClient} from "./HttpClient";
 import UserStore from "../stores/UserStore";
-import {ChangeUserRoleProps, JoinGameUserProps} from "../../backend/Types/UserTypes";
 import {AxiosResponse} from "axios";
 import GameStore from "../stores/GameStore";
+import {ChangeUserRoleProps, JoinGameUserProps} from "../constants/contants";
 
 class UserService {
     public async GetCurrentUser() {
