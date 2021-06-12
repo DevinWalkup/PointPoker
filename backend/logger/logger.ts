@@ -1,3 +1,8 @@
+export enum JobStatus {
+    START = "start",
+    END = "end"
+}
+
 export class Logger {
 
     constructor() {}
@@ -20,5 +25,9 @@ export class Logger {
 
     public socket(event: string): void {
         console.log(new Date() + "socket:::::::" + event);
+    }
+
+    public job(jobName: string, status: JobStatus) : void{
+        console.log(new Date() + `job:::::::${jobName}:::::status${status.toString()}`)
     }
 }

@@ -11,6 +11,7 @@ import {GameEvents, UserEvents} from "./Types/SocketEvents";
 import {GameSocketType} from "./Types/GameTypes";
 import {GameService} from "./services/GameService";
 import {SocketService} from "./services/SocketService";
+import Jobs from './jobs'
 
 const cors = require('cors');
 
@@ -36,6 +37,7 @@ export class App {
         this.routes();
         this.gameService = new GameService();
         this.socketService = new SocketService();
+        this.startJobs();
     }
 
     get app(): express.Application {
@@ -188,5 +190,9 @@ export class App {
         Mongoose.InitializeConnection().then(() => {
             this.logger.info("Database connected!");
         });
+    }
+
+    private startJobs() : void {
+        Jobs.startJobs();
     }
 }
