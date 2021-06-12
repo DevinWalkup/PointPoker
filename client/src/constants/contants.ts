@@ -16,3 +16,13 @@ export enum RoleType {
     EDITOR,
     USER
 }
+export interface JoinGameUserProps {
+    name: String,
+    gameId: String
+}
+
+export interface ChangeUserRoleProps {
+    currentUserId: String,
+    userId: String,
+    roleType: RoleType
+}
