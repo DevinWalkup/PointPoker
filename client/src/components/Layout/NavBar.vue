@@ -5,7 +5,7 @@
         <div class="flex items-center flex-1">
           <div class="flex items-center justify-between w-full md:w-auto">
             <a href="#" @click="sendHome()">
-              <span class="sr-only">Workflow</span>
+              <span class="sr-only">Point Poker</span>
               <img class="h-24" src="../../assets/PointPoker_Logo.png"
                    alt="Point Poker Logo"/>
             </a>
@@ -90,7 +90,8 @@ export default {
       navigation: [
         {name: 'Home', href: '/'},
         {name: 'Play', href: '/play'},
-        {name: 'About', href: '/about'}
+        {name: 'About', href: '/about'},
+        {name: 'How To Play', href: '/howto'}
       ],
       openMenu: false,
     }

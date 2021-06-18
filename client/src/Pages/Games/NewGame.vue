@@ -24,7 +24,7 @@
                     v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
             <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
             <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories"
-                      description="Copy and paste to import stories into your game. Separate the stories names by a comma">Game Stories</TextArea>
+                      description="Copy and paste to import stories into your game. Separate the stories names by a semi-colon">Game Stories</TextArea>
             <Toggle v-model="formData.autoShowVotes">Automatically show votes when all users vote?</Toggle>
             <Toggle v-model="formData.autoSwitchStory">Automatically switch to the next story when estimate has been
               set?
