@@ -1,5 +1,5 @@
 <template>
-  <Modal :open="showChangeRoleModal" confirm-variant="success" @cancel="this.showChangeRoleModal = false;"
+  <Modal :open="showChangeRoleModal" confirm-variant="success" @cancel="showChangeRoleModal = false;"
          @confirm="changeUserRole">
     <template #title>
       Set user role
@@ -52,6 +52,13 @@ import {CheckIcon} from '@heroicons/vue/outline'
 
 export default {
   name: "UserList",
+
+  props: {
+    forceUpdate: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   components: {
     Modal,
@@ -134,11 +141,15 @@ export default {
       }
 
       return this.$gameStore.currentStory.votes.some((vote) => {return vote.userId === user.userId});
+    },
+  },
+
+  watch: {
+    forceUpdate(newVal, oldVal) {
+      if (oldVal && newVal === false) {
+        this.$forceUpdate();
+      }
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

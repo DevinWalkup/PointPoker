@@ -173,6 +173,12 @@ export class App {
                 this.io.emit('client_update_game', {gameId: socketData.gameId});
             });
 
+            socket.on(GameEvents.USER_JOINED, () => {
+                this.logger.socket(`${GameEvents.USER_JOINED}`);
+
+                this.io.emit('client_user_joined', {gameId: socketData.gameId});
+            })
+
             socket.on(UserEvents.ROLE_CHANGE, (m: UserSocketRoleChangeProps) => {
                 this.logger.socket(`${UserEvents.ROLE_CHANGE}`);
                 this.io.emit('client_user_role_change', m)

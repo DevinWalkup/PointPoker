@@ -5,12 +5,14 @@ import NewGame from './Pages/Games/NewGame.vue'
 import Game from './Pages/Games/Game.vue'
 import Play from './Pages/Play.vue'
 import Join from './Pages/Games/Join.vue'
+import HowTo from './Pages/HowTo.vue'
 
 const routes = [
     {path: '/', name: "Home", component: Home},
     {path: '/about', name: "About", component: About},
     {path: '/play', name: "Play", component: Play},
     {path: '/createGame', name: "Create Game", component: NewGame},
+    {path: '/howto', name: "How To", component: HowTo},
     {
         path: '/game/:id',
         name: "Game",
