@@ -1,5 +1,10 @@
 <template>
   <div class="w-full md:w-9/12 grid items-center mx-auto pb-5">
+    <Modal :open="toggleHelpDialog" confirm-variant="help" @cancel="showHelp">
+      <template #body>
+        <CreateGame :show-create-game="false" is-in-modal/>
+      </template>
+    </Modal>
     <form
         class="p-4 space-y-8 divide-y divide-gray-200 bg-secondaryLight dark:bg-secondaryDark rounded-lg p-3 shadow-lg"
         @submit.prevent="submitForm">
@@ -43,6 +48,11 @@
               type="button">
             Cancel
           </Button>
+          <Button
+            @click="showHelp"
+            type="button">
+            Help
+          </Button>
         </div>
       </div>
     </form>
@@ -57,6 +67,8 @@ import Select from "../../components/Fields/Select.vue";
 import GameService from '../../services/GameService'
 import Button from "../../components/Fields/Button.vue";
 import points from "../../stores/PointStore"
+import Modal from "../../components/Modal.vue";
+import CreateGame from "../../components/Guides/CreateGame.vue"
 
 import UserService from "../../services/UserService";
 import Toggle from "../../components/Fields/Toggle.vue";
@@ -70,7 +82,8 @@ export default {
     Select,
     TextArea,
     Input,
-
+    Modal,
+    CreateGame
   },
 
   data() {
@@ -86,7 +99,8 @@ export default {
       },
       pointTypes: [],
       defaultPointType: 0,
-      submitting: false
+      submitting: false,
+      toggleHelpDialog: false
     }
   },
 
@@ -135,6 +149,10 @@ export default {
 
     cancel() {
       this.$router.push('/');
+    },
+
+    showHelp() {
+      this.toggleHelpDialog = !this.toggleHelpDialog;
     }
   }
 }

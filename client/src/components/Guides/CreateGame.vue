@@ -1,8 +1,9 @@
 <template>
-  <div class="lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:grid-flow-col-dense lg:gap-12">
+  <div :class="{'lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:grid-flow-col-dense lg:gap-12'
+                : !isInModal, '' : isInModal}">
     <div class="max-w-xl mx-auto sm:px-6 lg:py-4 lg:max-w-none lg:mx-0 lg:px-0">
       <div class="p-4">
-        <h2 class="text-3xl font-extrabold tracking-tight text-textLight dark:text-textDark">
+        <h2 class="text-3xl font-extrabold tracking-tight text-textLight" :class="{'dark:text-textDark' : !isInModal}">
           Create a New Game
         </h2>
         <p class="mt-4 text-lg text-textLight dark:text-secondaryTextDark">
@@ -32,7 +33,7 @@
         <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
           Once you have filed out the game details, you can click "Save" and the game will be created.
         </p>
-        <div class="mt-6">
+        <div class="mt-6" v-if="showCreateGame">
           <button @click="startGame"
                   class="text-white block w-full py-3 px-4 rounded-md shadow bg-gradient-to-r from-teal-500 to-cyan-600 font-medium hover:from-teal-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-400 focus:ring-offset-gray-900">
             Ready to get started?
@@ -40,9 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="mt-12 sm:mt-16 lg:mt-0">
-      <div class="lg:px-0 lg:m-0 lg:relative lg:h-full">
-        <img class="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none" src="../../assets/CreateGame.png" alt="Create Game Interface" />
+    <div :class="{'mt-12 sm:mt-16 lg:mt-0' : !isInModal, 'mb-3' : isInModal}">
+      <div :class="{'lg:px-0 h-full md:mt-36 lg:mt-36 lg:w-90' : !isInModal}">
+        <img class="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:left-0" src="../../assets/CreateGame.png" alt="Create Game Interface" />
       </div>
     </div>
   </div>
@@ -54,6 +55,17 @@ import Button from "../Fields/Button.vue";
 
 export default {
   name: "CreateGame",
+
+  props: {
+    showCreateGame: {
+      type: Boolean,
+      default: true
+    },
+    isInModal: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   components: {
     Button,

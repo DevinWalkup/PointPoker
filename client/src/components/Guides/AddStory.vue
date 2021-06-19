@@ -1,8 +1,9 @@
 <template>
-  <div class="lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:grid-flow-col-dense lg:gap-12">
+  <div :class="{'lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:grid-flow-col-dense lg:gap-12'
+                : !isInModal, '' : isInModal}">
     <div class="max-w-xl mx-auto sm:px-6 lg:py-4 lg:max-w-none lg:mx-0 lg:px-0 lg:col-start-2">
         <div class="p-4">
-          <h2 class="text-3xl font-extrabold tracking-tight text-textLight dark:text-textDark">
+          <h2 class="text-3xl font-extrabold tracking-tight text-textLight" :class="{'dark:text-textDark' : !isInModal}">
             Add New Stories
           </h2>
           <p class="mt-4 text-lg text-textLight dark:text-secondaryTextDark">
@@ -24,28 +25,25 @@
             provide information about who this story will provide value to and
             why it will provide the value.
           </p>
-<!--          <div class="mt-6">-->
-<!--            <a href="#" class="inline-flex px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">-->
-<!--              Get started-->
-<!--            </a>-->
-<!--          </div>-->
       </div>
     </div>
     <div class="lg:col-start-1">
-      <div class="pr-4 h-full md:mt-36 lg:mt-24">
-        <img class="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 w-auto" src="../../assets/Stories.png" alt="Customer profile user interface" />
+      <div :class="{'pr-4 h-full md:mt-36 lg:mt-24': !isInModal}">
+        <img class="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 w-auto" src="../../assets/Stories.png" alt="Add story interface" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SparklesIcon } from '@heroicons/vue/outline'
 export default {
   name: "AddStory",
 
-  components: {
-    SparklesIcon
+  props: {
+    isInModal: {
+      type: Boolean,
+      default: false
+    }
   }
 }
 </script>

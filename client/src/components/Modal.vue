@@ -10,7 +10,7 @@
         <!-- This element is to trick the browser into centering the modal contents. -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-          <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+          <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg md:max-w-3xl sm:w-full sm:p-6">
             <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
               <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500" @click="cancel">
                 <span class="sr-only">Close</span>
@@ -18,13 +18,16 @@
               </button>
             </div>
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10" :class="{'bg-green-100' : isSuccess, 'bg-red-100': !isSuccess}">
+              <div
+                  v-if="!isHelp"
+                  class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                  :class="{'bg-green-100' : isSuccess, 'bg-red-100': !isSuccess}">
                 <ExclamationIcon class="h-6 w-6 text-red-600" aria-hidden="true" v-if="!isSuccess" />
                 <CheckCircleIcon class="h-6 w-6 text-green-600" aria-hidden="true" v-else />
               </div>
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
-                  <slot name="title">
+                  <slot name="title" v-if="!isHelp">
 
                   </slot>
                 </DialogTitle>
@@ -38,7 +41,7 @@
               </div>
             </div>
             <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-              <Button :type="confirmVariant" @click="confirm">
+              <Button :type="confirmVariant" @click="confirm" v-if="!isHelp">
                 <slot name="confirmText"></slot>
               </Button>
               <Button type="button" @click="cancel">
@@ -94,6 +97,10 @@ export default {
   computed: {
     isSuccess() {
       return this.confirmVariant.toLowerCase() === "success";
+    },
+
+    isHelp() {
+      return this.confirmVariant.toLowerCase() === "help";
     }
   }
 }

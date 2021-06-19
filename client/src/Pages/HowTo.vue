@@ -8,10 +8,19 @@
         </div>
       </div>
         <div class="relative">
-          <CreateGame />
+          <CreateGame v-if="!isInModal" :show-create-game="!isInModal" />
         </div>
-        <div class="mt-24">
-          <AddStory />
+        <div :class="{'mt-24' : !isInModal}">
+          <Voting :is-in-modal="isInModal" />
+        </div>
+        <div :class="{'mt-24': !isInModal}">
+          <Estimate :is-in-modal="isInModal" />
+        </div>
+        <div :class="{'mt-24': !isInModal}">
+          <AddStory :is-in-modal="isInModal" />
+        </div>
+      <div :class="{'mt-24': !isInModal}">
+          <SetUserRole :is-in-modal="isInModal" />
         </div>
     </div>
   </div>
@@ -20,10 +29,20 @@
 <script>
 import CreateGame from "../components/Guides/CreateGame.vue";
 import {useMeta} from "vue-meta"
+import Voting from "../components/Guides/Voting.vue";
+import Estimate from "../components/Guides/Estimate.vue";
 import AddStory from "../components/Guides/AddStory.vue";
+import SetUserRole from "../components/Guides/SetUserRole.vue";
 
 export default {
   name: "HowTo",
+
+  props: {
+    isInModal: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   mounted() {
     useMeta({
@@ -37,8 +56,11 @@ export default {
   },
 
   components: {
+    Estimate,
     AddStory,
-    CreateGame
+    Voting,
+    CreateGame,
+    SetUserRole
   },
 }
 </script>

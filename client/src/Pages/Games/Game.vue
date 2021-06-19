@@ -1,6 +1,6 @@
 <template>
   <div class="py-0 px-4 sm:px-6 lg:px-8">
-    <Modal :open="showDeleteModal" @cancel="this.showDeleteModal = false;" @confirm="deleteGame">
+    <Modal :open="showDeleteModal" @cancel="showDeleteModal = false;" @confirm="deleteGame">
       <template #title>
         Delete Game
       </template>
@@ -12,7 +12,7 @@
         Delete Game
       </template>
     </Modal>
-    <Modal :open="showLeaveModal" @cancel="this.showLeaveModal = false;" @confirm="leaveGame">
+    <Modal :open="showLeaveModal" @cancel="showLeaveModal = false;" @confirm="leaveGame">
       <template #title>
         Leave Game
       </template>
@@ -21,6 +21,11 @@
       </template>
       <template #confirmText>
         Leave Game
+      </template>
+    </Modal>
+    <Modal :open="showHelp" @cancel="showHelp = false" confirm-variant="help">
+      <template #body>
+        <HowTo is-in-modal />
       </template>
     </Modal>
 
@@ -38,7 +43,8 @@
             {{ $gameStore.game.description }}
           </p>
           </div>
-          <div class="flex flex-wrap content-end">
+          <div class="flex flex-wrap content-end gap-2">
+            <Button type="button" @click="showHelp = true">Help</Button>
             <Button type="button" @click="startLeaveGame">Leave Game</Button>
             <Button type="error" @click="startDeleteGame" v-if="$userStore.isAdmin()">Delete Game</Button>
           </div>
@@ -104,7 +110,7 @@
               </div>
             </form>
 
-            <UserList />
+            <UserList :force-update="updateChildren" />
 
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
@@ -173,7 +179,7 @@
         <div class="space-y-3">
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg"
                v-if="$gameStore.hasUsers">
-            <UserList />
+            <UserList :force-update="updateChildren" />
           </div>
           <div class="bg-secondaryLight dark:bg-secondaryDark md:p-6 rounded-xl shadow-lg">
             <div class="text-textLight dark:text-textDark text-center pt-3" v-if="!$gameStore.hasStories > 0">
@@ -204,11 +210,13 @@ import GameStories from "../../components/Game/Stories/GameStories.vue";
 import {GameEvents, RoleType, UserEvents} from "../../constants/contants";
 import Loader from "../../components/Loader.vue";
 import UserList from "../../components/Game/UserList.vue";
+import HowTo from "../HowTo.vue";
 
 export default {
   name: "Game",
 
   components: {
+    HowTo,
     UserList,
     Loader,
     GameStories,
@@ -238,6 +246,7 @@ export default {
       storyTotal: '',
       showCheck: false,
       loading: true,
+      showHelp: false,
 
       updateChildren: false,
       submitting: false
@@ -259,7 +268,7 @@ export default {
     this.initializeSockets();
 
     if (this.$userStore.joinedUser) {
-      this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
+      this.$socketStore.emitEvent(GameEvents.USER_JOINED, {gameId: this.$gameStore.game.gameId})
     }
 
     if (this.$gameStore.hasVotes) {
@@ -334,6 +343,14 @@ export default {
 
               that.updateGame();
               that.handleAutoSwitchStory();
+            })
+
+            this.$socketStore.socket.on('client_user_joined', function (data) {
+              if (data.gameId !== that.$route.params.id) {
+                return;
+              }
+
+              that.updateGame();
             })
           });
     },
