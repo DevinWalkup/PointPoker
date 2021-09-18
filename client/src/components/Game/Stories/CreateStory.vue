@@ -27,12 +27,14 @@
           <TextArea validator="empty" id="story_story" v-model="formData.Story"
                     description="Type or copy your story as free-form text" required>Story</TextArea>
           <TextArea id="story_notes" v-model="formData.Notes">Notes</TextArea>
+          <Input id="url" v-model="formData.Url">Story Url</Input>
         </div>
         <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5" v-if="isStructured">
           <Input validator="empty" id="story_as" v-model="formData.As" required>As a/an...</Input>
           <Input validator="empty" id="story_like" v-model="formData.Like" required>I would like to...</Input>
           <Input validator="empty" id="story_so" v-model="formData.So" required>So that...</Input>
           <TextArea id="story_notes" v-model="formData.Notes">Notes</TextArea>
+          <Input id="url" v-model="formData.Url">Story Url</Input>
         </div>
       </div>
     </div>
@@ -105,7 +107,8 @@ export default {
         So: '',
         Notes: '',
         StoryType: -1,
-        GameId: ''
+        GameId: '',
+        Url: ''
       },
 
       submitting: false,

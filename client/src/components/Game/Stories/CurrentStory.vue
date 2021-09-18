@@ -42,6 +42,12 @@
               </p>
               <p class="text-sm text-textLight dark:text-textDark">{{ $gameStore.currentStory.notes }}</p>
             </div>
+            <div v-if="$gameStore.currentStory.url">
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Story Url
+              </p>
+              <a :href="handleStoryUrl($gameStore.currentStory.url)" target="_blank" class="text-blue-600 hover:text-blue-800">{{$gameStore.currentStory.url}}</a>
+            </div>
             <div
                 v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
@@ -147,6 +153,18 @@
                 Notes
               </p>
               <TextArea placeholder="Notes.." id="current_story_notes" v-model="storyData.notes"/>
+            </div>
+            <div v-if="$gameStore.currentStory.url">
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Current Url
+              </p>
+              <a :href="handleStoryUrl($gameStore.currentStory.url)" target="_blank" class="text-blue-600 hover:text-blue-800">{{$gameStore.currentStory.url}}</a>
+            </div>
+            <div>
+              <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
+                Story Url
+              </p>
+              <Input id="url" v-model="storyData.url">Story Url</Input>
             </div>
             <div
                 v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
@@ -333,6 +351,28 @@ export default {
       this.setLocalData();
       this.getCurrentVote();
       this.$forceUpdate();
+    },
+
+    handleStoryUrl(url) {
+      if (!url) {
+        return;
+      }
+
+      if (url.includes("https://www") || url.includes("http://www")) {
+        return url;
+      }
+
+      let newUrl = url;
+
+      if (!url.includes("www.")) {
+        newUrl = `www.${newUrl}`
+      }
+
+      if (!url.includes("https://")) {
+        newUrl = `https://${newUrl}`
+      }
+
+      return newUrl;
     }
   },
 

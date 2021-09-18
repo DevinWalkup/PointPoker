@@ -1,8 +1,0 @@
-Index: client/Procfile
-===================================================================
-diff --git a/client/Procfile b/client/Procfile
-deleted file mode 100644
---- a/client/Procfile	(revision 227b485f21aef3807ff547500e37817eb3ce7990)
-+++ /dev/null	(revision 227b485f21aef3807ff547500e37817eb3ce7990)
-@@ -1,1 +0,0 @@
--web: npm run serve
