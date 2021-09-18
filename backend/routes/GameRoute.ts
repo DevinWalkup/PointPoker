@@ -124,7 +124,8 @@ class GameRoute {
                 As: data.As,
                 Like: data.Like,
                 So: data.So,
-                GameId: data.GameId
+                GameId: data.GameId,
+                Url: data.Url
             };
 
             let erroredFields = []

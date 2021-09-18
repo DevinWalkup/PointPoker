@@ -15,7 +15,8 @@ export interface Story {
     so: String | undefined | null,
     votes: Array<Votes>,
     storyPoint: String | undefined | null,
-    votesVisible: Boolean
+    votesVisible: Boolean,
+    url: String
 }
 
 export interface UpdateStoryProps {
@@ -29,7 +30,8 @@ export interface UpdateStoryProps {
     so: String | undefined | null,
     votes: Array<Votes>,
     storyPoint: String | undefined | null,
-    votesVisible: Boolean
+    votesVisible: Boolean,
+    url: String
 }
 
 export interface CreateStoryProps {
@@ -39,7 +41,8 @@ export interface CreateStoryProps {
     As: String,
     Like: String,
     So: String,
-    GameId: String
+    GameId: String,
+    Url: String
 }
 
 export interface SetStoryPointProps {

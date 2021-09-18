@@ -56,7 +56,6 @@ export class GameService {
         if (data.gameStories) {
 
             let stories = data.gameStories.split(';');
-            console.log("Game has stories", stories);
             for (const idx in stories) {
                 let newStory: CreateStoryProps = {
                     StoryType: 0,
@@ -65,7 +64,8 @@ export class GameService {
                     As: '',
                     Like: '',
                     So: '',
-                    GameId: game.gameId
+                    GameId: game.gameId,
+                    Url: ''
                 };
 
                 game = await this.AddStory(newStory);
@@ -85,14 +85,16 @@ export class GameService {
                 notes: data.Notes,
                 as: data.As,
                 like: data.Like,
-                so: data.So
+                so: data.So,
+                url: data.Url
             }
         } else {
             story = {
                 storyId: uuidv4(),
                 storyType: data.StoryType,
                 story: data.Story,
-                notes: data.Notes
+                notes: data.Notes,
+                url: data.Url
             }
         }
 
@@ -120,8 +122,6 @@ export class GameService {
         if (!game) {
             throw new Error("Game not found!");
         }
-
-        console.log(userId);
 
         if (userId && !game.users.some((user) => user.userId === userId)) {
             throw new Error("User is not apart of the game!");
@@ -275,6 +275,7 @@ export class GameService {
         story.as = data.as;
         story.like = data.like;
         story.so = data.so;
+        story.url = data.url
 
 
         await game.save();
