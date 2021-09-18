@@ -160,16 +160,21 @@ class GameRoute {
             this.logger.endpoint(`/games${req.url}`)
 
             let gameId: String = req.query.gameId.toString();
+            let isJoining: Boolean = req.query.isJoining === "true";
 
             if (!gameId) {
                 res.status(400).send({"message": "Game was not found!"});
                 return;
             }
 
-            this.gameService.GetGame(gameId).then((game) => {
+            this.gameService.GetGame(gameId, isJoining ? null : req.session.user.userId).then((game) => {
                 res.status(200).send({"game": game})
                 return;
             }).catch((err) => {
+                if (err === "User is not apart of the game!") {
+                    return res.status(401).send({"message": err});
+                }
+
                 res.status(500).send({"message": err});
                 return;
             })

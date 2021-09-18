@@ -129,6 +129,8 @@ export default {
           return;
         }
 
+        this.$gameStore.setReloadPage();
+
         this.$router.push(`/game/${gameId}`);
       })
     },

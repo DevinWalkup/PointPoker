@@ -1,3 +1,5 @@
+import {RouteParamValue} from "vue-router";
+
 export enum GameEvents {
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
@@ -18,7 +20,7 @@ export enum RoleType {
 }
 export interface JoinGameUserProps {
     name: String,
-    gameId: String
+    gameId: String | RouteParamValue[]
 }
 
 export interface ChangeUserRoleProps {

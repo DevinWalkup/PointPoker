@@ -13,7 +13,8 @@ class GameStore{
             showVotes: false,
             loading: true,
             CurrentPointType: null,
-            currentVote: null
+            currentVote: null,
+            reloadPage: false
         })
     }
 
@@ -126,6 +127,14 @@ class GameStore{
         }
 
         return !this.state.currentStory.votes ? false : this.state.currentStory.votes.length > 0;
+    }
+
+    public setReloadPage() {
+        this.state.reloadPage = true;
+    }
+
+    get reloadPage() {
+        return this.state.reloadPage;
     }
 }
 
