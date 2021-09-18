@@ -55,7 +55,7 @@ export class GameService {
 
         if (data.gameStories) {
 
-            let stories = data.gameStories.split(',');
+            let stories = data.gameStories.split(';');
             console.log("Game has stories", stories);
             for (const idx in stories) {
                 let newStory: CreateStoryProps = {
