@@ -114,11 +114,17 @@ export class GameService {
         return game;
     }
 
-    public async GetGame(gameId: String): Promise<Game> {
+    public async GetGame(gameId: String, userId?: String): Promise<Game> {
         let game: Game = await Game.findOne({gameId: gameId});
 
         if (!game) {
             throw new Error("Game not found!");
+        }
+
+        console.log(userId);
+
+        if (userId && !game.users.some((user) => user.userId === userId)) {
+            throw new Error("User is not apart of the game!");
         }
 
         return game;

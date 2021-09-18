@@ -39,7 +39,7 @@
             {{ $gameStore.game.name }}
           </h2>
           <p class="text-sm tracking-wide text-textLight dark:text-textDark pt-2"
-             v-if="$gameStore.game.description">
+             v-if="hasDescription">
             {{ $gameStore.game.description }}
           </p>
           </div>
@@ -246,6 +246,7 @@ export default {
       storyTotal: '',
       showCheck: false,
       loading: true,
+      hasDescription: false,
       showHelp: false,
 
       updateChildren: false,
@@ -254,105 +255,102 @@ export default {
   },
 
   beforeMount() {
-    this.loading = true;
-    if (!this.$userStore.user) {
-      this.$alertStore.error({"message": "An unknown error occurred!"});
-      this.$router.push('/');
-      return;
+    if (this.$gameStore.reloadPage) {
+      location.reload();
     }
 
-    this.populateGame();
+    this.loading = true;
   },
 
   mounted() {
-    this.initializeSockets();
+    if (!this.$userStore.user) {
+      this.$route.params.id ? this.$router.push(`/game/${this.$route.params.id}/join`) : this.$router.push('/');
+      return;
+      }
 
-    if (this.$userStore.joinedUser) {
-      this.$socketStore.emitEvent(GameEvents.USER_JOINED, {gameId: this.$gameStore.game.gameId})
-    }
-
-    if (this.$gameStore.hasVotes) {
-      this.handleAutoToggleVotes();
-    }
+    this.populateGame().then(() => {
+      this.initializeSockets().then(() => {
+        if (this.$gameStore.hasVotes) {
+          this.handleAutoToggleVotes();
+        }
+      });
+    });
   },
 
   methods: {
-    populateGame() {
+    async populateGame() {
       this.updateChildren = true;
-      GameService.loadGame(this.$route.params.id).then(() => {
-        this.showAddStory = this.$userStore.isEditor();
-        this.showVoteScreen = !this.showAddStory;
-        this.setTotalVotes();
-        this.updateChildren = false;
-        this.loading = false;
+      await GameService.loadGame(this.$route.params.id);
 
-        if (!this.$gameStore.game) {
-          this.$alertStore.warning({"message": "Game not found!"});
-          this.$router.push('/createGame');
-        }
-      })
-    },
+      this.showAddStory = this.$userStore.isEditor();
+      this.showVoteScreen = !this.showAddStory;
+      this.setTotalVotes();
+      this.updateChildren = false;
+      this.loading = false;
 
-    initializeSockets() {
-      let gameId;
-      if (!this.$route.params.id) {
-        if (!this.$gameStore.game) {
-          this.$alertStore.error({"message": "An error occurred!"});
-          this.$router.push('/');
-        }
-
-        gameId = this.$gameStore.game.gameId;
+      if (!this.$gameStore.game) {
+        await this.$router.push(`/game/${this.$route.params.id}/join`);
+        return;
       }
 
-      this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id)
-          .then(() => {
-            let that = this;
+      this.hasDescription = !!this.$gameStore.game.description
 
-            this.$socketStore.socket.on('client_update_game', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      this.$forceUpdate();
+    },
 
-              that.updateGame();
-            })
+    async initializeSockets() {
+      if (!this.$route.params.id) {
+        return;
+      }
 
-            this.$socketStore.socket.on('client_game_was_delete', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      if (!this.$userStore.user) {
+        return;
+      }
 
-              that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
+      await this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id);
 
-              that.leaveGame();
-            })
+      let that = this;
 
-            this.$socketStore.socket.on('client_user_role_change', function (data) {
-              if (data.userId !== that.$userStore.user.userId) {
-                return;
-              }
+      this.$socketStore.socket.on('client_update_game', function (data) {
+        if (data.gameId !== that.$route.params.id) {
+          return;
+        }
 
-              UserService.GetCurrentUser().then(() => {
-                that.updateGame();
-              })
-            })
+        that.updateGame();
+      })
 
-            this.$socketStore.socket.on('client_story_was_added', function(data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      this.$socketStore.socket.on('client_game_was_delete', function (data) {
+        if (data.gameId !== that.$route.params.id) {
+          return;
+        }
 
-              that.updateGame();
-              that.handleAutoSwitchStory();
-            })
+        that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
 
-            this.$socketStore.socket.on('client_user_joined', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+        that.leaveGame();
+      })
 
-              that.updateGame();
-            })
-          });
+      this.$socketStore.socket.on('client_user_role_change', function (data) {
+        if (data.userId !== that.$userStore.user.userId) {
+          return;
+        }
+
+        UserService.GetCurrentUser().then(() => {
+          that.updateGame();
+        })
+      })
+
+      this.$socketStore.socket.on('client_story_was_added', function(data) {
+        if (data.gameId !== that.$route.params.id) {
+          return;
+        }
+
+        that.updateGame();
+        that.handleAutoSwitchStory();
+      })
+
+      if (this.$userStore.joinedUser) {
+        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
+      }
     },
 
     startDeleteGame() {
@@ -439,12 +437,7 @@ export default {
     },
 
     updateGame() {
-      this.populateGame();
-
-      setTimeout(() => {
-        this.$forceUpdate();
-      }, 200)
-
+      this.populateGame()
     },
 
     startLeaveGame() {
@@ -513,6 +506,9 @@ export default {
   },
 
   unmounted() {
+    if (!this.$gameStore.game) {
+      return;
+    }
     this.$socketStore.delete();
     this.$gameStore.reset();
   },

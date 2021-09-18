@@ -19,8 +19,8 @@ class GameService {
         return null;
     }
 
-    public async loadGame(gameId: string | RouteParamValue[]) {
-        let params = {gameId: gameId};
+    public async loadGame(gameId: string | RouteParamValue[], isJoining: boolean = false) {
+        let params = {gameId: gameId, isJoining: isJoining};
         let response = await HttpClient.get('/api/games/getGame', params)
 
         if (response?.data) {

@@ -65,7 +65,7 @@ export default {
   },
 
   mounted() {
-    GameService.loadGame(this.$route.params.id).then(() => {
+    GameService.loadGame(this.$route.params.id, true).then(() => {
       if (this.$userStore.user) {
         this.joinGame();
       }
@@ -86,7 +86,7 @@ export default {
     },
 
     joinGame() {
-      let data = {gameId: this.$route.params.id};
+      let data = {name: this.$userStore.user ? this.$userStore.user.name : this.formData.userName, gameId: this.$route.params.id};
 
       if (this.$userStore.user) {
         data.name = this.$userStore.user.name;
