@@ -358,15 +358,11 @@ export default {
         return;
       }
 
-      if (url.includes("https://www") || url.includes("http://www")) {
+      if (url.includes("https://") || url.includes("http://")) {
         return url;
       }
 
       let newUrl = url;
-
-      if (!url.includes("www.")) {
-        newUrl = `www.${newUrl}`
-      }
 
       if (!url.includes("https://")) {
         newUrl = `https://${newUrl}`
