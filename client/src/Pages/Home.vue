@@ -8,7 +8,7 @@
                 class="text-callToAttention sm:pb-5">Poker</span></span>
           </h1>
           <p class="text-textLight dark:text-textDark text-base sm:text-xl lg:text-lg xl:text-xl">
-            Point Poker, the best way to estimate stories. Click the button bellow to get started!
+            Point Poker, the best way to estimate stories. Click the button below to get started!
           </p>
           <div class="mt-10 sm:mt-5">
             <div class="sm:flex">
