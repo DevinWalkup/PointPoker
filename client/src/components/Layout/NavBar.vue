@@ -6,7 +6,7 @@
           <div class="flex items-center justify-between w-full md:w-auto">
             <a href="#" @click="sendHome()">
               <span class="sr-only">Point Poker</span>
-              <img class="h-24" src="../../assets/PointPoker_Logo.png"
+              <img class="h-24" src="/PointPoker_Logo.png"
                    alt="Point Poker Logo"/>
             </a>
             <div class="-mr-2 flex items-center md:hidden">
