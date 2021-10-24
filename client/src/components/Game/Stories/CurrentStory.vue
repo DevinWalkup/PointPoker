@@ -69,23 +69,23 @@
                 </div>
               </div>
             </div>
-            <div v-if="currentVote && !$gameStore.currentStory.votesVisible">
+            <div v-if="currentVote && (!$gameStore.currentStory.votesVisible || !editVote)">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
                 Current Vote
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
                 <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">
-                    <Switch v-model="editVote"
-                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
-                      <span class="sr-only">Toggle Add Stories</span>
-                      <span aria-hidden="true"
-                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
-                    </Switch>
-                    <SwitchLabel as="span" class="ml-3">
-                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
-                    </SwitchLabel>
-                  </SwitchGroup>
+<!--                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">-->
+<!--                    <Switch v-model="editVote"-->
+<!--                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">-->
+<!--                      <span class="sr-only">Toggle Add Stories</span>-->
+<!--                      <span aria-hidden="true"-->
+<!--                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>-->
+<!--                    </Switch>-->
+<!--                    <SwitchLabel as="span" class="ml-3">-->
+<!--                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>-->
+<!--                    </SwitchLabel>-->
+<!--                  </SwitchGroup>-->
                 </div>
                 <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
                   <div class="flex-1 text-center">
@@ -93,6 +93,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="w-full p-2" v-if="currentVote">
+              <Button type="submit" @click="toggleEditVote" :show-loader="submittingVoteChange">{{editVoteText}}</Button>
             </div>
             <div v-if="$gameStore.currentStory.votesVisible">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
@@ -187,30 +190,20 @@
                 </div>
               </div>
             </div>
-            <div v-if="currentVote && !$gameStore.currentStory.votesVisible">
+            <div v-if="currentVote && (!$gameStore.currentStory.votesVisible || !editVote)">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300">
                 Current Vote
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
-                <div class="w-full p-2">
-                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">
-                    <Switch v-model="editVote"
-                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">
-                      <span class="sr-only">Toggle Add Stories</span>
-                      <span aria-hidden="true"
-                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>
-                    </Switch>
-                    <SwitchLabel as="span" class="ml-3">
-                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>
-                    </SwitchLabel>
-                  </SwitchGroup>
-                </div>
                 <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
                   <div class="flex-1 text-center">
                     <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ currentVote }}</h3>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="w-full p-2" v-if="currentVote">
+              <Button type="submit" @click="toggleEditVote" :show-loader="submittingVoteChange">{{editVoteText}}</Button>
             </div>
             <div v-if="$gameStore.currentStory.votesVisible">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
@@ -255,6 +248,7 @@ import TextArea from "../../Fields/TextArea.vue";
 import utilMixin from "../../../scripts/util-mixin";
 import {Switch, SwitchGroup, SwitchLabel} from '@headlessui/vue'
 import {GameEvents} from "../../../constants/contants";
+import Button from '../../Fields/Button.vue';
 
 export default {
   components: {
@@ -262,7 +256,8 @@ export default {
     TextArea,
     Switch,
     SwitchGroup,
-    SwitchLabel
+    SwitchLabel,
+    Button
   },
 
   mixins: [utilMixin],
@@ -280,6 +275,7 @@ export default {
       currentVote: null,
       isMounted: false,
       editVote: false,
+      submittingVoteChange: false,
 
       storyData: {},
 
@@ -294,6 +290,10 @@ export default {
 
     canEdit() {
       return this.$userStore.isEditor();
+    },
+
+    editVoteText() {
+      return this.editVote ? 'Cancel Editing Vote' : 'Edit Vote';
     }
   },
 
@@ -308,18 +308,24 @@ export default {
     this.setLocalData();
 
     this.points = this.$gameStore.currentPoints;
+    this.getCurrentVote();
 
     this.isMounted = true;
   },
 
   methods: {
     castVote(point) {
+      this.submittingVoteChange = true;
       this.currentVote = point;
 
       let data = {gameId: this.$gameStore.game.gameId, storyId: this.$gameStore.currentStory.storyId, vote: point};
 
       GameService.castVote(data).then(() => {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId});
+        if (this.editVote) {
+          this.editVote = false;
+        }
+        this.submittingVoteChange = false;
       });
     },
 
@@ -351,6 +357,10 @@ export default {
       this.setLocalData();
       this.getCurrentVote();
       this.$forceUpdate();
+    },
+
+    toggleEditVote() {
+      this.editVote = !this.editVote;
     },
 
     handleStoryUrl(url) {
