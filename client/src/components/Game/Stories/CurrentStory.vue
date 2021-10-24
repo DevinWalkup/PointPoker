@@ -74,19 +74,6 @@
                 Current Vote
               </p>
               <div class="col-span-2 bg-secondaryLight dark:bg-secondaryDark rounded-lg shadow">
-                <div class="w-full p-2">
-<!--                  <SwitchGroup as="div" class="flex items-center" v-if="$gameStore.hasStories && !$gameStore.currentStory.storyPoint">-->
-<!--                    <Switch v-model="editVote"-->
-<!--                            :class="[editVote ? 'bg-cyan-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500']">-->
-<!--                      <span class="sr-only">Toggle Add Stories</span>-->
-<!--                      <span aria-hidden="true"-->
-<!--                            :class="[editVote ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']"/>-->
-<!--                    </Switch>-->
-<!--                    <SwitchLabel as="span" class="ml-3">-->
-<!--                      <span class="text-sm font-medium text-textLight dark:text-textDark">Edit Vote</span>-->
-<!--                    </SwitchLabel>-->
-<!--                  </SwitchGroup>-->
-                </div>
                 <div class="w-full flex items-center justify-between text-center pb-3 space-x-3">
                   <div class="flex-1 text-center">
                     <h3 class="text-textLight dark:text-textDark text-lg font-medium truncate">{{ currentVote }}</h3>
