@@ -368,6 +368,10 @@ export default {
       if (!this.$userStore.isAdmin()) {
         return;
       }
+      
+      if (!this.$gameStore.game) {
+        return;
+      }
 
       let data = {gameId: this.$route.params.id, users: this.$gameStore.state.onlineUsers};
 
