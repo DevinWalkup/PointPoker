@@ -24,7 +24,15 @@
           <li v-for="(user, idx) in $gameStore.users()" :key="idx"
               class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover"
               @click="setUser(user)">
-            <div v-if="hasVoted(user)" class="flex flex-1 py-3 px-2">
+            <div v-if="userOffline(user)" class="flex flex-1 py-3 px-2">
+              <div class="w-6 h-6 flex">
+                <StatusOfflineIcon class="text-red-400"/>
+              </div>
+              <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
+                {{ user.name  }}
+              </p>
+            </div>
+            <div v-else-if="hasVoted(user)" class="flex flex-1 py-3 px-2">
               <div class="w-6 h-6 flex">
                 <CheckIcon class="text-green-400"/>
               </div>
@@ -48,7 +56,7 @@
 import UserService from "../../services/UserService";
 import {RoleType, UserEvents} from "../../constants/contants";
 import Modal from "../../components/Modal.vue";
-import {CheckIcon} from '@heroicons/vue/outline'
+import {CheckIcon, StatusOfflineIcon} from '@heroicons/vue/outline'
 
 export default {
   name: "UserList",
@@ -62,7 +70,8 @@ export default {
 
   components: {
     Modal,
-    CheckIcon
+    CheckIcon,
+    StatusOfflineIcon
   },
 
   data() {
@@ -142,6 +151,10 @@ export default {
 
       return this.$gameStore.currentStory.votes.some((vote) => {return vote.userId === user.userId});
     },
+
+    userOffline(user) {
+      return !this.$gameStore.state.onlineUsers.includes(user.userId);
+    }
   },
 
   watch: {

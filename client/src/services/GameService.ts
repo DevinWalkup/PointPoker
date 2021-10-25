@@ -106,6 +106,26 @@ class GameService {
 
         return true;
     }
+
+    public async SetOnlineUser(data) {
+        let response : AxiosResponse = await HttpClient.patch('/api/games/setOnlineUser', data);
+
+        if (response.data) {
+            GameStore.addOnlineUser(data.userId);
+        }
+
+        return true;
+    }
+
+    public async SetOnlineUsers(data) {
+        let response : AxiosResponse = await HttpClient.patch('/api/games/setOnlineUsers', data);
+
+        if (response.data) {
+            GameStore.setOnlineUsers(response.data.onlineUsers);
+        }
+
+        return true;
+    }
 }
 
 export { GameService };

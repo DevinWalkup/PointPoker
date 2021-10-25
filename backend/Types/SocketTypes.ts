@@ -3,7 +3,7 @@ export interface SocketSessionProps {
     gameId: String
 }
 
-export interface UserSocketRoleChangeProps {
+export interface UserSocketProps {
     userId: String
 }
 

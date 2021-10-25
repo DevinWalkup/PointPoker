@@ -31,7 +31,8 @@ export interface Game {
     currentStoryId: String,
     users: Array<User>,
     pointType: PointType,
-    createdDate: Date
+    createdDate: Date,
+    onlineUsers: Array<String>
 }
 
 export interface JoinGameProps {

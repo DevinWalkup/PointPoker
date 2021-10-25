@@ -14,7 +14,10 @@ class GameStore{
             loading: true,
             CurrentPointType: null,
             currentVote: null,
-            reloadPage: false
+            reloadPage: false,
+            onlineUsers: [],
+            tempOnlineUsers: [],
+            resetOnlineUsersDebounce: null
         })
     }
 
@@ -27,6 +30,8 @@ class GameStore{
 
         this.setCurrentStory();
         this.setPointType();
+
+        this.state.onlineUsers = game.onlineUsers;
 
         this.state.loading = false;
     }
@@ -48,6 +53,10 @@ class GameStore{
     }
 
     public setCurrentStory() {
+        if (!this.game) {
+            return;
+        }
+
         if (!this.state.game.stories) {
             return null;
         }
@@ -63,6 +72,14 @@ class GameStore{
         return this.state.CurrentPointType ? this.state.CurrentPointType.values : null;
     }
 
+    public setOnlineUsers(onlineUsers) {
+        if (!this.game) {
+            return;
+        }
+
+        return this.state.onlineUsers = onlineUsers;
+    }
+
     public reset() {
         this.state ={
             game: null,
@@ -71,10 +88,17 @@ class GameStore{
             showVotes: false,
             loading: false,
             CurrentPointType: null,
+            onlineUsers: [],
+            tempOnlineUsers: [],
+            resetOnlineUsersDebounce: null
         }
     }
 
     public setPointType() {
+        if (!this.game) {
+            return;
+        }
+
         this.state.CurrentPointType = points.Points.filter(p => p.pointTypeId === this.state.game.pointType)[0];
     }
 
@@ -83,11 +107,50 @@ class GameStore{
     }
 
     public users(){
+        if (!this.game) {
+            return;
+        }
+
         return this.state.game.users;
     }
 
     get autoShowVotes() {
         return this.state.game.autoShowVotes;
+    }
+
+    public userDisconnectSetOnlineUser(userId) {
+        if (!this.game) {
+            return;
+        }
+
+        if (this.state.tempOnlineUsers.includes(userId)) {
+            return;
+        }
+
+        this.state.tempOnlineUsers.push(userId);
+        this.debounce(this.setOnlineToTemp, 5000);
+    }
+
+    public addOnlineUser(userId) {
+        if (!this.game) {
+            return;
+        }
+
+        if (this.state.onlineUsers.includes(userId)) {
+            return;
+        }
+
+        this.state.onlineUsers.push(userId);
+    }
+
+    private setOnlineToTemp() {
+        if (!this.game) {
+            return;
+        }
+
+        this.state.onlineUsers = this.state.tempOnlineUsers;
+
+        this.state.tempOnlineUsers = [];
     }
 
     get nextStory() {
@@ -130,11 +193,31 @@ class GameStore{
     }
 
     public setReloadPage() {
+        if (!this.game) {
+            return;
+        }
+
         this.state.reloadPage = true;
     }
 
     get reloadPage() {
         return this.state.reloadPage;
+    }
+
+    private debounce(func, wait, immediate?) {
+        if (!this.game) {
+            return;
+        }
+
+        let context = this, args = arguments;
+        const later = function() {
+            context.state.resetOnlineUsersDebounce = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !this.state.resetOnlineUsersDebounce;
+        clearTimeout(this.state.resetOnlineUsersDebounce);
+        this.state.resetOnlineUsersDebounce = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
     }
 }
 

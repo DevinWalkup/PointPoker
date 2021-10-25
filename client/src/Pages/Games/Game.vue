@@ -307,29 +307,39 @@ export default {
         return;
       }
 
+      this.$gameStore.addOnlineUser(this.$userStore.user.userId);
+
       await this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id);
+      let gameId = this.$route.params.id;
 
       let that = this;
 
-      this.$socketStore.socket.on('client_update_game', function (data) {
-        if (data.gameId !== that.$route.params.id) {
-          return;
-        }
-
+      this.$socketStore.socket.on(`client_update_game-${gameId}`, function (data) {
         that.updateGame();
       })
 
-      this.$socketStore.socket.on('client_game_was_delete', function (data) {
-        if (data.gameId !== that.$route.params.id) {
-          return;
-        }
-
+      this.$socketStore.socket.on(`client_game_was_delete-${gameId}`, function (data) {
         that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
 
         that.leaveGame();
       })
 
-      this.$socketStore.socket.on('client_user_role_change', function (data) {
+      this.$socketStore.socket.on(`client_user_left_game-${gameId}`, function(data) {
+        that.$socketStore.emitEvent(GameEvents.USER_STATUS_UPDATE, {userId: that.$userStore.user.userId});
+      })
+
+      this.$socketStore.socket.on(`client_user_status_update-${gameId}`, function(data) {
+        that.$gameStore.userDisconnectSetOnlineUser(data.userId);
+
+        that.debounce(that.setOnlineUsers, 6000);
+      })
+
+      this.$socketStore.socket.on(`client_user_joined-${gameId}`, function(data) {
+        that.$gameStore.addOnlineUser(data.userId);
+        GameService.SetOnlineUser({gameId: gameId, userId: data.userId});
+      })
+
+      this.$socketStore.socket.on(`client_user_role_change-${gameId}`, function (data) {
         if (data.userId !== that.$userStore.user.userId) {
           return;
         }
@@ -339,11 +349,7 @@ export default {
         })
       })
 
-      this.$socketStore.socket.on('client_story_was_added', function(data) {
-        if (data.gameId !== that.$route.params.id) {
-          return;
-        }
-
+      this.$socketStore.socket.on(`client_story_was_added-${gameId}`, function(data) {
         that.updateGame();
         that.handleAutoSwitchStory();
       })
@@ -351,6 +357,21 @@ export default {
       if (this.$userStore.joinedUser) {
         this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
       }
+
+      GameService.SetOnlineUser({gameId: this.$gameStore.game.gameId, userId: this.$userStore.user.userId});
+
+      this.$socketStore.emitEvent(GameEvents.USER_JOINED,
+          {gameId: this.$gameStore.game.gameId, userId: this.$userStore.user.userId});
+    },
+
+    setOnlineUsers() {
+      if (!this.$userStore.isAdmin()) {
+        return;
+      }
+
+      let data = {gameId: this.$route.params.id, users: this.$gameStore.state.onlineUsers};
+
+      GameService.SetOnlineUsers(data);
     },
 
     startDeleteGame() {
@@ -465,7 +486,7 @@ export default {
         return;
       }
 
-      if (this.totalVotes === this.$gameStore.users().length) {
+      if (this.totalVotes === this.$gameStore.state.onlineUsers.length) {
         this.toggleVoteVisibility();
       }
     },

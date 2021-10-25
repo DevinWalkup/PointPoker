@@ -41,6 +41,12 @@ export default {
     ChevronRightIcon
   },
 
+  mounted() {
+    if (this.$gameStore.game) {
+      this.$gameStore.reset();
+    }
+  },
+
   methods: {
     startGame() {
       this.$router.push('/createGame')

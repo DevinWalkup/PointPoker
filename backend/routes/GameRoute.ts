@@ -317,6 +317,42 @@ class GameRoute {
                 return res.status(500).send({"message": err})
             })
         })
+
+        this.express.patch('/setOnlineUser', (req, res) => {
+            this.logger.endpoint(`/games${req.url}`);
+
+            let data : {gameId: string, userId: string} = req.body;
+
+            this.gameService.AddOnlineUser(data.gameId, data.userId).then((onlineUsers: Array<string> | String) => {
+                if (typeof onlineUsers === 'string') {
+                    return res.status(400).send({"message": onlineUsers});
+                }
+
+                return res.status(200).send({"onlineUsers": onlineUsers});
+            }).catch((err) => {
+                this.logger.error(err);
+                return res.status(500).send({"message": err});
+            })
+        })
+
+        this.express.patch('/setOnlineUsers', (req, res) => {
+            this.logger.endpoint(`/games${req.url}`);
+
+            let data : {gameId: string, users: Array<string>} = req.body;
+
+            let user = req.session.user;
+
+            this.gameService.SetOnlineUsers(data.gameId, user.userId, data.users).then((onlineUsers: Array<string> | String) => {
+                if (typeof onlineUsers === 'string') {
+                    return res.status(400).send({"message": onlineUsers});
+                }
+
+                return res.status(200).send({"onlineUsers": onlineUsers});
+            }).catch((err) => {
+                this.logger.error(err);
+                return res.status(500).send({"message": err});
+            })
+        })
     }
 }
 
