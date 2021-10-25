@@ -23,6 +23,9 @@
               {{ item.name }}
             </router-link>
           </div>
+          <div class="hidden md:block absolute right-0">
+              <ThemeSwitch />
+          </div>
         </div>
       </nav>
     </div>
@@ -58,6 +61,9 @@
                 </router-link>
               </div>
             </div>
+            <div class="pl-2">
+              <ThemeSwitch />
+            </div>
           </div>
         </PopoverPanel>
     </transition>
@@ -72,11 +78,13 @@ import {
   XIcon,
 } from '@heroicons/vue/outline'
 import {ChevronRightIcon} from '@heroicons/vue/solid'
+import ThemeSwitch from "../Theme/ThemeSwitch.vue";
 
 export default {
   name: 'NavBar',
 
   components: {
+    ThemeSwitch,
     Popover,
     PopoverButton,
     PopoverPanel,
