@@ -48,7 +48,8 @@ export class GameService {
             description: data.gameDescription,
             pointType: data.pointType,
             autoShowVotes: data.autoShowVotes ? data.autoShowVotes : false,
-            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false
+            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false,
+            onlineUsers: users.map((user) => user.userId)
         })
 
         await game.save();
@@ -194,8 +195,6 @@ export class GameService {
             return 'Game not found!';
         }
 
-        console.log(storyId);
-
         game.currentStoryId = storyId;
 
         await game.save();
@@ -333,6 +332,7 @@ export class GameService {
         }
 
         game.users.push({userId: user.userId, name: user.name});
+        game.onlineUsers.push(user.userId);
 
         game.save();
 
@@ -383,5 +383,57 @@ export class GameService {
 
     public async GetAll() : Promise<Array<Game>> {
         return Game.find();
+    }
+
+    public async AddOnlineUser(gameId: string, userId: string) : Promise<Array<string> | String> {
+        let game = await Game.findOne({"gameId": gameId});
+
+        if (!game) {
+            return "Game not found";
+        }
+
+        if (game.onlineUsers.includes(userId)) {
+            return game.onlineUsers;
+        }
+
+        game.onlineUsers.push(userId);
+        game.save();
+
+        return game.onlineUsers;
+    }
+
+    public async SetOnlineUsers(gameId: string, userId: String, onlineUsers: Array<string>) : Promise<Array<string> | String>{
+        let game = await Game.findOne({"gameId": gameId});
+
+        if (!game) {
+            return "Game not found";
+        }
+
+        let userService: UserService = new UserService();
+        let user : User = null;
+
+        for (let i = 0; i < game.users.length; i ++) {
+            let u = game.users[i];
+
+            let localUser : User = await userService.GetUserById(u.userId);
+
+            if (localUser.roleType === RoleType.ADMIN) {
+                user = localUser;
+                break;
+            }
+        }
+
+        if (!user) {
+            return "Could not find the admin user";
+        }
+
+        if (user.userId !== userId) {
+            return game.onlineUsers;
+        }
+
+        game.onlineUsers = onlineUsers;
+        game.save();
+
+        return game.onlineUsers;
     }
 }
