@@ -70,9 +70,9 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-1 mb-3 space-x-4 p-3">
+          <div class="flex flex-1 mb-3 space-x-3 p-3">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Participants: </span>{{ $gameStore.game.users.length }}</p>
+                class="font-bold">Participants: </span>{{ $gameStore.votingUsers.length }}</p>
             <p class="text-textLight dark:text-textDark pr-6"><span class="font-bold">Votes: </span>{{ totalVotes }}</p>
             <div
                 @click="copyLink"
@@ -154,7 +154,7 @@
           </div>
           <div class="flex flex-1 mb-3 space-x-4 p-2">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Participants: </span>{{ $gameStore.game.users ? $gameStore.game.users.length : 0 }}
+                class="font-bold">Participants: </span>{{ $gameStore.game.users ? $gameStore.votingUsers.length : 0 }}
             </p>
             <p class="text-textLight dark:text-textDark"><span class="font-bold">Votes: </span>{{ totalVotes }}
             </p>
@@ -341,6 +341,7 @@ export default {
 
       this.$socketStore.socket.on(`client_user_role_change-${gameId}`, function (data) {
         if (data.userId !== that.$userStore.user.userId) {
+          that.updateGame();
           return;
         }
 
@@ -400,12 +401,8 @@ export default {
       let gameId = this.$gameStore.game.gameId;
       GameService.deleteGame().then(() => {
         this.$router.push('/');
-
-        this.$nextTick(() => {
-          this.$gameStore.reset();
-        })
-
         this.$socketStore.emitEvent(GameEvents.GAME_DELETE, {gameId: gameId});
+        this.$socketStore.delete();
       })
     },
 
@@ -490,7 +487,7 @@ export default {
         return;
       }
 
-      if (this.totalVotes === this.$gameStore.state.onlineUsers.length) {
+      if (this.totalVotes === this.$gameStore.votingUsers.length) {
         this.toggleVoteVisibility();
       }
     },
@@ -509,6 +506,7 @@ export default {
       }
 
       if (!this.$gameStore.nextStory) {
+        this.updateGame();
         return;
       }
 

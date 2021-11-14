@@ -1,5 +1,6 @@
 import {reactive} from 'vue'
 import points from "./PointStore"
+import {RoleType} from '../constants/contants';
 
 class GameStore{
     public state;
@@ -17,7 +18,8 @@ class GameStore{
             reloadPage: false,
             onlineUsers: [],
             tempOnlineUsers: [],
-            resetOnlineUsersDebounce: null
+            resetOnlineUsersDebounce: null,
+            votingUsers: [],
         })
     }
 
@@ -50,6 +52,16 @@ class GameStore{
 
     get currentStory() {
         return this.state.currentStory;
+    }
+
+    get votingUsers() {
+        return this.state.game.users.filter((user) => {
+            if (user.roleType !== RoleType.VIEWER) {
+                return true;
+            }
+
+            return false;
+        })
     }
 
     public setCurrentStory() {
@@ -114,6 +126,14 @@ class GameStore{
         return this.state.game.users;
     }
 
+    public getUserById(userId) {
+        if (!this.hasUsers) {
+            return null;
+        }
+
+        return this.state.game.users.find((user) => user.userId === userId);
+    }
+
     get autoShowVotes() {
         return this.state.game.autoShowVotes;
     }
@@ -136,6 +156,10 @@ class GameStore{
             return;
         }
 
+        if (!this.state.tempOnlineUsers.includes(userId)) {
+            this.state.tempOnlineUsers.push(userId);
+        }
+
         if (this.state.onlineUsers.includes(userId)) {
             return;
         }
@@ -154,7 +178,16 @@ class GameStore{
     }
 
     get nextStory() {
-        let setStory = false;
+        let currentStoryIndex = this.state.game.stories
+            .indexOf(this.state.currentStory) + 1;
+
+        let setStory = currentStoryIndex === this.state.game.stories.length;
+
+        if (!setStory) {
+            if (this.state.game.stories[currentStoryIndex].storyPoint !== undefined) {
+                setStory = true;
+            }
+        }
 
         let nextStory = null;
 
@@ -163,7 +196,8 @@ class GameStore{
                 return;
             }
 
-            if (setStory) {
+            if (setStory && story.storyPoint === undefined) {
+                console.log("next story", story);
                 nextStory = story;
                 return;
             }

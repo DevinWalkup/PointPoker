@@ -1,7 +1,8 @@
 export enum RoleType {
     ADMIN,
     EDITOR,
-    USER
+    USER,
+    VIEWER
 }
 
 export interface CreateUserProps {

@@ -3,7 +3,8 @@ import {reactive} from 'vue'
 enum RoleType {
     ADMIN,
     EDITOR,
-    USER
+    USER,
+    VIEWER
 }
 
 class UserStore {
@@ -22,11 +23,15 @@ class UserStore {
     }
 
     public isEditor() : boolean {
-        return this.state.userRole !== RoleType[RoleType.USER];
+        return this.state.userRole === RoleType[RoleType.EDITOR] || this.state.userRole === RoleType[RoleType.ADMIN];
     }
 
     public isAdmin() : boolean {
         return this.state.userRole === RoleType[RoleType.ADMIN];
+    }
+
+    public isViewer() : boolean {
+        return this.state.userRole === RoleType[RoleType.VIEWER]
     }
 
     public setUser(user) {

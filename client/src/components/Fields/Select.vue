@@ -6,7 +6,7 @@
   </label>
   <div class="mt-1 relative" :id="id">
     <button @click="toggleList" type="button"
-            class="relative w-full bg-primaryLight border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none sm:text-sm"
+            class="relative w-full bg-primaryLight dark:bg-secondaryDark text-textLight dark:text-textDark border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none sm:text-sm"
             :aria-expanded="listToggled" aria-labelledby="listbox-label"
             :class="{'border-red-500 focus:outline-none focus:ring focus:ring-red-500' : !fieldValid && validationField, 'border-gray-400 focus:outline-none focus:ring focus:ring-cyan-500' : fieldValid && validationField}"
     >
@@ -28,7 +28,7 @@
 
 
     <ul v-show="listToggled"
-        class="absolute m-0 p-0 list-none transition ease-in duration-100 mt-1 w-full bg-primaryLight shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+        class="absolute m-0 p-0 list-none transition ease-in duration-100 mt-1 w-full bg-primaryLight dark:bg-secondaryDark shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm border border-gray-500"
         tabindex="-1" role="listbox" aria-labelledby="listbox-label" :id="id">
       <li class="cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-hoverLight hover:text-primary"
           :class="{'text-white bg-hover' : isSelectSelected}"
@@ -49,7 +49,7 @@
       </li>
       <li v-for="(option, index) in items" :key="option[valueKey]"
           class="cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-hoverLight hover:text-primary"
-          :class="{'text-white bg-cyan-400' : showCheckmarkFor(option[valueKey])}"
+          :class="{'text-white bg-cyan-400' : showCheckmarkFor(option[valueKey]), 'text-textLight dark:text-textDark' : !showCheckmarkFor(option[valueKey])}"
           :id="getId(index)" role="option" @click="setItem(option)">
                     <span class="font-normal block truncate">
                         {{ option[nameKey] }}
@@ -65,6 +65,10 @@
                     </span>
       </li>
     </ul>
+  </div>
+  <div class="text-red-400 font-bold tracking-wide text-sm flex flex-1 items-center pt-2" v-if="validationMessage">
+    <ExclamationCircleIcon class="w-4 h-4 mr-2" />
+    {{validationMessage}}
   </div>
 </template>
 
@@ -117,7 +121,7 @@ export default {
       type: String,
       required: false,
     },
-    customValidationMessage: {
+    validationMessage: {
       type: String,
       required: false,
     },
@@ -161,7 +165,7 @@ export default {
         return;
       }
 
-      this.$emit('update:modelValue', this.selectedItem);
+      this.$emit('update:modelValue', this.selectedValue);
     },
 
     showCheckmarkFor(currentItemKey) {
