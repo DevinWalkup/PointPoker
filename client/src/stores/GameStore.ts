@@ -111,7 +111,7 @@ class GameStore{
             return;
         }
 
-        this.state.CurrentPointType = points.Points.filter(p => p.pointTypeId === this.state.game.pointType)[0];
+        this.state.CurrentPointType = points.Points.find((p) => p.pointType === this.state.game.pointType);
     }
 
     get hasUsers() {

@@ -26,7 +26,7 @@
               Name</Input>
             <Select v-if="hasPointTypes" validator="select" id="game_point_type" :items="pointTypes"
                     :show-select-option="false" :default-selected-item="defaultPointType"
-                    v-model="formData.gamePointType" required zero-acceptable>Estimate Type</Select>
+                    v-model="formData.pointType" required zero-acceptable>Estimate Type</Select>
             <TextArea placeholder="Game description..." id="game_description" v-model="formData.gameDescription">Game Description</TextArea>
             <TextArea placeholder="Game stories..." id="game_stories" v-model="formData.gameStories"
                       description="Copy and paste to import stories into your game. Separate the stories names by a semi-colon">Game Stories</TextArea>
@@ -93,7 +93,7 @@ export default {
         gameName: '',
         gameDescription: '',
         gameStories: '',
-        gamePointType: 0,
+        pointType: 0,
         autoShowVotes: false,
         autoSwitchStory: false,
       },

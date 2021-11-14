@@ -129,6 +129,10 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    emitSelectedItem: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -165,7 +169,11 @@ export default {
         return;
       }
 
-      this.$emit('update:modelValue', this.selectedValue);
+      if (!this.emitSelectedItem) {
+        this.$emit('update:modelValue', this.selectedValue);
+      } else {
+        this.$emit('update:modelValue', this.selectedItem);
+      }
     },
 
     showCheckmarkFor(currentItemKey) {
