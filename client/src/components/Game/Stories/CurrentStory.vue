@@ -49,7 +49,7 @@
               <a :href="handleStoryUrl($gameStore.currentStory.url)" target="_blank" class="text-blue-600 hover:text-blue-800">{{$gameStore.currentStory.url}}</a>
             </div>
             <div
-                v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
+                v-if="!$gameStore.currentStory.votesVisible && !currentVote && !$userStore.isViewer() || editVote">
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Vote
               </p>
@@ -81,7 +81,7 @@
                 </div>
               </div>
             </div>
-            <div class="w-full p-2" v-if="currentVote">
+            <div class="w-full p-2" v-if="currentVote && !$userStore.isViewer()">
               <Button type="submit" @click="toggleEditVote" :show-loader="submittingVoteChange">{{editVoteText}}</Button>
             </div>
             <div v-if="$gameStore.currentStory.votesVisible">
@@ -302,6 +302,9 @@ export default {
 
   methods: {
     castVote(point) {
+      if (this.$userStore.isViewer()) {
+        return;
+      }
       this.submittingVoteChange = true;
       this.currentVote = point;
 

@@ -39,7 +39,7 @@ export class GameService {
 
         let users: Array<any> = new Array<any>();
 
-        users.push({userId: user.userId.toString(), name: user.name});
+        users.push({userId: user.userId.toString(), name: user.name, roleType: RoleType.ADMIN});
 
         let game = await Game.create({
             gameId: uuidv4(),
@@ -58,6 +58,10 @@ export class GameService {
 
             let stories = data.gameStories.split(';');
             for (const idx in stories) {
+                if (!stories[idx].trim()) {
+                    continue;
+                }
+
                 let newStory: CreateStoryProps = {
                     StoryType: 0,
                     Story: stories[idx].trim(),
@@ -127,6 +131,20 @@ export class GameService {
         if (userId && !game.users.some((user) => user.userId === userId)) {
             throw new Error("User is not apart of the game!");
         }
+
+        let userService = new UserService();
+        let users: Array<any> = new Array<any>();
+        for (let idx in game.users) {
+            let user = await userService.GetUserById(game.users[idx].userId);
+
+            if (!user){
+                continue;
+            }
+
+            users.push({userId: user.userId, name: user.name, roleType: user.roleType});
+        }
+
+        game.users = users;
 
         return game;
     }
@@ -331,7 +349,7 @@ export class GameService {
             return "Game not found";
         }
 
-        game.users.push({userId: user.userId, name: user.name});
+        game.users.push({userId: user.userId, name: user.name, roleType: user.roleType});
         game.onlineUsers.push(user.userId);
 
         game.save();

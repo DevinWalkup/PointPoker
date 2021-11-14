@@ -1,17 +1,30 @@
 <template>
   <Modal :open="showChangeRoleModal" confirm-variant="success" @cancel="showChangeRoleModal = false;"
-         @confirm="changeUserRole">
+         @confirm="changeUserRole" icon="ClipboardListIcon">
     <template #title>
       Set user role
     </template>
     <template #body>
-      <span class="font-bold">{{ selectedUser.name }}</span> is currently <span class="font-bold">{{
-        selectedUser.role
-      }}</span>.
-      Do you want to make them <span class="font-bold">{{ resultingRole }}</span>?
+      <div class="w-full h-5/6">
+        <div>
+          <span class="font-bold">{{ selectedUser.name }}</span>
+          currently has the role: <span class="font-bold">{{ selectedUser.role }}</span>.
+        </div>
+        <div class="w-full">
+          <Select id="select-user-role"
+                  :required="true"
+                  name-key="role"
+                  value-key="roleId"
+                  :items="availableRoles"
+                  v-model="resultingRoleId"
+                  :validation-message="userRoleValidation">
+            What Role do you want to assign to this user?
+          </Select>
+        </div>
+      </div>
     </template>
     <template #confirmText>
-      Yes
+      Change Role
     </template>
   </Modal>
   <div id="userList">
@@ -29,7 +42,15 @@
                 <StatusOfflineIcon class="text-red-400"/>
               </div>
               <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
-                {{ user.name  }}
+                {{ user.name }}
+              </p>
+            </div>
+            <div v-else-if="userIsViewer(user)" class="flex flex-1 py-3 px=2">
+              <div class="ml-2 w-6 h-6 flex">
+                <SearchCircleIcon class="text-gray-400"/>
+              </div>
+              <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
+                {{ user.name }}
               </p>
             </div>
             <div v-else-if="hasVoted(user)" class="flex flex-1 py-3 px-2">
@@ -37,7 +58,7 @@
                 <CheckIcon class="text-green-400"/>
               </div>
               <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
-                {{ user.name  }}
+                {{ user.name }}
               </p>
             </div>
             <div class="w-full flex items-center justify-between text-center p-3" v-else>
@@ -57,6 +78,7 @@ import UserService from "../../services/UserService";
 import {RoleType, UserEvents} from "../../constants/contants";
 import Modal from "../../components/Modal.vue";
 import {CheckIcon, StatusOfflineIcon} from '@heroicons/vue/outline'
+import Select from "../../components/Fields/Select.vue";
 
 export default {
   name: "UserList",
@@ -71,7 +93,8 @@ export default {
   components: {
     Modal,
     CheckIcon,
-    StatusOfflineIcon
+    StatusOfflineIcon,
+    Select
   },
 
   data() {
@@ -81,8 +104,37 @@ export default {
         name: '',
         role: ''
       },
-      resultingRole: null,
+      availableRoles: [],
       resultingRoleId: null,
+    }
+  },
+
+  computed: {
+    roleTypes() {
+      return [
+        {
+          role: "Editor",
+          roleId: RoleType.EDITOR
+        },
+        {
+          role: "Viewer",
+          roleId: RoleType.VIEWER
+        },
+        {
+          role: "User",
+          roleId: RoleType.USER
+        }
+      ]
+    },
+
+    userRoleValidation() {
+      if (!this.showChangeRoleModal) {
+        return null;
+      }
+
+      if (!this.resultingRoleId) {
+        return "This field is required";
+      }
     }
   },
 
@@ -100,15 +152,21 @@ export default {
         this.selectedUser = usr;
 
         switch (usr.roleType) {
-          case 2:
-            this.selectedUser.role = `a ${RoleType[usr.roleType].toLowerCase()}`;
-            this.resultingRoleId = RoleType.EDITOR;
-            this.resultingRole = `an ${RoleType[RoleType.EDITOR].toLowerCase()}`;
+          case RoleType.USER:
+            this.selectedUser.role = "User";
+            this.availableRoles = this.roleTypes.filter((role) => role.roleId !== RoleType.USER);
+            break;
+          case RoleType.EDITOR:
+            this.selectedUser.role = "Editor";
+            this.availableRoles = this.roleTypes.filter((role) => role.roleId !== RoleType.EDITOR);
+            break;
+          case RoleType.VIEWER:
+            this.selectedUser.role = "Viewer";
+            this.availableRoles = this.roleTypes.filter((role) => role.roleId !== RoleType.VIEWER);
             break;
           default:
-            this.selectedUser.role = `an ${RoleType[usr.roleType].toLowerCase()}`;
-            this.resultingRoleId = RoleType.USER;
-            this.resultingRole = `a ${RoleType[RoleType.USER].toLowerCase()}`;
+            this.$alertStore.error("An unexpected error occurred");
+            return;
         }
 
         this.showChangeRoleModal = true;
@@ -117,6 +175,10 @@ export default {
 
     changeUserRole() {
       if (!this.$userStore.isAdmin()) {
+        return;
+      }
+
+      if (!this.resultingRoleId) {
         return;
       }
 
@@ -134,14 +196,24 @@ export default {
           role: ''
         };
         this.resultingRoleId = null;
-        this.resultingRole = null;
 
         if (!user) {
           return;
         }
 
         this.$socketStore.emitEvent(UserEvents.ROLE_CHANGE, {userId: user.userId});
+        this.$nextTick(() => this.$forceUpdate());
       })
+    },
+
+    userIsViewer(user) {
+      let gameUser = this.$gameStore.getUserById(user.userId);
+
+      if (!gameUser) {
+        return false
+      }
+
+      return gameUser.roleType === RoleType.VIEWER;
     },
 
     hasVoted(user) {
@@ -149,7 +221,9 @@ export default {
         return false;
       }
 
-      return this.$gameStore.currentStory.votes.some((vote) => {return vote.userId === user.userId});
+      return this.$gameStore.currentStory.votes.some((vote) => {
+        return vote.userId === user.userId
+      });
     },
 
     userOffline(user) {

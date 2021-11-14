@@ -23,23 +23,23 @@ export default Object.freeze({
     ],
     Points: [
         {
-            pointTypeId: 0,
+            pointType: 'SCRUM',
             values: ["0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?"]
         },
         {
-            pointTypeId: 1,
+            pointType: 'FIBONACCI',
             values: ["0", "1/2", "1", "2", "3", "5", "8", "13", "21", "34", "55", "89", "?"]
         },
         {
-            pointTypeId: 2,
+            pointType: 'SEQUENTIAL',
             values: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "?"]
         },
         {
-            pointTypeId: 3,
+            pointType: 'HOURLY',
             values: ["0", "4", "8", "16", "24", "32", "40", "60", "80", "?"]
         },
         {
-            pointTypeId: 4,
+            pointType: 'TSHIRT',
             values: ["XXS", "XS", "S", "M", "L", "L", "XL", "XXL", "?"]
         },
     ]

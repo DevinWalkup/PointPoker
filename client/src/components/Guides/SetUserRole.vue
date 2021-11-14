@@ -8,21 +8,26 @@
         </h2>
         <p class="mt-4 text-lg text-textLight dark:text-secondaryTextDark">
           The user that creates a game will be assigned the "Administrator" role. As an administrator, you have the
-          ability to give additional game players the "Editor" role.
+          ability to assign special roles to the players of the game!
         </p>
         <div class="mt-4 border-t border-gray-200" />
         <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
-          To assign the "Editor" role to a user, click on their name in the user list.
+          To assign the a new role to a user, click on their name in the user list.
         </p>
         <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
-          Once you click on their name, a dialog will appear asking you to confirm assigning the Editor role to the
-          user. If you select yes, the users view will update in real time to give them access to edit the story
-          details, and set the stories estimate.
+          Once you click on their name, a dialog will appear asking you to select the role to assign to the
+          user. Once you select the desired role and click "Change Role", the users view will update in real time.
         </p>
         <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
-          If you decide that you no longer want a user to be an Editor, as the administrator you can click their name
-          again and the same dialog will appear asking you if you want to remove their editor permission. If you select
-          yes, the users view will update in real time and reset to the standard users view.
+          If you chose the "Editor" role, the user will get access to managing the story details and will get access
+          to setting story estimates.
+        </p>
+        <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
+          If you chose the "Viewer" role, the user can view the game, current story, and votes if they are displayed.
+          But this user will not be able to participate in the game.
+        </p>
+        <p class="mt-4 text-md text-textLight dark:text-secondaryTextDark">
+          If at any point you decide to update this users role to a different role you can access this dialog at any point.
         </p>
       </div>
     </div>

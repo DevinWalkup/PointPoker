@@ -18,7 +18,8 @@ export enum UserEvents {
 export enum RoleType {
     ADMIN,
     EDITOR,
-    USER
+    USER,
+    VIEWER
 }
 export interface JoinGameUserProps {
     name: String,
