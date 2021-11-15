@@ -1,6 +1,6 @@
 <template>
   <Modal :open="showChangeRoleModal" confirm-variant="success" @cancel="showChangeRoleModal = false;"
-         @confirm="changeUserRole" icon="ClipboardListIcon">
+         @confirm="changeUserRole" icon="ClipboardListIcon" body-height="h-64">
     <template #title>
       Set user role
     </template>
@@ -27,44 +27,111 @@
       Change Role
     </template>
   </Modal>
+  <Modal :open="showUserIconHelpModal" confirm-variant="success" @cancel="toggleUserIconHelpModal"
+         icon="ClipboardListIcon" :show-ok-button="false" close-button-text="Close">
+    <template #title>
+      User Icons
+    </template>
+    <template #body>
+      <div class="w-full h-full mt-5 p-5 mb-5">
+        <h1 class="text-textLight dark:text-textDark font-bold tracking-tight border-b border-gray-500 dark:border-gray-300">
+          What do the icons next to the users mean?
+        </h1>
+        <div class="mt-2 space-y-6 bg-secondaryLight dark:bg-secondaryDark p-5 rounded-md text-textLight dark:text-textDark">
+          <div class="flex flex-1 items-center">
+            <CheckIcon class="text-green-400 w-6 h-6 mr-2"/>
+            <p class="text-sm"> - User has voted for the current story</p>
+          </div>
+          <div class="flex flex-1 items-center">
+            <StatusOfflineIcon class="text-red-400 w-6 h-6 mr-2"/>
+            <p class="text-sm"> - User is disconnected from the game</p>
+          </div>
+          <div class="flex flex-1 items-center">
+            <SearchCircleIcon class="text-textLight dark:text-textDark w-6 h-6 mr-2"/>
+            <p class="text-sm">- User is a viewer of the game. This user cannot participate in voting for the story estimate</p>
+          </div>
+          <div class="flex flex-1 items-center">
+            <UserGroupIcon class="text-textLight dark:text-textDark w-6 h-6 mr-2"/>
+            <p class="text-sm"> - User is the admin of the game.</p>
+          </div>
+          <div class="flex flex-1 items-center">
+            <PencilIcon class="text-textLight dark:text-textDark w-6 h-6 mr-2"/>
+            <p class="text-sm"> - User is an editor for the game.</p>
+          </div>
+          <div class="flex flex-1 items-center">
+            <UserIcon class="text-textLight dark:text-textDark w-6 h-6 mr-2"/>
+            <p class="text-sm"> - User is a regular player of the game.</p>
+          </div>
+        </div>
+      </div>
+    </template>
+  </Modal>
   <div id="userList">
-    <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
-      Users
-    </p>
+    <div class="flex flex-1 space-x-3 border-b border-gray-500 dark:border-gray-300 items-center">
+      <p class="font-bold text-textLight dark:text-textDark pt-2 pb-2">
+        Users
+      </p>
+      <QuestionMarkCircleIcon class="w-5 h-5 text-textLight dark:text-textDark cursor-pointer"
+                              @click="toggleUserIconHelpModal"/>
+    </div>
     <div class="flex flex-1 justify-center pb-3 mt-2">
       <div class="px-2 w-full justify-between">
-        <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-8">
+        <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <li v-for="(user, idx) in $gameStore.users()" :key="idx"
               class="col-span-2 bg-primaryLight dark:bg-primaryDark rounded-lg shadow divide-y divide-gray-200 hover:bg-secondaryLightHover dark:hover:bg-secondaryDarkHover"
               @click="setUser(user)">
-            <div v-if="userOffline(user)" class="flex flex-1 py-3 px-2">
-              <div class="w-6 h-6 flex">
-                <StatusOfflineIcon class="text-red-400"/>
+            <div v-if="userOffline(user)" class="flex flex-1 py-3 px-2 items-center">
+              <div class="ml-1 flex">
+                <CheckIcon class="text-green-400 w-6 h-6" v-if="hasVoted(user)"/>
+                <StatusOfflineIcon class="text-red-400 w-6 h-6"/>
               </div>
               <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
                 {{ user.name }}
               </p>
             </div>
-            <div v-else-if="userIsViewer(user)" class="flex flex-1 py-3 px=2">
-              <div class="ml-2 w-6 h-6 flex">
-                <SearchCircleIcon class="text-gray-400"/>
+            <div v-else-if="userIsViewer(user)" class="flex flex-1 py-3 px-2 items-center">
+              <div class="ml-1 flex">
+                <CheckIcon class="text-green-400 w-6 h-6" v-if="hasVoted(user)"/>
+                <SearchCircleIcon class="text-textLight dark:text-textDark w-6 h-6"/>
               </div>
               <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
                 {{ user.name }}
               </p>
             </div>
-            <div v-else-if="hasVoted(user)" class="flex flex-1 py-3 px-2">
-              <div class="w-6 h-6 flex">
-                <CheckIcon class="text-green-400"/>
+            <!--            <div v-else-if="hasVoted(user)" class="flex flex-1 py-3 px-2">-->
+            <!--              <div class="w-6 h-6 flex">-->
+            <!--                <CheckIcon class="text-green-400"/>-->
+            <!--              </div>-->
+            <!--              <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">-->
+            <!--                {{ user.name }}-->
+            <!--              </p>-->
+            <!--            </div>-->
+            <div v-else-if="userIsAdmin(user)" class="flex flex-1 py-3 px-2 items-center">
+              <div class="ml-1 flex">
+                <CheckIcon class="text-green-400 w-6 h-6" v-if="hasVoted(user)"/>
+                <UserGroupIcon class="text-textLight dark:text-textDark w-6 h-6"/>
               </div>
               <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
                 {{ user.name }}
               </p>
             </div>
-            <div class="w-full flex items-center justify-between text-center p-3" v-else>
-              <div class="flex-1 text-center w-full">
-                <h3 class="text-textLight dark:text-textDark text-md font-bold">{{ user.name }}</h3>
+            <div v-else-if="userIsEditor(user)" class="flex flex-1 py-3 px-2 items-center">
+              <div class="ml-1 flex">
+                <CheckIcon class="text-green-400 w-6 h-6" v-if="hasVoted(user)"/>
+                <PencilIcon class="text-textLight dark:text-textDark w-6 h-6"/>
               </div>
+              <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
+                {{ user.name }}
+              </p>
+            </div>
+            <div v-else class="flex flex-1 py-3 px-2 items-center">
+              <div class="ml-1 flex">
+                <CheckIcon class="text-green-400 w-6 h-6" v-if="hasVoted(user)"/>
+                <UserIcon class="text-textLight dark:text-textDark w-6 h-6"/>
+              </div>
+              <p class="text-textLight text-center w-full dark:text-textDark text-md font-bold">
+                {{ user.name }}
+              </p>
             </div>
           </li>
         </ul>
@@ -106,6 +173,7 @@ export default {
       },
       availableRoles: [],
       resultingRoleId: null,
+      showUserIconHelpModal: false,
     }
   },
 
@@ -216,6 +284,26 @@ export default {
       return gameUser.roleType === RoleType.VIEWER;
     },
 
+    userIsAdmin(user) {
+      let gameUser = this.$gameStore.getUserById(user.userId);
+
+      if (!gameUser) {
+        return false;
+      }
+
+      return gameUser.roleType === RoleType.ADMIN;
+    },
+
+    userIsEditor(user) {
+      let gameUser = this.$gameStore.getUserById(user.userId);
+
+      if (!gameUser) {
+        return false;
+      }
+
+      return gameUser.roleType === RoleType.EDITOR;
+    },
+
     hasVoted(user) {
       if (!this.$gameStore.currentStory || !this.$gameStore.currentStory.votes) {
         return false;
@@ -228,6 +316,10 @@ export default {
 
     userOffline(user) {
       return !this.$gameStore.state.onlineUsers.includes(user.userId);
+    },
+
+    toggleUserIconHelpModal() {
+      this.showUserIconHelpModal = !this.showUserIconHelpModal;
     }
   },
 

@@ -42,17 +42,17 @@
                 </DialogTitle>
               </div>
             </div>
-            <div class="mt-2 h-64">
+            <div class="mt-2" :class="bodyHeight">
               <slot name="body">
 
               </slot>
             </div>
             <div class="mt-5 sm:mt-4 sm:flex space-x-3">
-              <Button :type="confirmVariant" @click="confirm" v-if="!isHelp">
+              <Button :type="confirmVariant" @click="confirm" v-if="!isHelp && showOkButton">
                 <slot name="confirmText"></slot>
               </Button>
               <Button type="button" @click="cancel">
-                Cancel
+                {{ closeButtonText }}
               </Button>
             </div>
           </div>
@@ -79,6 +79,18 @@ export default {
     icon: {
       type: String,
       default: null
+    },
+    showOkButton: {
+      type: Boolean,
+      default: true
+    },
+    closeButtonText: {
+      type: String,
+      default: "Cancel"
+    },
+    bodyHeight: {
+      type: String,
+      default: "h-full"
     }
   },
 

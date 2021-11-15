@@ -154,7 +154,7 @@
               <p class="font-bold text-textLight dark:text-textDark border-b border-gray-300 pt-2 pb-2">
                 Story Url
               </p>
-              <Input id="url" v-model="storyData.url">Story Url</Input>
+              <Input id="url" v-model="storyData.url" placeholder="Url...">Story Url</Input>
             </div>
             <div
                 v-if="!$gameStore.currentStory.votesVisible && !currentVote || editVote">
