@@ -313,18 +313,25 @@ export class GameService {
 
         let stories: Array<Story> = []
 
+        let currentStoryRemoved = data.storyId === game.currentStoryId
+        let currentStoryIndex = -1;
+
+        if (currentStoryRemoved) {
+            let currentStory = game.stories.find((story : Story) => story.storyId === data.storyId);
+            currentStoryIndex = game.stories.indexOf(currentStory)
+        }
+
         game.stories.forEach((story: Story) => {
             if (story.storyId !== data.storyId) {
                 stories.push(story);
             }
         });
 
-        let previousStory = stories[stories.length - 1];
-
-        game.currentStoryId = previousStory ? previousStory.storyId : null;
+        if (currentStoryIndex !== -1) {
+            game.currentStoryId = stories[currentStoryIndex].storyId;
+        }
 
         game.stories = stories;
-
         await game.save();
 
         return game;
