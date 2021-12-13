@@ -1,5 +1,6 @@
 import {reactive} from 'vue'
 import {io, Socket} from "socket.io-client";
+import {RouteParamValue} from "vue-router";
 
 class SocketStore {
     private state;
@@ -10,7 +11,7 @@ class SocketStore {
         })
     }
 
-    async createSocket(userId: String, gameId: String) {
+    async createSocket(userId: String, gameId: string | RouteParamValue[]) {
         // @ts-ignore
         this.state.socket = io(`${import.meta.env.VITE_API_URL}`, {query: `userid=${userId}&gameid=${gameId}`})
 

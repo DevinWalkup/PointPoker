@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5d7a3af9-9ae6-49e4-be67-9b2d36760bc4" name="Default Changelist" comment="#6 - Mobile menu popup fix">
+    <list default="true" id="5d7a3af9-9ae6-49e4-be67-9b2d36760bc4" name="Default Changelist" comment="Closes #41">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/GameTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Types/GameTypes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/SocketEvents.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Types/SocketEvents.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Types/SocketTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Types/SocketTypes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/GameRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/GameRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/services/GameService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/services/GameService.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/Pages/Games/Game.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Games/Game.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/Pages/Games/Join.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Games/Join.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/Pages/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/Pages/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Game/UserList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Game/UserList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/constants/contants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/constants/contants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/scripts/util-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/scripts/util-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/GameService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/GameService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/stores/GameStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/stores/GameStore.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,8 +26,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="package.json" />
+        <option value="Vue Single File Component" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -24,28 +37,47 @@
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$/.." value="dev" />
-        <entry key="$PROJECT_DIR$" value="staging" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="master" />
+        <option value="staging" />
+      </list>
+    </option>
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/backend/routes/GameRoute.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/client/package.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/services/GameService.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/app.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/routes/GameRoute.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/tsconfig.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/nodemon.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/package.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/client/src/Pages/Games/NewGame.vue" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/package.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/app.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/nodemon.json" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tCM95qk0MjBiR66wBirlxjT5lb" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -53,8 +85,17 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
-    <property name="ts.external.directory.path" value="E:\Development\PointPoker\backend\node_modules\typescript\lib" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/backend/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Development\PointPoker" />
+      <recent name="E:\Development\PointPoker\client" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Development\PointPoker\client\src\components\Game" />
+    </key>
   </component>
   <component name="RunManager" selected="npm.backend">
     <configuration name="backend" type="js.build_tools.npm">
@@ -65,8 +106,8 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
+    <configuration name="build (1)" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/client/package.json" />
       <command value="run" />
       <scripts>
         <script value="build" />
@@ -103,6 +144,16 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/client/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="start:dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
@@ -118,15 +169,17 @@
       <item itemvalue="npm.client" />
       <item itemvalue="npm.dev" />
       <item itemvalue="npm.start:dev" />
-      <item itemvalue="npm.build" />
       <item itemvalue="npm.postinstall" />
+      <item itemvalue="npm.build (1)" />
+      <item itemvalue="npm.serve" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.start:dev" />
+        <item itemvalue="npm.serve" />
+        <item itemvalue="npm.build (1)" />
         <item itemvalue="npm.postinstall" />
-        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -145,6 +198,13 @@
       <workItem from="1622319834416" duration="194000" />
       <workItem from="1622320037893" duration="526000" />
       <workItem from="1622320579128" duration="1627000" />
+      <workItem from="1623000287900" duration="5082000" />
+      <workItem from="1623459204392" duration="16000" />
+      <workItem from="1623514630394" duration="5868000" />
+      <workItem from="1623607241187" duration="11000" />
+      <workItem from="1631979605696" duration="6214000" />
+      <workItem from="1635116663228" duration="158000" />
+      <workItem from="1635116861896" duration="8622000" />
     </task>
     <task id="LOCAL-00001" summary="repo restructure">
       <created>1622268704154</created>
@@ -223,7 +283,77 @@
       <option name="project" value="LOCAL" />
       <updated>1622321016576</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="#13 - Auto switch story when adding new story and game is on last story in game">
+      <created>1622407936869</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1622407936869</updated>
+    </task>
+    <task id="LOCAL-00013" summary="On game delete message content update">
+      <created>1622408563077</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1622408563077</updated>
+    </task>
+    <task id="LOCAL-00014" summary="#20 - Auto Switch Story When Current Not Estimated">
+      <created>1623002526441</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1623002526441</updated>
+    </task>
+    <task id="LOCAL-00015" summary="#18 - Add checkmark next to user when they vote">
+      <created>1623004739592</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1623004739592</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Create cleanup job for orphaned database records.">
+      <created>1623519417549</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1623519417549</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Create cleanup job for orphaned database records.">
+      <created>1623519625492</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1623519625492</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Create cleanup job for orphaned database records.">
+      <created>1623519954012</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1623519954012</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Closes #33&#10;Closes #34">
+      <created>1631983925932</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1631983925932</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Closes #41">
+      <created>1635118368371</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1635118368371</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Closes #41">
+      <created>1635118417350</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1635118417350</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,6 +402,7 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <ignored-roots>
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
@@ -282,6 +413,13 @@
     <MESSAGE value="Cookie httponly fix" />
     <MESSAGE value="#7 - Create Game Add Stories" />
     <MESSAGE value="#6 - Mobile menu popup fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="#6 - Mobile menu popup fix" />
+    <MESSAGE value="#13 - Auto switch story when adding new story and game is on last story in game" />
+    <MESSAGE value="On game delete message content update" />
+    <MESSAGE value="#20 - Auto Switch Story When Current Not Estimated" />
+    <MESSAGE value="#18 - Add checkmark next to user when they vote" />
+    <MESSAGE value="Create cleanup job for orphaned database records." />
+    <MESSAGE value="Closes #33&#10;Closes #34" />
+    <MESSAGE value="Closes #41" />
+    <option name="LAST_COMMIT_MESSAGE" value="Closes #41" />
   </component>
 </project>

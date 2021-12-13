@@ -1,5 +1,5 @@
 require('dotenv').config({path: './.env'})
-import {SocketSessionProps, UserSocketRoleChangeProps} from "./Types/SocketTypes";
+import {SocketSessionProps, UserSocketProps} from "./Types/SocketTypes";
 import {Mongoose} from "./services/Mongoose";
 import {Logger} from "./logger/logger";
 import * as bodyParser from "body-parser";
@@ -149,18 +149,19 @@ export class App {
 
             socket.on(GameEvents.GAME_UPDATE, (m: GameSocketType) => {
                 this.logger.socket(`${GameEvents.GAME_UPDATE}`);
-                this.io.emit('client_update_game', {gameId: socketData.gameId});
+                this.io.emit(`client_update_game-${socketData.gameId}`);
             });
 
             socket.on(GameEvents.GAME_DELETE, (m: GameSocketType) => {
                 this.logger.socket(`${GameEvents.GAME_DELETE}`);
                 this.socketService.DeleteSocketSession(socketData).then(() => {
-                    this.io.emit('client_game_was_delete', {gameId: socketData.gameId})
+                    this.io.emit(`client_game_was_delete-${socketData.gameId}`)
                 });
             })
 
             socket.on(GameEvents.DISCONNECT, () => {
                 this.logger.socket(`${GameEvents.DISCONNECT}`);
+                this.io.emit(`client_user_left_game-${socketData.gameId}`);
             });
 
             socket.on(GameEvents.LEAVE_GAME, () => {
@@ -170,24 +171,30 @@ export class App {
                     this.logger.info('Socket session has ended');
                 });
 
-                this.io.emit('client_update_game', {gameId: socketData.gameId});
+                this.io.emit(`client_update_game-${socketData.gameId}`);
             });
 
-            socket.on(GameEvents.USER_JOINED, () => {
+            socket.on(GameEvents.USER_STATUS_UPDATE, (m: UserSocketProps) => {
+                this.logger.socket(`${GameEvents.USER_STATUS_UPDATE}`);
+
+                this.io.emit(`client_user_status_update-${socketData.gameId}`, m)
+            });
+
+            socket.on(GameEvents.USER_JOINED, (m: SocketSessionProps) => {
                 this.logger.socket(`${GameEvents.USER_JOINED}`);
 
-                this.io.emit('client_user_joined', {gameId: socketData.gameId});
+                this.io.emit(`client_user_joined-${socketData.gameId}`, {userId: m.userId});
             })
 
-            socket.on(UserEvents.ROLE_CHANGE, (m: UserSocketRoleChangeProps) => {
+            socket.on(UserEvents.ROLE_CHANGE, (m: UserSocketProps) => {
                 this.logger.socket(`${UserEvents.ROLE_CHANGE}`);
-                this.io.emit('client_user_role_change', m)
+                this.io.emit(`client_user_role_change-${socketData.gameId}`, m)
             })
 
             socket.on(GameEvents.CREATE_STORY, () => {
                 this.logger.socket(`${GameEvents.CREATE_STORY}`);
 
-                this.io.emit('client_story_was_added', {gameId: socketData.gameId});
+                this.io.emit(`client_story_was_added-${socketData.gameId}`);
             })
         });
     }

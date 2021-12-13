@@ -8,7 +8,7 @@
                 class="text-callToAttention sm:pb-5">Poker</span></span>
           </h1>
           <p class="text-textLight dark:text-textDark text-base sm:text-xl lg:text-lg xl:text-xl">
-            Point Poker, the best way to estimate stories. Click the button bellow to get started!
+            Point Poker, the best way to estimate stories. Click the button below to get started!
           </p>
           <div class="mt-10 sm:mt-5">
             <div class="sm:flex">
@@ -22,7 +22,7 @@
       </div>
       <div class="mt-12 -mb-16 sm:mb-48 lg:m-0 lg:relative">
         <div class="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 lg:max-w-none lg:px-0">
-          <img class="w-full lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-auto lg:max-w-none" src="../assets/PointPoker_Logo.png" alt="" />
+          <img class="w-full lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-auto lg:max-w-none" src="/PointPoker_Logo.png" alt="" />
         </div>
       </div>
     </div>
@@ -39,6 +39,12 @@ export default {
 
   components: {
     ChevronRightIcon
+  },
+
+  mounted() {
+    if (this.$gameStore.game) {
+      this.$gameStore.reset();
+    }
   },
 
   methods: {

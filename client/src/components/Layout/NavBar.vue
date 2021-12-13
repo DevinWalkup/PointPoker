@@ -6,7 +6,7 @@
           <div class="flex items-center justify-between w-full md:w-auto">
             <a href="#" @click="sendHome()">
               <span class="sr-only">Point Poker</span>
-              <img class="h-24" src="../../assets/PointPoker_Logo.png"
+              <img class="h-24" src="/PointPoker_Logo.png"
                    alt="Point Poker Logo"/>
             </a>
             <div class="-mr-2 flex items-center md:hidden">
@@ -22,6 +22,9 @@
                          class="text-base font-medium text-textLight dark:text-textDark hover:text-gray-300">
               {{ item.name }}
             </router-link>
+          </div>
+          <div class="hidden md:block absolute right-0">
+              <ThemeSwitch />
           </div>
         </div>
       </nav>
@@ -58,6 +61,9 @@
                 </router-link>
               </div>
             </div>
+            <div class="pl-2">
+              <ThemeSwitch />
+            </div>
           </div>
         </PopoverPanel>
     </transition>
@@ -72,11 +78,13 @@ import {
   XIcon,
 } from '@heroicons/vue/outline'
 import {ChevronRightIcon} from '@heroicons/vue/solid'
+import ThemeSwitch from "../Theme/ThemeSwitch.vue";
 
 export default {
   name: 'NavBar',
 
   components: {
+    ThemeSwitch,
     Popover,
     PopoverButton,
     PopoverPanel,

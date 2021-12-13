@@ -1,5 +1,6 @@
 import {reactive} from 'vue'
 import points from "./PointStore"
+import {RoleType} from '../constants/contants';
 
 class GameStore{
     public state;
@@ -13,7 +14,12 @@ class GameStore{
             showVotes: false,
             loading: true,
             CurrentPointType: null,
-            currentVote: null
+            currentVote: null,
+            reloadPage: false,
+            onlineUsers: [],
+            tempOnlineUsers: [],
+            resetOnlineUsersDebounce: null,
+            votingUsers: [],
         })
     }
 
@@ -26,6 +32,8 @@ class GameStore{
 
         this.setCurrentStory();
         this.setPointType();
+
+        this.state.onlineUsers = game.onlineUsers;
 
         this.state.loading = false;
     }
@@ -46,7 +54,21 @@ class GameStore{
         return this.state.currentStory;
     }
 
+    get votingUsers() {
+        return this.state.game.users.filter((user) => {
+            if (user.roleType !== RoleType.VIEWER) {
+                return true;
+            }
+
+            return false;
+        })
+    }
+
     public setCurrentStory() {
+        if (!this.game) {
+            return;
+        }
+
         if (!this.state.game.stories) {
             return null;
         }
@@ -62,6 +84,14 @@ class GameStore{
         return this.state.CurrentPointType ? this.state.CurrentPointType.values : null;
     }
 
+    public setOnlineUsers(onlineUsers) {
+        if (!this.game) {
+            return;
+        }
+
+        return this.state.onlineUsers = onlineUsers;
+    }
+
     public reset() {
         this.state ={
             game: null,
@@ -70,11 +100,18 @@ class GameStore{
             showVotes: false,
             loading: false,
             CurrentPointType: null,
+            onlineUsers: [],
+            tempOnlineUsers: [],
+            resetOnlineUsersDebounce: null
         }
     }
 
     public setPointType() {
-        this.state.CurrentPointType = points.Points.filter(p => p.pointTypeId === this.state.game.pointType)[0];
+        if (!this.game) {
+            return;
+        }
+
+        this.state.CurrentPointType = points.Points.find((p) => p.pointType === this.state.game.pointType);
     }
 
     get hasUsers() {
@@ -82,15 +119,75 @@ class GameStore{
     }
 
     public users(){
+        if (!this.game) {
+            return;
+        }
+
         return this.state.game.users;
+    }
+
+    public getUserById(userId) {
+        if (!this.hasUsers) {
+            return null;
+        }
+
+        return this.state.game.users.find((user) => user.userId === userId);
     }
 
     get autoShowVotes() {
         return this.state.game.autoShowVotes;
     }
 
+    public userDisconnectSetOnlineUser(userId) {
+        if (!this.game) {
+            return;
+        }
+
+        if (this.state.tempOnlineUsers.includes(userId)) {
+            return;
+        }
+
+        this.state.tempOnlineUsers.push(userId);
+        this.debounce(this.setOnlineToTemp, 5000);
+    }
+
+    public addOnlineUser(userId) {
+        if (!this.game) {
+            return;
+        }
+
+        if (!this.state.tempOnlineUsers.includes(userId)) {
+            this.state.tempOnlineUsers.push(userId);
+        }
+
+        if (this.state.onlineUsers.includes(userId)) {
+            return;
+        }
+
+        this.state.onlineUsers.push(userId);
+    }
+
+    private setOnlineToTemp() {
+        if (!this.game) {
+            return;
+        }
+
+        this.state.onlineUsers = this.state.tempOnlineUsers;
+
+        this.state.tempOnlineUsers = [];
+    }
+
     get nextStory() {
-        let setStory = false;
+        let currentStoryIndex = this.state.game.stories
+            .indexOf(this.state.currentStory) + 1;
+
+        let setStory = currentStoryIndex === this.state.game.stories.length;
+
+        if (!setStory) {
+            if (this.state.game.stories[currentStoryIndex].storyPoint !== undefined) {
+                setStory = true;
+            }
+        }
 
         let nextStory = null;
 
@@ -99,7 +196,8 @@ class GameStore{
                 return;
             }
 
-            if (setStory) {
+            if (setStory && story.storyPoint === undefined) {
+                console.log("next story", story);
                 nextStory = story;
                 return;
             }
@@ -126,6 +224,34 @@ class GameStore{
         }
 
         return !this.state.currentStory.votes ? false : this.state.currentStory.votes.length > 0;
+    }
+
+    public setReloadPage() {
+        if (!this.game) {
+            return;
+        }
+
+        this.state.reloadPage = true;
+    }
+
+    get reloadPage() {
+        return this.state.reloadPage;
+    }
+
+    private debounce(func, wait, immediate?) {
+        if (!this.game) {
+            return;
+        }
+
+        let context = this, args = arguments;
+        const later = function() {
+            context.state.resetOnlineUsersDebounce = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !this.state.resetOnlineUsersDebounce;
+        clearTimeout(this.state.resetOnlineUsersDebounce);
+        this.state.resetOnlineUsersDebounce = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
     }
 }
 

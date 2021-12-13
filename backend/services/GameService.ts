@@ -39,7 +39,7 @@ export class GameService {
 
         let users: Array<any> = new Array<any>();
 
-        users.push({userId: user.userId.toString(), name: user.name});
+        users.push({userId: user.userId.toString(), name: user.name, roleType: RoleType.ADMIN});
 
         let game = await Game.create({
             gameId: uuidv4(),
@@ -48,7 +48,8 @@ export class GameService {
             description: data.gameDescription,
             pointType: data.pointType,
             autoShowVotes: data.autoShowVotes ? data.autoShowVotes : false,
-            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false
+            autoSwitchStory: data.autoSwitchStory ? data.autoSwitchStory : false,
+            onlineUsers: users.map((user) => user.userId)
         })
 
         await game.save();
@@ -56,8 +57,11 @@ export class GameService {
         if (data.gameStories) {
 
             let stories = data.gameStories.split(';');
-            console.log("Game has stories", stories);
             for (const idx in stories) {
+                if (!stories[idx].trim()) {
+                    continue;
+                }
+
                 let newStory: CreateStoryProps = {
                     StoryType: 0,
                     Story: stories[idx].trim(),
@@ -65,7 +69,8 @@ export class GameService {
                     As: '',
                     Like: '',
                     So: '',
-                    GameId: game.gameId
+                    GameId: game.gameId,
+                    Url: ''
                 };
 
                 game = await this.AddStory(newStory);
@@ -85,14 +90,16 @@ export class GameService {
                 notes: data.Notes,
                 as: data.As,
                 like: data.Like,
-                so: data.So
+                so: data.So,
+                url: data.Url
             }
         } else {
             story = {
                 storyId: uuidv4(),
                 storyType: data.StoryType,
                 story: data.Story,
-                notes: data.Notes
+                notes: data.Notes,
+                url: data.Url
             }
         }
 
@@ -114,12 +121,30 @@ export class GameService {
         return game;
     }
 
-    public async GetGame(gameId: String): Promise<Game> {
+    public async GetGame(gameId: String, userId?: String): Promise<Game> {
         let game: Game = await Game.findOne({gameId: gameId});
 
         if (!game) {
             throw new Error("Game not found!");
         }
+
+        if (userId && !game.users.some((user) => user.userId === userId)) {
+            throw new Error("User is not apart of the game!");
+        }
+
+        let userService = new UserService();
+        let users: Array<any> = new Array<any>();
+        for (let idx in game.users) {
+            let user = await userService.GetUserById(game.users[idx].userId);
+
+            if (!user){
+                continue;
+            }
+
+            users.push({userId: user.userId, name: user.name, roleType: user.roleType});
+        }
+
+        game.users = users;
 
         return game;
     }
@@ -187,8 +212,6 @@ export class GameService {
         if (!game) {
             return 'Game not found!';
         }
-
-        console.log(storyId);
 
         game.currentStoryId = storyId;
 
@@ -269,6 +292,7 @@ export class GameService {
         story.as = data.as;
         story.like = data.like;
         story.so = data.so;
+        story.url = data.url
 
 
         await game.save();
@@ -289,18 +313,25 @@ export class GameService {
 
         let stories: Array<Story> = []
 
+        let currentStoryRemoved = data.storyId === game.currentStoryId
+        let currentStoryIndex = -1;
+
+        if (currentStoryRemoved) {
+            let currentStory = game.stories.find((story : Story) => story.storyId === data.storyId);
+            currentStoryIndex = game.stories.indexOf(currentStory)
+        }
+
         game.stories.forEach((story: Story) => {
             if (story.storyId !== data.storyId) {
                 stories.push(story);
             }
         });
 
-        let previousStory = stories[stories.length - 1];
-
-        game.currentStoryId = previousStory ? previousStory.storyId : null;
+        if (currentStoryIndex !== -1) {
+            game.currentStoryId = stories[currentStoryIndex].storyId;
+        }
 
         game.stories = stories;
-
         await game.save();
 
         return game;
@@ -325,7 +356,8 @@ export class GameService {
             return "Game not found";
         }
 
-        game.users.push({userId: user.userId, name: user.name});
+        game.users.push({userId: user.userId, name: user.name, roleType: user.roleType});
+        game.onlineUsers.push(user.userId);
 
         game.save();
 
@@ -376,5 +408,57 @@ export class GameService {
 
     public async GetAll() : Promise<Array<Game>> {
         return Game.find();
+    }
+
+    public async AddOnlineUser(gameId: string, userId: string) : Promise<Array<string> | String> {
+        let game = await Game.findOne({"gameId": gameId});
+
+        if (!game) {
+            return "Game not found";
+        }
+
+        if (game.onlineUsers.includes(userId)) {
+            return game.onlineUsers;
+        }
+
+        game.onlineUsers.push(userId);
+        game.save();
+
+        return game.onlineUsers;
+    }
+
+    public async SetOnlineUsers(gameId: string, userId: String, onlineUsers: Array<string>) : Promise<Array<string> | String>{
+        let game = await Game.findOne({"gameId": gameId});
+
+        if (!game) {
+            return "Game not found";
+        }
+
+        let userService: UserService = new UserService();
+        let user : User = null;
+
+        for (let i = 0; i < game.users.length; i ++) {
+            let u = game.users[i];
+
+            let localUser : User = await userService.GetUserById(u.userId);
+
+            if (localUser.roleType === RoleType.ADMIN) {
+                user = localUser;
+                break;
+            }
+        }
+
+        if (!user) {
+            return "Could not find the admin user";
+        }
+
+        if (user.userId !== userId) {
+            return game.onlineUsers;
+        }
+
+        game.onlineUsers = onlineUsers;
+        game.save();
+
+        return game.onlineUsers;
     }
 }

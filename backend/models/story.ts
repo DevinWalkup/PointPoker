@@ -14,7 +14,8 @@ const storySchema = new Schema({
     so: String,
     votes: [voteSchema],
     storyPoint: String,
-    votesVisible: {type: Boolean, default: false}
+    votesVisible: {type: Boolean, default: false},
+    url: String
 })
 
 export {storySchema}

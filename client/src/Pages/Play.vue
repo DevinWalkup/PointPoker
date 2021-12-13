@@ -12,7 +12,7 @@
             <div>
               <h2 class="text-3xl leading-8 font-extrabold tracking-tight text-callToAttention mb-3">Create Game</h2>
               <div class="prose prose-teal prose-lg lg:max-w-none dark:text-white">
-                <p>If you want to create a new game, click the button bellow!</p>
+                <p>If you want to create a new game, click the button below!</p>
                 <button @click="startGame"
                         class="text-white block w-full py-3 px-4 rounded-md shadow bg-gradient-to-r from-teal-500 to-cyan-600 font-medium hover:from-teal-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-400 focus:ring-offset-gray-900">
                   Create Game

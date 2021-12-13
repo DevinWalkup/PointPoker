@@ -11,9 +11,16 @@ import UserStore from "./stores/UserStore";
 import AppStore from "./stores/AppStore";
 import SocketStore from "./stores/SocketStore";
 
+import * as Icons from '@heroicons/vue/outline';
+
 
 const app = createApp(App);
 app.use(router)
+
+Object.keys(Icons).forEach((icon) => {
+    app.component(icon, Icons[icon]);
+})
+
 
 app.config.globalProperties.$alertStore = AlertStore
 app.config.globalProperties.$gameStore = GameStore

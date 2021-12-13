@@ -20,7 +20,7 @@ export interface CreateGameParams {
     gameStories: String,
     pointType: PointType,
     autoShowVotes: Boolean,
-    autoSwitchStory: Boolean
+    autoSwitchStory: Boolean,
 }
 
 export interface Game {
@@ -31,7 +31,8 @@ export interface Game {
     currentStoryId: String,
     users: Array<User>,
     pointType: PointType,
-    createdDate: Date
+    createdDate: Date,
+    onlineUsers: Array<String>
 }
 
 export interface JoinGameProps {

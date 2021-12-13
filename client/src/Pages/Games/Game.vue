@@ -39,7 +39,7 @@
             {{ $gameStore.game.name }}
           </h2>
           <p class="text-sm tracking-wide text-textLight dark:text-textDark pt-2"
-             v-if="$gameStore.game.description">
+             v-if="hasDescription">
             {{ $gameStore.game.description }}
           </p>
           </div>
@@ -70,9 +70,9 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-1 mb-3 space-x-4 p-3">
+          <div class="flex flex-1 mb-3 space-x-3 p-3">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Participants: </span>{{ $gameStore.game.users.length }}</p>
+                class="font-bold">Participants: </span>{{ $gameStore.votingUsers.length }}</p>
             <p class="text-textLight dark:text-textDark pr-6"><span class="font-bold">Votes: </span>{{ totalVotes }}</p>
             <div
                 @click="copyLink"
@@ -154,7 +154,7 @@
           </div>
           <div class="flex flex-1 mb-3 space-x-4 p-2">
             <p class="text-textLight dark:text-textDark"><span
-                class="font-bold">Participants: </span>{{ $gameStore.game.users ? $gameStore.game.users.length : 0 }}
+                class="font-bold">Participants: </span>{{ $gameStore.game.users ? $gameStore.votingUsers.length : 0 }}
             </p>
             <p class="text-textLight dark:text-textDark"><span class="font-bold">Votes: </span>{{ totalVotes }}
             </p>
@@ -246,6 +246,7 @@ export default {
       storyTotal: '',
       showCheck: false,
       loading: true,
+      hasDescription: false,
       showHelp: false,
 
       updateChildren: false,
@@ -254,105 +255,128 @@ export default {
   },
 
   beforeMount() {
-    this.loading = true;
-    if (!this.$userStore.user) {
-      this.$alertStore.error({"message": "An unknown error occurred!"});
-      this.$router.push('/');
-      return;
+    if (this.$gameStore.reloadPage) {
+      location.reload();
     }
 
-    this.populateGame();
+    this.loading = true;
   },
 
   mounted() {
-    this.initializeSockets();
+    if (!this.$userStore.user) {
+      this.$route.params.id ? this.$router.push(`/game/${this.$route.params.id}/join`) : this.$router.push('/');
+      return;
+      }
 
-    if (this.$userStore.joinedUser) {
-      this.$socketStore.emitEvent(GameEvents.USER_JOINED, {gameId: this.$gameStore.game.gameId})
-    }
-
-    if (this.$gameStore.hasVotes) {
-      this.handleAutoToggleVotes();
-    }
+    this.populateGame().then(() => {
+      this.initializeSockets().then(() => {
+        if (this.$gameStore.hasVotes) {
+          this.handleAutoToggleVotes();
+        }
+      });
+    });
   },
 
   methods: {
-    populateGame() {
+    async populateGame() {
       this.updateChildren = true;
-      GameService.loadGame(this.$route.params.id).then(() => {
-        this.showAddStory = this.$userStore.isEditor();
-        this.showVoteScreen = !this.showAddStory;
-        this.setTotalVotes();
-        this.updateChildren = false;
-        this.loading = false;
+      await GameService.loadGame(this.$route.params.id);
 
-        if (!this.$gameStore.game) {
-          this.$alertStore.warning({"message": "Game not found!"});
-          this.$router.push('/createGame');
-        }
-      })
-    },
+      this.showAddStory = this.$userStore.isEditor();
+      this.showVoteScreen = !this.showAddStory;
+      this.setTotalVotes();
+      this.updateChildren = false;
+      this.loading = false;
 
-    initializeSockets() {
-      let gameId;
-      if (!this.$route.params.id) {
-        if (!this.$gameStore.game) {
-          this.$alertStore.error({"message": "An error occurred!"});
-          this.$router.push('/');
-        }
-
-        gameId = this.$gameStore.game.gameId;
+      if (!this.$gameStore.game) {
+        await this.$router.push(`/game/${this.$route.params.id}/join`);
+        return;
       }
 
-      this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id)
-          .then(() => {
-            let that = this;
+      this.hasDescription = !!this.$gameStore.game.description
 
-            this.$socketStore.socket.on('client_update_game', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      this.$forceUpdate();
+    },
 
-              that.updateGame();
-            })
+    async initializeSockets() {
+      if (!this.$route.params.id) {
+        return;
+      }
 
-            this.$socketStore.socket.on('client_game_was_delete', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      if (!this.$userStore.user) {
+        return;
+      }
 
-              that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
+      this.$gameStore.addOnlineUser(this.$userStore.user.userId);
 
-              that.leaveGame();
-            })
+      await this.$socketStore.createSocket(this.$userStore.user.userId, this.$route.params.id);
+      let gameId = this.$route.params.id;
 
-            this.$socketStore.socket.on('client_user_role_change', function (data) {
-              if (data.userId !== that.$userStore.user.userId) {
-                return;
-              }
+      let that = this;
 
-              UserService.GetCurrentUser().then(() => {
-                that.updateGame();
-              })
-            })
+      this.$socketStore.socket.on(`client_update_game-${gameId}`, function (data) {
+        that.updateGame();
+      })
 
-            this.$socketStore.socket.on('client_story_was_added', function(data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      this.$socketStore.socket.on(`client_game_was_delete-${gameId}`, function (data) {
+        that.$alertStore.warning({"message": "Game has been deleted by the admin!"});
 
-              that.updateGame();
-              that.handleAutoSwitchStory();
-            })
+        that.leaveGame();
+      })
 
-            this.$socketStore.socket.on('client_user_joined', function (data) {
-              if (data.gameId !== that.$route.params.id) {
-                return;
-              }
+      this.$socketStore.socket.on(`client_user_left_game-${gameId}`, function(data) {
+        that.$socketStore.emitEvent(GameEvents.USER_STATUS_UPDATE, {userId: that.$userStore.user.userId});
+      })
 
-              that.updateGame();
-            })
-          });
+      this.$socketStore.socket.on(`client_user_status_update-${gameId}`, function(data) {
+        that.$gameStore.userDisconnectSetOnlineUser(data.userId);
+
+        that.debounce(that.setOnlineUsers, 6000);
+      })
+
+      this.$socketStore.socket.on(`client_user_joined-${gameId}`, function(data) {
+        that.$gameStore.addOnlineUser(data.userId);
+        GameService.SetOnlineUser({gameId: gameId, userId: data.userId});
+      })
+
+      this.$socketStore.socket.on(`client_user_role_change-${gameId}`, function (data) {
+        if (data.userId !== that.$userStore.user.userId) {
+          that.updateGame();
+          return;
+        }
+
+        UserService.GetCurrentUser().then(() => {
+          that.updateGame();
+        })
+      })
+
+      this.$socketStore.socket.on(`client_story_was_added-${gameId}`, function(data) {
+        that.updateGame();
+        that.handleAutoSwitchStory();
+      })
+
+      if (this.$userStore.joinedUser) {
+        this.$socketStore.emitEvent(GameEvents.GAME_UPDATE, {gameId: this.$gameStore.game.gameId})
+      }
+
+      GameService.SetOnlineUser({gameId: this.$gameStore.game.gameId, userId: this.$userStore.user.userId});
+
+      this.$socketStore.emitEvent(GameEvents.USER_JOINED,
+          {gameId: this.$gameStore.game.gameId, userId: this.$userStore.user.userId});
+    },
+
+    setOnlineUsers() {
+      if (!this.$userStore.isAdmin()) {
+        return;
+      }
+      
+      if (!this.$gameStore.game) {
+        return;
+      }
+
+      let data = {gameId: this.$route.params.id, users: this.$gameStore.state.onlineUsers};
+
+      GameService.SetOnlineUsers(data);
     },
 
     startDeleteGame() {
@@ -377,12 +401,8 @@ export default {
       let gameId = this.$gameStore.game.gameId;
       GameService.deleteGame().then(() => {
         this.$router.push('/');
-
-        this.$nextTick(() => {
-          this.$gameStore.reset();
-        })
-
         this.$socketStore.emitEvent(GameEvents.GAME_DELETE, {gameId: gameId});
+        this.$socketStore.delete();
       })
     },
 
@@ -439,12 +459,7 @@ export default {
     },
 
     updateGame() {
-      this.populateGame();
-
-      setTimeout(() => {
-        this.$forceUpdate();
-      }, 200)
-
+      this.populateGame()
     },
 
     startLeaveGame() {
@@ -472,7 +487,7 @@ export default {
         return;
       }
 
-      if (this.totalVotes === this.$gameStore.users().length) {
+      if (this.totalVotes === this.$gameStore.votingUsers.length) {
         this.toggleVoteVisibility();
       }
     },
@@ -491,6 +506,7 @@ export default {
       }
 
       if (!this.$gameStore.nextStory) {
+        this.updateGame();
         return;
       }
 
@@ -513,6 +529,9 @@ export default {
   },
 
   unmounted() {
+    if (!this.$gameStore.game) {
+      return;
+    }
     this.$socketStore.delete();
     this.$gameStore.reset();
   },

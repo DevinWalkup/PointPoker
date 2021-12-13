@@ -19,8 +19,8 @@ class GameService {
         return null;
     }
 
-    public async loadGame(gameId: string | RouteParamValue[]) {
-        let params = {gameId: gameId};
+    public async loadGame(gameId: string | RouteParamValue[], isJoining: boolean = false) {
+        let params = {gameId: gameId, isJoining: isJoining};
         let response = await HttpClient.get('/api/games/getGame', params)
 
         if (response?.data) {
@@ -102,6 +102,26 @@ class GameService {
 
         if (response.data) {
             GameStore.setGame(response.data.game);
+        }
+
+        return true;
+    }
+
+    public async SetOnlineUser(data) {
+        let response : AxiosResponse = await HttpClient.patch('/api/games/setOnlineUser', data);
+
+        if (response.data) {
+            GameStore.addOnlineUser(data.userId);
+        }
+
+        return true;
+    }
+
+    public async SetOnlineUsers(data) {
+        let response : AxiosResponse = await HttpClient.patch('/api/games/setOnlineUsers', data);
+
+        if (response.data) {
+            GameStore.setOnlineUsers(response.data.onlineUsers);
         }
 
         return true;
