@@ -7,7 +7,6 @@
       <div class="overflow-auto min-h-screen">
         <Alert/>
         <NavBar/>
-        <Loader v-if="loading" loader-size="medium"/>
         <router-view v-if="!loading"/>
       </div>
       <div class="relative w-full bottom-0 mt-4">
@@ -38,7 +37,6 @@ export default {
 
   data() {
     return {
-      loading: true,
       AppName: AppStore.AppName
     }
   },
@@ -53,14 +51,7 @@ export default {
   mounted() {
     if (window.location.protocol !== 'https:' && import.meta.env.MODE !== 'development'){
       window.location.href = import.meta.env.VITE_APP_URL;
-      return;
     }
-
-    UserService.GetCurrentUser().then(() => {
-      this.$nextTick(() => {
-        this.loading = false;
-      })
-    });
   }
 }
 </script>
