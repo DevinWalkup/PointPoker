@@ -68,9 +68,17 @@ export default {
     GameService.loadGame(this.$route.params.id, true).then(() => {
       if (this.$userStore.user) {
         this.joinGame();
+      } else {
+        UserService.GetCurrentUser().then(() => {
+          if (this.$userStore.user) {
+            this.joinGame();
+          } else {
+            this.pageReady = true;      
+          }
+        }).catch((e) => {
+          this.pageReady = true;
+        })
       }
-
-      this.pageReady = true;
     })
   },
 
